@@ -1,210 +1,194 @@
 <!DOCTYPE html>
 <html lang="uk"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Україна · CVP звіт (Looker 32511)</title>
+<title>Україна · CVP Report (Looker 32511)</title>
 <style>
-:root{
-  --bg:#f5f5f7;--card:#fff;--line:#e5e5ea;--txt:#1d1d1f;--muted:#86868b;
-  --good:#248a3d;--good-bg:#e8f9ed;--bad:#d70015;--bad-bg:#ffe5e3;
-  --warn:#c67600;--warn-bg:#fff4e5;--blue:#007aff;--blue-bg:#e5f1ff;
-  --radius:14px;--shadow:0 1px 3px rgba(0,0,0,.04),0 4px 12px rgba(0,0,0,.04);
-}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"Inter","Segoe UI",Roboto,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased}
-.wrap{max-width:1280px;margin:0 auto;padding:24px 18px 64px}
-header.top{background:var(--card);border-radius:var(--radius);padding:20px 22px;box-shadow:var(--shadow);margin-bottom:20px}
-.badge{display:inline-block;background:var(--blue-bg);color:var(--blue);font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px}
-h1{font-size:26px;margin:10px 0 4px;font-weight:700;letter-spacing:-.3px}
-h2{font-size:18px;margin:24px 0 10px;font-weight:700}
-.sub{color:var(--muted);font-size:13px}
-.sub a{color:var(--blue);text-decoration:none}
-.tabsnav{display:inline-flex;background:var(--line);border-radius:10px;padding:3px;gap:2px;margin:14px 0 0}
-.tabsnav button{background:transparent;border:none;color:var(--muted);padding:8px 14px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600}
-.tabsnav button.active{background:var(--card);color:var(--txt);box-shadow:0 1px 4px rgba(0,0,0,.08)}
-.hl{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
-.hitem{background:var(--card);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow);border-left:4px solid var(--line)}
-.hitem.crit{border-left-color:var(--bad)}.hitem.watch{border-left-color:var(--warn)}.hitem.win{border-left-color:var(--good)}
-.hitem .k{font-size:10px;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:.4px}
-.hitem .t{font-size:13px;margin-top:5px}
-.panel{background:var(--card);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);margin-bottom:16px}
-.tablewrap{overflow-x:auto;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:16px}
-table{width:100%;border-collapse:collapse;font-size:12.5px}
-th,td{padding:8px 10px;text-align:right;border-bottom:1px solid #f0f0f5}
-th:first-child,td:first-child{text-align:left}
-thead th{background:#fafafa;color:var(--muted);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.3px;position:sticky;top:0}
-tbody tr:hover td{background:#f9f9fb}
-.grp td{color:var(--blue);font-weight:700;font-size:11px;text-transform:uppercase;background:#fafafa}
-.cell-bad{color:var(--bad);font-weight:600}.cell-good{color:var(--good);font-weight:600}
-.vd{font-weight:700;font-size:11px}.vd.up{color:var(--good)}.vd.down{color:var(--bad)}.vd.eq{color:var(--muted)}
-.ua-row td{background:var(--good-bg);font-weight:600}
-.chart-bars{display:flex;align-items:flex-end;gap:8px;height:140px;padding:8px 0}
-.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px}
-.bar{width:100%;max-width:44px;background:var(--blue);border-radius:4px 4px 0 0;opacity:.85}
-.bar-lbl{font-size:10px;color:var(--muted)}
-.filter{margin:12px 0}
-.filter select{padding:8px 12px;border-radius:8px;border:1px solid var(--line);background:var(--card);font-size:13px}
-.rank-bad{color:var(--bad);font-weight:700}
-footer{color:var(--muted);font-size:12px;margin-top:28px;padding-top:16px;border-top:1px solid var(--line)}
+:root{--bg:#f5f5f7;--card:#fff;--line:#e5e5ea;--txt:#1d1d1f;--muted:#86868b;--good:#248a3d;--good-bg:#e8f9ed;--bad:#d70015;--bad-bg:#ffe5e3;--warn:#c67600;--blue:#007aff;--blue-bg:#e5f1ff;--shadow:0 1px 3px rgba(0,0,0,.05),0 4px 12px rgba(0,0,0,.04)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,Inter,Segoe UI,sans-serif;line-height:1.45}
+.wrap{max-width:1320px;margin:0 auto;padding:20px 16px 60px}
+header{background:var(--card);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow);margin-bottom:16px}
+.badge{font-size:11px;font-weight:600;color:var(--blue);background:var(--blue-bg);padding:4px 10px;border-radius:20px}
+h1{font-size:24px;margin:8px 0 4px}h2{font-size:17px;margin:22px 0 8px}h3{font-size:14px;margin:16px 0 6px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+.sub{font-size:13px;color:var(--muted)}.sub a{color:var(--blue);text-decoration:none}
+.tabs{display:inline-flex;background:var(--line);border-radius:10px;padding:3px;gap:2px;margin-top:12px;flex-wrap:wrap}
+.tabs button{border:none;background:transparent;padding:8px 12px;border-radius:8px;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer}
+.tabs button.active{background:#fff;color:var(--txt);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.hl{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;margin-bottom:16px}
+.card{background:var(--card);border-radius:12px;padding:12px 14px;box-shadow:var(--shadow);border-left:4px solid var(--line)}
+.card.crit{border-left-color:var(--bad)}.card.win{border-left-color:var(--good)}.card.watch{border-left-color:var(--warn)}
+.card .k{font-size:10px;font-weight:700;text-transform:uppercase;color:var(--muted)}.card .t{font-size:13px;margin-top:4px}
+.tbl{overflow-x:auto;background:var(--card);border-radius:12px;box-shadow:var(--shadow);margin-bottom:14px}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{padding:7px 8px;border-bottom:1px solid #f0f0f5;text-align:right;white-space:nowrap}
+th:first-child,td:first-child{text-align:left}thead th{background:#fafafa;color:var(--muted);font-size:10px;text-transform:uppercase}
+tbody tr:hover td{background:#fafbfc}.ua td{background:var(--good-bg);font-weight:600}
+.pp{font-size:10px;color:var(--muted)}.pp.up{color:var(--bad)}.pp.down{color:var(--good)}
+.filter select{padding:7px 10px;border:1px solid var(--line);border-radius:8px;font-size:13px}
+footer{font-size:11px;color:var(--muted);margin-top:24px;padding-top:12px;border-top:1px solid var(--line)}
 </style></head><body><div class="wrap">
-<header class="top">
-  <span class="badge">LOOKER DASHBOARD 32511 · STORE PROVIDER</span>
+<header>
+  <span class="badge">LOOKER · DASHBOARD 32511 · CVP INPUT & OUTPUT</span>
   <h1>Україна — CVP звіт</h1>
-  <div class="sub" id="ovSub"></div>
-  <div class="tabsnav" id="tabsnav">
-    <button data-tab="overview" class="active">Огляд UA</button>
-    <button data-tab="countries">Порівняння країн</button>
-    <button data-tab="weekly">Тижневий rolling</button>
-    <button data-tab="partners">Партнери</button>
+  <div class="sub" id="hdr"></div>
+  <div class="tabs" id="tabs">
+    <button data-t="overview" class="active">Огляд</button>
+    <button data-t="input">CVP Input</button>
+    <button data-t="output">CVP Output</button>
+    <button data-t="countries">Країни</button>
+    <button data-t="partners">Партнери</button>
   </div>
 </header>
 
-<div id="tab-overview">
-<section><h2>Ключові висновки</h2><div class="hl" id="insights"></div></section>
-<section><h2>Україна — помісячні метрики</h2>
-  <div class="sub" style="margin-bottom:8px">Метрики з <a href="https://bolt.cloud.looker.com/dashboards/32511" target="_blank">Looker dashboard 32511</a> (fact_provider_weekly). Орієнтир: <span id="benchNote"></span>.</div>
-  <div class="tablewrap"><table id="uaTable"></table></div>
-</section>
+<div id="p-overview">
+  <div class="hl" id="insights"></div>
+  <h2>Ключові метрики (серпень + PP vs липень)</h2>
+  <div class="tbl"><table id="kpiAug"></table></div>
 </div>
 
-<div id="tab-countries" style="display:none">
-<section><h2>Україна vs інші країни</h2>
-  <div class="sub" style="margin-bottom:8px">Агрегат черв–сер 2026 · Store Provider = Yes · Entity = provider level</div>
-  <div class="tablewrap"><table id="countryTable"></table></div>
-</section>
+<div id="p-input" style="display:none">
+  <h2>CVP Input — Україна (помісячно)</h2>
+  <div class="tbl"><table id="tblInput"></table></div>
 </div>
 
-<div id="tab-weekly" style="display:none">
-<section><h2>Тижневий rolling</h2>
-  <div class="panel"><div style="font-size:12px;color:var(--muted);margin-bottom:8px">Замовлення по тижнях (з червня 2026)</div><div class="chart-bars" id="weeklyChart"></div></div>
-  <div class="tablewrap"><table id="weeklyTable"></table></div>
-</section>
+<div id="p-output" style="display:none">
+  <h2>CVP Output — GMV</h2><div class="tbl"><table id="tblGmv"></table></div>
+  <h2>CVP Output — Users</h2><div class="tbl"><table id="tblUsers"></table></div>
+  <h2>CVP Output — Funnel</h2><div class="tbl"><table id="tblFunnel"></table></div>
 </div>
 
-<div id="tab-partners" style="display:none">
-<section><h2>Усі партнери</h2>
-  <div class="sub" style="margin-bottom:8px">Середнє черв–сер 2026. CVP Input: Order Discrepancies, Replacements, Promotional Share.</div>
-  <div class="tablewrap"><table id="partnerRank"></table></div>
-  <div class="filter"><label>Партнер: </label><select id="partnerSel"></select></div>
-  <div class="tablewrap"><table id="partnerDetail"></table></div>
+<div id="p-countries" style="display:none">
+  <h2>Порівняння країн (черв–сер 2026)</h2>
+  <div class="sub" style="margin-bottom:8px">Ключові CVP Input метрики. UA — з Looker CSV, інші — Databricks.</div>
+  <div class="tbl"><table id="tblCountries"></table></div>
 </div>
 
-<footer><b>Методологія.</b> Джерело: <a href="https://bolt.cloud.looker.com/dashboards/32511" target="_blank">Looker dashboard 32511</a> → Databricks <code>main.ng_delivery.fact_provider_weekly</code>. Store Provider = Yes, vertical store_3p. Період з <span id="dataStart"></span>. <span id="genAt"></span></footer>
+<div id="p-partners" style="display:none">
+  <h2>Партнери — CVP Input + Output</h2>
+  <div class="filter"><label>Бренд: </label><select id="brandSel"></select></div>
+  <h3>CVP Input</h3><div class="tbl"><table id="tblPartnerInput"></table></div>
+  <h3>CVP Output — Users & Funnel</h3><div class="tbl"><table id="tblPartnerOut"></table></div>
+  <h3>Рейтинг (серпень)</h3><div class="tbl"><table id="tblPartnerRank"></table></div>
+</div>
+
+<footer>Джерело: <a href="https://bolt.cloud.looker.com/dashboards/32511" target="_blank">Looker dashboard 32511</a> CSV exports + Databricks для країн / partner CVP Input Jul–Aug. <span id="genAt"></span></footer>
 </div>
 <script>
 const R=/*__CVP_DATA__*/;
-const ML=R.month_lbl;
-document.getElementById("ovSub").innerHTML=`Період: ${R.period}. ${R.partners.length} партнерів. <a href="${R.looker_dashboard}" target="_blank">Відкрити в Looker →</a>`;
-document.getElementById("benchNote").textContent=R.bench_note;
-document.getElementById("dataStart").textContent=R.data_start;
+const ML=R.month_lbl, MS=R.months;
+document.getElementById("hdr").innerHTML=`Черв–сер 2026 · ${R.partners.length} партнерів · <a href="${R.looker_url}" target="_blank">Looker →</a>`;
 document.getElementById("genAt").textContent="Згенеровано: "+R.generated_at;
 
 function fmt(v,f){
-  if(v===null||v===undefined||Number.isNaN(v))return "—";
+  if(v==null||v===""||Number.isNaN(v))return "—";
+  if(f==="eur")return "€"+Math.round(v).toLocaleString("uk-UA");
   if(f==="int")return Math.round(v).toLocaleString("uk-UA");
   if(f==="dec")return (+v).toFixed(2);
-  if(f==="pct"||f==="min")return (f==="min"?Math.round(v)+" хв":(+v).toFixed(1)+"%");
+  if(f==="pct")return (+v).toFixed(1)+"%";
+  if(f==="min")return Math.round(v)+" хв";
   return v;
 }
+function ppCell(d,lb){
+  if(!d||d==="")return "";
+  const n=parseFloat(String(d).replace(",","."));
+  if(isNaN(n))return `<span class="pp">${d}</span>`;
+  const cls=n>0?"up":n<0?"down":"";
+  const sign=n>0?"+":"";
+  return `<div class="pp ${cls}">${sign}${d}${String(d).includes("ppt")||String(d).includes("%")?"":" п.п."}</div>`;
+}
 
-document.querySelectorAll("#tabsnav button").forEach(b=>b.onclick=()=>{
-  document.querySelectorAll("#tabsnav button").forEach(x=>x.classList.toggle("active",x===b));
-  ["overview","countries","weekly","partners"].forEach(t=>{
-    document.getElementById("tab-"+t).style.display=b.dataset.tab===t?"":"none";
+document.querySelectorAll("#tabs button").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll("#tabs button").forEach(x=>x.classList.toggle("active",x===b));
+  ["overview","input","output","countries","partners"].forEach(t=>{
+    document.getElementById("p-"+t).style.display=b.dataset.t===t?"":"none";
   });
 });
 
+// Insights
 const ins=document.getElementById("insights");
 (R.insights||[]).forEach(h=>{
-  const d=document.createElement("div");d.className="hitem "+h.level;
+  const d=document.createElement("div");d.className="card "+h.level;
   d.innerHTML=`<div class="k">${h.kind}</div><div class="t">${h.text}</div>`;
   ins.appendChild(d);
 });
 
-(function(){
-  let h="<thead><tr><th>Показник</th>"+ML.map(m=>`<th>${m}</th>`).join("")+"<th>vs країни</th></tr></thead><tbody>";
-  let cur=null;
-  R.metrics.forEach(m=>{
-    if(m.group!==cur){cur=m.group;h+=`<tr class="grp"><td colspan="${ML.length+2}">${cur}</td></tr>`;}
-    h+="<tr><td>"+m.label+"</td>";
-    m.series.forEach(v=>{
-      let cls="";
-      if(v!==null&&m.bench!==null&&m.dir)cls=((m.dir===1&&v>=m.bench)||(m.dir===-1&&v<=m.bench))?"cell-good":"cell-bad";
-      h+=`<td class="${cls}">${fmt(v,m.fmt)}</td>`;
-    });
-    let vd="—",vc="eq";
-    if(m.bench!==null){
-      const a=m.series.filter(x=>x!=null);
-      const mean=a.length?a.reduce((x,y)=>x+y,0)/a.length:null;
-      if(mean!==null){
-        const rel=(mean-m.bench)/Math.abs(m.bench||1);
-        if(Math.abs(rel)<=0.05){vd="згідно";vc="eq";}
-        else if(mean>m.bench){vd="вище";vc=m.dir===-1?"down":"up";}
-        else{vd="нижче";vc=m.dir===-1?"up":"down";}
-      }
-    }
-    h+=`<td class="vd ${vc}">${vd}</td></tr>`;
-  });
-  document.getElementById("uaTable").innerHTML=h+"</tbody>";
-})();
-
+// KPI Aug overview
 (function(){
   const keys=[
-    ["orders","Замовлення","int"],["acceptance_rate","Acceptance %","pct"],["availability_rate","Availability %","pct"],
-    ["sku_availability_pct","SKU Avail %","pct"],["bad_order_rate","Bad Order %","pct"],
-    ["late_delivery_rate","Late Delivery %","pct"],["late_pickup_rate","Late Pickup %","pct"],
-    ["adjustment_rate","Order Discrepancies %","pct"],["replacement_rate","Replacements %","pct"],
-    ["item_discount_promo_share","Promo Share %","pct"],["avg_delivery_minutes","Delivery Time","min"],["avg_rating","Rating","dec"]
+    ["gmv","orders","Замовлення","int"],["gmv","gmv","GMV","eur"],
+    ["input","order_defect","Order Defect Rate","pct"],["input","order_replacement","Replacements","pct"],
+    ["input","not_delivered","Not-delivered","pct"],["input","late_delivery_10","Late Delivery 10+","pct"],
+    ["users","active_users","Active Users","int"],["funnel","conversion_rate","Conversion Rate","pct"],
   ];
-  let h="<thead><tr><th>Країна</th>"+keys.map(([,l])=>`<th>${l}</th>`).join("")+"</tr></thead><tbody>";
-  [...R.bench_rows].sort((a,b)=>(b.orders||0)-(a.orders||0)).forEach(r=>{
-    h+=`<tr class="${r.cc==='ua'?'ua-row':''}"><td>${r.name}</td>`;
-    keys.forEach(([k,,f])=>h+=`<td>${fmt(r[k],f)}</td>`);
+  let h=`<thead><tr><th>Метрика</th><th>${ML[2]} (сер)</th><th>${ML[1]} (лип)</th><th>PP (з CSV)</th></tr></thead><tbody>`;
+  keys.forEach(([sec,key,lab,f])=>{
+    const m=R.country[sec].find(x=>x.key===key);
+    const aug=m.values[2], jul=m.values[1];
+    const d=m.deltas?m.deltas[2]:null;
+    h+=`<tr><td>${lab}</td><td>${fmt(aug,f)}</td><td>${fmt(jul,f)}</td><td>${ppCell(d)}</td></tr>`;
+  });
+  document.getElementById("kpiAug").innerHTML=h+"</tbody>";
+})();
+
+function metricTable(secId, metrics, section){
+  let h=`<thead><tr><th>Метрика</th>`+ML.map(m=>`<th>${m}</th>`).join("")+`</tr></thead><tbody>`;
+  metrics.forEach(m=>{
+    const row=R.country[section].find(x=>x.key===m.key);
+    h+=`<tr><td>${m.label}</td>`;
+    row.values.forEach((v,i)=>{
+      const d=row.deltas?row.deltas[i]:null;
+      h+=`<td>${fmt(v,m.fmt)}${d?ppCell(d):""}</td>`;
+    });
     h+="</tr>";
   });
-  document.getElementById("countryTable").innerHTML=h+"</tbody>";
+  document.getElementById(secId).innerHTML=h+"</tbody>";
+}
+metricTable("tblInput",R.input_metrics,"input");
+metricTable("tblGmv",R.gmv_metrics,"gmv");
+metricTable("tblUsers",R.users_metrics,"users");
+metricTable("tblFunnel",R.funnel_metrics,"funnel");
+
+// Countries
+(function(){
+  const keys=[["order_defect","Order Defect %"],["order_replacement","Replacements %"],["not_delivered","Not-delivered %"],
+    ["late_delivery_10","Late Del 10+ %"],["delivery_time","Delivery Time"],["merchant_availability","Merchant Avail %"],["sku_availability","SKU Avail %"]];
+  let h="<thead><tr><th>Країна</th>"+keys.map(([,l])=>`<th>${l}</th>`).join("")+"</tr></thead><tbody>";
+  R.bench_rows.forEach(r=>{
+    h+=`<tr class="${r.cc==='ua'?'ua':''}"><td>${r.name}</td>`;
+    keys.forEach(([k])=>h+=`<td>${k==="delivery_time"?fmt(r[k],"min"):fmt(r[k],"pct")}</td>`);
+    h+="</tr>";
+  });
+  document.getElementById("tblCountries").innerHTML=h+"</tbody>";
 })();
 
+// Partners
 (function(){
-  const host=document.getElementById("weeklyChart");
-  const max=Math.max(...R.weekly.map(w=>w.orders));
-  R.weekly.forEach(w=>{
-    const col=document.createElement("div");col.className="bar-col";
-    const h=Math.max(4,Math.round(w.orders/max*110));
-    col.innerHTML=`<div class="bar" style="height:${h}px" title="${w.orders}"></div>
-      <div class="bar-lbl">${w.w.slice(5)}</div><div class="bar-lbl">${(w.orders/1000).toFixed(1)}k</div>`;
-    host.appendChild(col);
-  });
-  let h="<thead><tr><th>Тиждень</th><th>Замовлення</th><th>Adj %</th><th>Repl %</th><th>Bad %</th><th>Late Del %</th></tr></thead><tbody>";
-  R.weekly.forEach(w=>{
-    h+=`<tr><td>${w.w}</td><td>${fmt(w.orders,"int")}</td>
-      <td>${fmt(w.adjustment_rate,"pct")}</td><td>${fmt(w.replacement_rate,"pct")}</td>
-      <td>${fmt(w.bad_order_rate,"pct")}</td><td>${fmt(w.late_delivery_rate,"pct")}</td></tr>`;
-  });
-  document.getElementById("weeklyTable").innerHTML=h+"</tbody>";
-})();
-
-(function(){
-  let h="<thead><tr><th>#</th><th>Партнер</th><th>Замовлення</th><th>Adj %</th><th>Repl %</th><th>Promo %</th><th>Bad %</th><th>Late Del %</th><th>Late Pickup %</th><th>Accept %</th><th>SKU %</th></tr></thead><tbody>";
-  R.partners.forEach((p,i)=>{
-    const adjCls=p.adjustment_rate>25?"rank-bad":"";
-    h+=`<tr><td>${i+1}</td><td>${p.partner}</td><td>${fmt(p.orders,"int")}</td>
-      <td class="${adjCls}">${fmt(p.adjustment_rate,"pct")}</td><td>${fmt(p.replacement_rate,"pct")}</td>
-      <td>${fmt(p.item_discount_promo_share,"pct")}</td><td>${fmt(p.bad_order_rate,"pct")}</td>
-      <td>${fmt(p.late_delivery_rate,"pct")}</td><td>${fmt(p.late_pickup_rate,"pct")}</td>
-      <td>${fmt(p.acceptance_rate,"pct")}</td><td>${fmt(p.sku_availability_pct,"pct")}</td></tr>`;
-  });
-  document.getElementById("partnerRank").innerHTML=h+"</tbody>";
-  const sel=document.getElementById("partnerSel");
-  R.top_partners.forEach(p=>{const o=document.createElement("option");o.value=p;o.textContent=p;sel.appendChild(o);});
-  function renderDetail(){
-    const p=sel.value;
-    let dh="<thead><tr><th>Метрика</th>"+ML.map(m=>`<th>${m}</th>`).join("")+"</tr></thead><tbody>";
-    let cur=null;
-    R.partner_metrics.forEach(m=>{
-      if(m.group!==cur){cur=m.group;dh+=`<tr class="grp"><td colspan="${ML.length+1}">${cur}</td></tr>`;}
-      dh+=`<tr><td>${m.label}</td>`+(m.brands[p]||[]).map(v=>`<td>${fmt(v,m.fmt)}</td>`).join("")+"</tr>";
+  const sel=document.getElementById("brandSel");
+  R.partners.slice(0,30).forEach(p=>{const o=document.createElement("option");o.value=p.brand;o.textContent=p.brand;sel.appendChild(o);});
+  function render(){
+    const p=R.partners.find(x=>x.brand===sel.value)||R.partners[0];
+    let hi=`<thead><tr><th>CVP Input</th>`+ML.map(m=>`<th>${m}</th>`).join("")+"</tr></thead><tbody>";
+    R.input_metrics.forEach(m=>{
+      hi+=`<tr><td>${m.label}</td>`+MS.map(mo=>`<td>${fmt((p.input[mo]||{})[m.key],m.fmt)}</td>`).join("")+"</tr>";
     });
-    document.getElementById("partnerDetail").innerHTML=dh+"</tbody>";
+    document.getElementById("tblPartnerInput").innerHTML=hi+"</tbody>";
+    let ho=`<thead><tr><th>Output</th>`+ML.map(m=>`<th>${m}</th>`).join("")+"</tr></thead><tbody>";
+    [...R.users_metrics,...R.funnel_metrics].forEach(m=>{
+      const sec=m.key==="active_users"||m.key==="frequency"?"users":"funnel";
+      ho+=`<tr><td>${m.label}</td>`+MS.map(mo=>`<td>${fmt((p[sec][mo]||{})[m.key],m.fmt)}</td>`).join("")+"</tr>";
+    });
+    R.gmv_metrics.filter(m=>["gmv","orders"].includes(m.key)).forEach(m=>{
+      ho+=`<tr><td>${m.label}</td>`+MS.map(mo=>`<td>${fmt((p.gmv[mo]||{})[m.key],m.fmt)}</td>`).join("")+"</tr>";
+    });
+    document.getElementById("tblPartnerOut").innerHTML=ho+"</tbody>";
   }
-  sel.onchange=renderDetail;renderDetail();
+  sel.onchange=render;render();
+
+  let hr=`<thead><tr><th>#</th><th>Бренд</th><th>Mission</th><th>Orders сер</th><th>Active Users</th><th>Conv %</th><th>Order Defect</th><th>Replacements</th></tr></thead><tbody>`;
+  R.partners.slice(0,40).forEach((p,i)=>{
+    const s=p.summary;
+    hr+=`<tr><td>${i+1}</td><td>${p.brand}</td><td>${p.mission||"—"}</td>
+      <td>${fmt(s.orders,"int")}</td><td>${fmt(s.active_users,"int")}</td>
+      <td>${fmt(s.conversion,"pct")}</td><td>${fmt(s.order_defect,"pct")}</td><td>${fmt(s.order_replacement,"pct")}</td></tr>`;
+  });
+  document.getElementById("tblPartnerRank").innerHTML=hr+"</tbody>";
 })();
 </script></body></html>

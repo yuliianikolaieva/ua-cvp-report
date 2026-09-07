@@ -1,24 +1,23 @@
-# Україна — CVP Country Report
+# Україна — CVP Report (Looker 32511)
 
-Звіт по **усіх CVP метриках** Bolt Food Stores в Україні: помісячно з червня 2026, тижневий rolling, порівняння з іншими країнами Bolt Market та деталізація по **всіх партнерах**.
+Звіт по **усіх метриках** [Looker dashboard 32511](https://bolt.cloud.looker.com/dashboards/32511):
+- **CVP Input** (country + partner)
+- **CVP Output** — GMV, Users, Funnel
 
 **Живий звіт:** https://yuliianikolaieva.github.io/ua-cvp-report/
 
-## Зміст
-1. **Огляд UA** — ключові висновки, проблеми, рекомендації + помісячні метрики
-2. **Порівняння країн** — UA vs EE, LV, LT, PL, CZ, SK, RO
-3. **Тижневий rolling** — динаміка замовлень
-4. **Партнери** — рейтинг якості + деталізація по місяцях (топ-15 + повний список)
+## Період
+Останні 3 місяці (черв–сер 2026) + порівняння з попереднім місяцем (колонки Δ PP з Looker CSV).
 
-## Метрики (Looker / Databricks)
-- **Бізнес:** GMV, замовлення, активні/нові клієнти, AOV
-- **Доступність:** provider active rate
-- **Швидкість і якість:** час доставки, запізнення 10+, пізня підготовка, failed, bad order, CS, завершеність, рейтинг
-- **CVP Input:** adjustment rate, replacement rate, promo share
+## Джерела даних
+| Файл Looker | Рівень |
+|-------------|--------|
+| `📥 CVP Input (4).csv` | Україна (country) |
+| `📥 CVP Input (3).csv` | Партнери (черв + історія) |
+| `📤 CVP Output - GMV/Users/Funnel` | Україна + партнери |
+| Databricks | Країни (EE, LV, LT, PL, CZ, SK, RO), partner CVP Input Jul–Aug, partner GMV |
 
 ## Оновлення
-```bash
-python3 cvp_generate.py
-```
-
-Джерело: `main.ng_delivery` (Databricks). Потрібен `.env` з Databricks credentials.
+1. Експортуйте CSV з Looker dashboard 32511 у папку `data/`
+2. `python3 cvp_generate.py`
+3. `git push` → GitHub Pages оновиться автоматично
