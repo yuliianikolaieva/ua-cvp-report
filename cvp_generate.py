@@ -17,7 +17,8 @@ _ROOT = Path(__file__).parent
 _STORES = _ROOT.parent / "Stores-internal-weekly-report"
 
 DATA_START = "2026-06-01"
-DATA_END = "2026-09-07"
+# Лише повні місяці (вересень частковий — виключаємо з monthly)
+DATA_END = "2026-09-01"
 COUNTRIES = ["ua", "ee", "lv", "lt", "pl", "cz", "sk", "ro"]
 COUNTRY_NAMES = {
     "ua": "Україна", "ee": "Естонія", "lv": "Латвія", "lt": "Литва",
