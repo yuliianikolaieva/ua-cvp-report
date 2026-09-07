@@ -227,10 +227,15 @@ def build_country_section():
     }
 
 
+def _input_partner_path():
+    p5 = _DATA / "📥 CVP Input (5).csv"
+    return p5 if p5.exists() else _DATA / "📥 CVP Input (3).csv"
+
+
 def build_partners():
     _, users = parse_looker_csv(_DATA / "📤 CVP Output - Users (8).csv")
     _, funnel = parse_looker_csv(_DATA / "📤 CVP Output - Funnel (6).csv")
-    _, input_p = parse_looker_csv(_DATA / "📥 CVP Input (3).csv")
+    _, input_p = parse_looker_csv(_input_partner_path())
 
     by_brand = {}
     for r in users:
@@ -248,18 +253,20 @@ def build_partners():
         b = r["brand"]
         if b not in by_brand:
             by_brand[b] = {"brand": b, "mission": r["id"][1]}
-        by_brand[b]["input"] = {m: map_input_row(r, m) for m in r if m.startswith("2026-")}
+        by_brand[b]["input"] = {
+            m: map_input_row(r, m) for m in MONTHS if m in r
+        }
+        by_brand[b]["input_delta"] = {
+            m: map_input_delta(r, m) for m in MONTHS if m in r
+        }
 
-    # Databricks: partner CVP Input Jul/Aug + GMV all months
-    db_partners = fetch_partner_db()
+    # GMV по партнерах — лише Databricks (немає в Looker CSV export)
+    db_partners = fetch_partner_db(gmv_only=True)
     for b, db in db_partners.items():
         if b not in by_brand:
             by_brand[b] = {"brand": b, "mission": db.get("mission", "")}
-        by_brand[b].setdefault("input", {})
         by_brand[b].setdefault("gmv", {})
         for m in MONTHS:
-            if m in db.get("input", {}):
-                by_brand[b]["input"][m] = {**by_brand[b]["input"].get(m, {}), **db["input"][m]}
             if m in db.get("gmv", {}):
                 by_brand[b]["gmv"][m] = db["gmv"][m]
 
@@ -276,6 +283,7 @@ def build_partners():
             "users": d.get("users", {}),
             "funnel": d.get("funnel", {}),
             "input": d.get("input", {}),
+            "input_delta": d.get("input_delta", {}),
             "gmv": d.get("gmv", {}),
             "summary": {
                 "active_users": aug_users.get("active_users"),
@@ -295,7 +303,7 @@ def build_partners():
     return partners
 
 
-def fetch_partner_db():
+def fetch_partner_db(gmv_only=False):
     try:
         from databricks import sql as dbsql
     except ImportError:
@@ -312,7 +320,9 @@ def fetch_partner_db():
     )
     cur = conn.cursor()
     vertical = "(p.delivery_vertical IN ('store_3p_ent','store_3p_mm_smb','store_unclassified') OR p.group_name IN ('ANRI-PHARM','BRSM','VAPORS','PIVASOV'))"
-    cur.execute(f"""
+
+    if not gmv_only:
+        cur.execute(f"""
       SELECT p.group_name AS brand, MAX(p.store_shopping_mission) AS mission,
         DATE_FORMAT(DATE_TRUNC('month', m.metric_timestamp_local), 'yyyy-MM') AS m,
         COUNT(DISTINCT CASE WHEN m.delivered_orders_count>0 THEN m.provider_id END) AS active_merchants,
@@ -329,8 +339,8 @@ def fetch_partner_db():
       WHERE p.country_code='ua' AND m.metric_timestamp_local>='{MONTHS[0]}-01' AND m.metric_timestamp_local<'2026-09-01' AND {vertical}
       GROUP BY p.group_name, DATE_TRUNC('month', m.metric_timestamp_local)
     """)
-    mon = cur.fetchall()
-    cur.execute(f"""
+        mon = cur.fetchall()
+        cur.execute(f"""
       SELECT p.group_name AS brand, DATE_FORMAT(DATE_TRUNC('month', w.metric_timestamp_local), 'yyyy-MM') AS m,
         SUM(w.order_item_replacement_rate_value*w.order_item_replacement_rate_weight)/NULLIF(SUM(w.order_item_replacement_rate_weight),0)*100 AS order_replacement
       FROM main.ng_delivery.fact_provider_weekly w
@@ -338,7 +348,10 @@ def fetch_partner_db():
       WHERE p.country_code='ua' AND w.metric_timestamp_local>='{MONTHS[0]}-01' AND w.metric_timestamp_local<'2026-09-01' AND {vertical}
       GROUP BY p.group_name, DATE_TRUNC('month', w.metric_timestamp_local)
     """)
-    repl = {(r[0], r[1]): r[2] for r in cur.fetchall()}
+        repl = {(r[0], r[1]): r[2] for r in cur.fetchall()}
+    else:
+        mon, repl = [], {}
+
     cur.execute(f"""
       SELECT p.group_name AS brand, DATE_FORMAT(DATE_TRUNC('month', f.order_created_date), 'yyyy-MM') AS m,
         COUNT(*) AS orders, ROUND(SUM(f.order_gmv_eur),0) AS gmv
@@ -353,20 +366,21 @@ def fetch_partner_db():
     conn.close()
 
     out = {}
-    for r in mon:
-        brand, mission, m = r[0], r[1], r[2]
-        out.setdefault(brand, {"mission": mission, "input": {}, "gmv": {}})
-        out[brand]["input"][m] = {
-            "active_merchants": r[3], "merchant_availability": round(r[4], 1) if r[4] else None,
-            "sku_availability": round(r[5], 1) if r[5] else None,
-            "item_promo_gmv": round(r[6], 2) if r[6] else None,
-            "not_delivered": round(r[7], 1) if r[7] else None,
-            "delivery_time": round(r[8], 1) if r[8] else None,
-            "late_delivery_10": round(r[9], 1) if r[9] else None,
-            "order_defect": round(r[10], 1) if r[10] else None,
-            "cs_ticket": round(r[11], 1) if r[11] else None,
-            "order_replacement": round(repl.get((brand, m)), 1) if repl.get((brand, m)) else None,
-        }
+    if not gmv_only:
+        for r in mon:
+            brand, mission, m = r[0], r[1], r[2]
+            out.setdefault(brand, {"mission": mission, "input": {}, "gmv": {}})
+            out[brand]["input"][m] = {
+                "active_merchants": r[3], "merchant_availability": round(r[4], 1) if r[4] else None,
+                "sku_availability": round(r[5], 1) if r[5] else None,
+                "item_promo_gmv": round(r[6], 2) if r[6] else None,
+                "not_delivered": round(r[7], 1) if r[7] else None,
+                "delivery_time": round(r[8], 1) if r[8] else None,
+                "late_delivery_10": round(r[9], 1) if r[9] else None,
+                "order_defect": round(r[10], 1) if r[10] else None,
+                "cs_ticket": round(r[11], 1) if r[11] else None,
+                "order_replacement": round(repl.get((brand, m)), 1) if repl.get((brand, m)) else None,
+            }
     for brand, m, orders, gmv in gmv_rows:
         out.setdefault(brand, {"mission": "", "input": {}, "gmv": {}})
         out[brand]["gmv"][m] = {"orders": int(orders), "gmv": float(gmv)}

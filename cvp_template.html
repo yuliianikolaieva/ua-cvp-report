@@ -69,7 +69,7 @@ footer{font-size:11px;color:var(--muted);margin-top:24px;padding-top:12px;border
   <h3>Рейтинг (серпень)</h3><div class="tbl"><table id="tblPartnerRank"></table></div>
 </div>
 
-<footer>Джерело: <a href="https://bolt.cloud.looker.com/dashboards/32511" target="_blank">Looker dashboard 32511</a> CSV exports + Databricks для країн / partner CVP Input Jul–Aug. <span id="genAt"></span></footer>
+<footer>Джерело: <a href="https://bolt.cloud.looker.com/dashboards/32511" target="_blank">Looker dashboard 32511</a> CSV exports (CVP Input 4/5, Output GMV/Users/Funnel) + Databricks для країн / partner GMV. <span id="genAt"></span></footer>
 </div>
 <script>
 const R=/*__CVP_DATA__*/;
@@ -167,7 +167,12 @@ metricTable("tblFunnel",R.funnel_metrics,"funnel");
     const p=R.partners.find(x=>x.brand===sel.value)||R.partners[0];
     let hi=`<thead><tr><th>CVP Input</th>`+ML.map(m=>`<th>${m}</th>`).join("")+"</tr></thead><tbody>";
     R.input_metrics.forEach(m=>{
-      hi+=`<tr><td>${m.label}</td>`+MS.map(mo=>`<td>${fmt((p.input[mo]||{})[m.key],m.fmt)}</td>`).join("")+"</tr>";
+      hi+=`<tr><td>${m.label}</td>`+MS.map(mo=>{
+        const v=(p.input[mo]||{})[m.key];
+        const d=(p.input_delta||{})[mo];
+        const delta=d?d[m.key]:null;
+        return `<td>${fmt(v,m.fmt)}${delta?ppCell(delta):""}</td>`;
+      }).join("")+"</tr>";
     });
     document.getElementById("tblPartnerInput").innerHTML=hi+"</tbody>";
     let ho=`<thead><tr><th>Output</th>`+ML.map(m=>`<th>${m}</th>`).join("")+"</tr></thead><tbody>";

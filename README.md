@@ -12,10 +12,10 @@
 ## Джерела даних
 | Файл Looker | Рівень |
 |-------------|--------|
+| `📥 CVP Input (5).csv` | Партнери (черв–сер + PP) |
 | `📥 CVP Input (4).csv` | Україна (country) |
-| `📥 CVP Input (3).csv` | Партнери (черв + історія) |
 | `📤 CVP Output - GMV/Users/Funnel` | Україна + партнери |
-| Databricks | Країни (EE, LV, LT, PL, CZ, SK, RO), partner CVP Input Jul–Aug, partner GMV |
+| Databricks | Країни (EE, LV, LT, PL, CZ, SK, RO), partner GMV |
 
 ## Оновлення
 1. Експортуйте CSV з Looker dashboard 32511 у папку `data/`
