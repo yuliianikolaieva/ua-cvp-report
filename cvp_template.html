@@ -174,7 +174,7 @@ metricTable("tblFunnel",R.funnel_metrics,"funnel");
     const m=Math.floor(v.length/2);
     return v.length%2?v[m]:(v[m-1]+v[m])/2;
   }
-  function uaCell(k,fmt,lb){
+  function uaCell(k, fmtType, lb){
     const v=ua[k], m=med(k);
     if(v==null)return `<td>—</td>`;
     let cls="cell-neu";
@@ -183,7 +183,7 @@ metricTable("tblFunnel",R.funnel_metrics,"funnel");
       const worse=lb?(v>m):(v<m);
       if(better)cls="cell-good"; else if(worse)cls="cell-bad";
     }
-    return `<td class="${cls}">${fmt==="min"?fmt(v,"min"):fmt(v,fmt)}</td>`;
+    return `<td class="${cls}">${fmtType==="min"?fmt(v,"min"):fmt(v,fmtType)}</td>`;
   }
   let h="<thead><tr><th>Країна</th>"+defs.map(d=>`<th>${d.label}</th>`).join("")+"</tr></thead><tbody>";
   R.bench_rows.forEach(r=>{
