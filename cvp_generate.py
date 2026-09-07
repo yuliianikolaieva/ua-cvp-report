@@ -135,6 +135,12 @@ def num(v):
         return None
 
 
+def rnd(v, d=1):
+    if v is None:
+        return None
+    return round(float(v), d)
+
+
 def pick_val(row, month, looker_name):
     return row.get(month, {}).get(looker_name)
 
@@ -448,6 +454,185 @@ def fetch_country_bench():
     return rows
 
 
+def fetch_country_bench_full():
+    """Розширені метрики країн: CVP Input + Output (черв–сер агрегат, серпень для output)."""
+    bench = fetch_country_bench()
+    by_cc = {r["cc"]: r for r in bench}
+
+    # Output country-level: GMV/Users з CSV для UA, Databricks для інших
+    _, gmv_rows = parse_looker_csv(_DATA / "📤 CVP Output - GMV (4).csv")
+    _, users_rows = parse_looker_csv(_DATA / "📤 CVP Output - Users (7).csv")
+    ua_gmv = map_gmv_row(gmv_rows[0], "2026-08")
+    ua_users = map_users_row(users_rows[0], "2026-08")
+    by_cc["ua"].update({
+        "orders": ua_gmv.get("orders"), "gmv": ua_gmv.get("gmv"),
+        "active_users": ua_users.get("active_users"), "frequency": ua_users.get("frequency"),
+    })
+
+    try:
+        from databricks import sql as dbsql
+        kwargs = {}
+        if os.environ.get("DATABRICKS_TLS_NO_VERIFY", "").lower() in ("1", "true", "yes"):
+            kwargs["_tls_no_verify"] = True
+        conn = dbsql.connect(
+            server_hostname=os.environ["DATABRICKS_HOST"],
+            http_path=f"/sql/1.0/warehouses/{os.environ['DATABRICKS_WAREHOUSE_ID']}",
+            access_token=os.environ["DATABRICKS_TOKEN"],
+            **kwargs,
+        )
+        cur = conn.cursor()
+        peers = ",".join(f"'{c}'" for c in COUNTRIES if c != "ua")
+        vertical = "p.delivery_vertical LIKE 'store_%' AND p.is_bolt_market_provider=true"
+        cur.execute(f"""
+          SELECT f.city_country_code AS cc,
+            COUNT(*) AS orders, ROUND(SUM(f.order_gmv_eur),0) AS gmv,
+            COUNT(DISTINCT f.user_id) AS active_users
+          FROM main.ng_delivery.fact_order_delivery f
+          JOIN main.ng_delivery.dim_provider_v2 p ON f.provider_id=p.provider_id
+          WHERE f.city_country_code IN ({peers}) AND f.order_state='delivered'
+            AND f.order_created_date>='2026-08-01' AND f.order_created_date<'2026-09-01' AND {vertical}
+          GROUP BY 1
+        """)
+        for cc, orders, gmv, au in cur.fetchall():
+            by_cc.setdefault(cc, {"cc": cc, "name": COUNTRY_NAMES.get(cc, cc)})
+            by_cc[cc].update({"orders": int(orders), "gmv": float(gmv), "active_users": int(au),
+                              "frequency": round(orders / au, 2) if au else None})
+        cur.close()
+        conn.close()
+    except Exception as e:
+        print("WARN country output:", e)
+
+    # Повний список метрик для таблиці країн
+    metric_defs = [
+        ("orders", "Orders", "int", False),
+        ("gmv", "GMV", "eur", False),
+        ("active_users", "Active Users", "int", False),
+        ("frequency", "Frequency", "dec", False),
+        ("merchant_availability", "Merchant Availability %", "pct", False),
+        ("sku_availability", "SKU Availability %", "pct", False),
+        ("not_delivered", "Not-delivered %", "pct", True),
+        ("delivery_time", "Delivery Time", "min", True),
+        ("late_delivery_10", "Late Delivery 10+ %", "pct", True),
+        ("order_defect", "Order Defect %", "pct", True),
+        ("order_replacement", "Replacements %", "pct", True),
+    ]
+    rows = [by_cc[cc] for cc in COUNTRIES if cc in by_cc]
+    return rows, metric_defs
+
+
+def fetch_foreign_partners():
+    """Партнери інших країн — CVP Input + Output (Databricks, черв–сер)."""
+    try:
+        from databricks import sql as dbsql
+    except ImportError:
+        return {}
+    kwargs = {}
+    if os.environ.get("DATABRICKS_TLS_NO_VERIFY", "").lower() in ("1", "true", "yes"):
+        kwargs["_tls_no_verify"] = True
+    conn = dbsql.connect(
+        server_hostname=os.environ["DATABRICKS_HOST"],
+        http_path=f"/sql/1.0/warehouses/{os.environ['DATABRICKS_WAREHOUSE_ID']}",
+        access_token=os.environ["DATABRICKS_TOKEN"],
+        **kwargs,
+    )
+    cur = conn.cursor()
+    peers = ",".join(f"'{c}'" for c in COUNTRIES if c != "ua")
+    vertical = "p.delivery_vertical LIKE 'store_%' AND p.is_bolt_market_provider=true"
+
+    cur.execute(f"""
+      SELECT p.country_code AS cc, p.group_name AS brand, MAX(p.store_shopping_mission) AS mission,
+        DATE_FORMAT(DATE_TRUNC('month', m.metric_timestamp_local), 'yyyy-MM') AS m,
+        COUNT(DISTINCT CASE WHEN m.delivered_orders_count>0 THEN m.provider_id END) AS active_merchants,
+        SUM(m.provider_active_rate_value*m.provider_active_rate_weight)/NULLIF(SUM(m.provider_active_rate_weight),0)*100 AS merchant_availability,
+        SUM(m.provider_sku_session_availability_rate_value)/NULLIF(SUM(m.provider_sku_session_availability_rate_weight),0)*100 AS sku_availability,
+        SUM(m.provider_campaign_discount_gmv_share_value*m.provider_campaign_discount_gmv_share_weight)/NULLIF(SUM(m.provider_campaign_discount_gmv_share_weight),0)*100 AS item_promo_gmv,
+        SUM(m.failed_order_rate_value*m.failed_order_rate_weight)/NULLIF(SUM(m.failed_order_rate_weight),0)*100 AS not_delivered,
+        SUM(m.order_total_minutes_per_order_value*m.order_total_minutes_per_order_weight)/NULLIF(SUM(m.order_total_minutes_per_order_weight),0) AS delivery_time,
+        SUM(m.late_delivery_order_10min_rate_value*m.late_delivery_order_10min_rate_weight)/NULLIF(SUM(m.late_delivery_order_10min_rate_weight),0)*100 AS late_delivery_10,
+        SUM(m.order_item_adjustment_rate_value*m.order_item_adjustment_rate_weight)/NULLIF(SUM(m.order_item_adjustment_rate_weight),0)*100 AS order_defect,
+        SUM(m.cs_ticket_order_rate_value*m.cs_ticket_order_rate_weight)/NULLIF(SUM(m.cs_ticket_order_rate_weight),0)*100 AS cs_ticket,
+        SUM(m.delivered_orders_count) AS orders_m
+      FROM main.ng_delivery.fact_provider_monthly m
+      JOIN main.ng_delivery.dim_provider_v2 p ON m.provider_id=p.provider_id
+      WHERE p.country_code IN ({peers}) AND m.metric_timestamp_local>='{MONTHS[0]}-01' AND m.metric_timestamp_local<'2026-09-01' AND {vertical}
+      GROUP BY p.country_code, p.group_name, DATE_TRUNC('month', m.metric_timestamp_local)
+      HAVING SUM(m.delivered_orders_count) >= 30
+    """)
+    mon = cur.fetchall()
+
+    cur.execute(f"""
+      SELECT p.country_code, p.group_name, DATE_FORMAT(DATE_TRUNC('month', w.metric_timestamp_local), 'yyyy-MM') AS m,
+        SUM(w.order_item_replacement_rate_value*w.order_item_replacement_rate_weight)/NULLIF(SUM(w.order_item_replacement_rate_weight),0)*100 AS order_replacement
+      FROM main.ng_delivery.fact_provider_weekly w
+      JOIN main.ng_delivery.dim_provider_v2 p ON w.provider_id=p.provider_id
+      WHERE p.country_code IN ({peers}) AND w.metric_timestamp_local>='{MONTHS[0]}-01' AND w.metric_timestamp_local<'2026-09-01' AND {vertical}
+      GROUP BY p.country_code, p.group_name, DATE_TRUNC('month', w.metric_timestamp_local)
+    """)
+    repl = {(r[0], r[1], r[2]): r[3] for r in cur.fetchall()}
+
+    cur.execute(f"""
+      SELECT p.country_code, p.group_name, DATE_FORMAT(DATE_TRUNC('month', f.order_created_date), 'yyyy-MM') AS m,
+        COUNT(*) AS orders, ROUND(SUM(f.order_gmv_eur),0) AS gmv, COUNT(DISTINCT f.user_id) AS active_users
+      FROM main.ng_delivery.fact_order_delivery f
+      JOIN main.ng_delivery.dim_provider_v2 p ON f.provider_id=p.provider_id
+      WHERE f.city_country_code IN ({peers}) AND f.order_state='delivered'
+        AND f.order_created_date>='{MONTHS[0]}-01' AND f.order_created_date<'2026-09-01' AND {vertical}
+      GROUP BY p.country_code, p.group_name, DATE_TRUNC('month', f.order_created_date)
+      HAVING COUNT(*) >= 30
+    """)
+    gmv_rows = cur.fetchall()
+    cur.close()
+    conn.close()
+
+    by_country = {cc: {} for cc in COUNTRIES if cc != "ua"}
+
+    def _inp(r):
+        cc, brand, mission, m = r[0], r[1], r[2], r[3]
+        return {
+            "active_merchants": r[4], "merchant_availability": rnd(r[5]), "sku_availability": rnd(r[6]),
+            "item_promo_gmv": rnd(r[7], 2), "not_delivered": rnd(r[8]), "delivery_time": rnd(r[9]),
+            "late_delivery_10": rnd(r[10]), "order_defect": rnd(r[11]), "cs_ticket": rnd(r[12]),
+            "order_replacement": rnd(repl.get((cc, brand, m))),
+        }
+
+    for r in mon:
+        cc, brand, mission, m = r[0], r[1], r[2], r[3]
+        by_country[cc].setdefault(brand, {"brand": brand, "mission": mission or "", "input": {}, "gmv": {}, "users": {}})
+        by_country[cc][brand]["input"][m] = _inp(r)
+
+    for cc, brand, m, orders, gmv, au in gmv_rows:
+        by_country[cc].setdefault(brand, {"brand": brand, "mission": "", "input": {}, "gmv": {}, "users": {}})
+        by_country[cc][brand]["gmv"][m] = {"orders": int(orders), "gmv": float(gmv)}
+        by_country[cc][brand]["users"][m] = {
+            "active_users": int(au),
+            "frequency": rnd(orders / au, 2) if au else None,
+        }
+
+    out = {}
+    for cc, brands in by_country.items():
+        plist = []
+        for brand, d in brands.items():
+            aug_in = d["input"].get("2026-08", {})
+            aug_g = d["gmv"].get("2026-08", {})
+            aug_u = d["users"].get("2026-08", {})
+            total_orders = sum((d["gmv"].get(m) or {}).get("orders", 0) for m in MONTHS)
+            if total_orders < 100:
+                continue
+            plist.append({
+                "brand": brand, "mission": d.get("mission", ""),
+                "input": d["input"], "gmv": d["gmv"], "users": d["users"],
+                "summary": {
+                    "orders": aug_g.get("orders"), "gmv": aug_g.get("gmv"),
+                    "active_users": aug_u.get("active_users"), "frequency": aug_u.get("frequency"),
+                    "order_defect": aug_in.get("order_defect"), "order_replacement": aug_in.get("order_replacement"),
+                    "not_delivered": aug_in.get("not_delivered"),
+                },
+            })
+        plist.sort(key=lambda x: -(x["summary"].get("orders") or 0))
+        out[cc] = plist[:40]
+    return out
+
+
 def build_insights(country, bench_rows):
     insights = []
     aug = {m["key"]: m["values"][-1] for sec in [country["input"], country["gmv"], country["users"], country["funnel"]]
@@ -502,8 +687,9 @@ def main():
 
     country = build_country_section()
     partners = build_partners()
-    bench = fetch_country_bench()
-    insights = build_insights(country, bench)
+    bench_rows, bench_metric_defs = fetch_country_bench_full()
+    foreign_partners = fetch_foreign_partners()
+    insights = build_insights(country, bench_rows)
 
     R = {
         "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
@@ -512,7 +698,10 @@ def main():
         "month_lbl": [MONTH_LBL[m] for m in MONTHS],
         "country": country,
         "partners": partners,
-        "bench_rows": bench,
+        "bench_rows": bench_rows,
+        "bench_metric_defs": [{"key": k, "label": l, "fmt": f, "lower_better": lb} for k, l, f, lb in bench_metric_defs],
+        "foreign_partners": foreign_partners,
+        "country_names": COUNTRY_NAMES,
         "insights": insights,
         "input_metrics": [{"key": k, "label": l, "fmt": f} for k, l, f in INPUT_VAL],
         "gmv_metrics": [{"key": k, "label": l, "fmt": f} for k, l, f in GMV_VAL],
@@ -523,7 +712,7 @@ def main():
     (_ROOT / "cvp_data.json").write_text(json.dumps(R, ensure_ascii=False, indent=2), encoding="utf-8")
     tpl = (_ROOT / "cvp_template.html").read_text(encoding="utf-8")
     (_ROOT / "index.html").write_text(tpl.replace("/*__CVP_DATA__*/", json.dumps(R, ensure_ascii=False)), encoding="utf-8")
-    print(f"OK | partners={len(partners)} | insights={len(insights)}")
+    print(f"OK | partners={len(partners)} | foreign={sum(len(v) for v in foreign_partners.values())} | insights={len(insights)}")
 
 
 if __name__ == "__main__":
