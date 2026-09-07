@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="uk"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Україна · CVP звіт 2026</title>
+<style>
+:root{--bg:#0f1115;--panel:#171a21;--panel2:#1e222b;--line:#2a2f3a;--txt:#e7eaf0;--muted:#9aa4b2;
+--accent:#34d399;--accent2:#60a5fa;--bad:#f87171;--good:#34d399;--warn:#fbbf24;--neu:#94a3b8;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.5}
+.wrap{max-width:1280px;margin:0 auto;padding:24px 18px 80px}
+header.top{border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:14px}
+.badge{display:inline-block;background:rgba(52,211,153,.14);color:var(--accent);font-size:12px;font-weight:600;padding:4px 10px;border-radius:20px}
+h1{font-size:27px;margin:12px 0 6px}h2{font-size:19px;margin:28px 0 12px}
+.sub{color:var(--muted);font-size:14px}
+.tabsnav{display:inline-flex;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:4px;gap:3px;margin:10px 0}
+.tabsnav button{background:transparent;border:none;color:var(--muted);padding:9px 16px;border-radius:9px;cursor:pointer;font-size:13px;font-weight:700}
+.tabsnav button.active{background:var(--accent);color:#0a0d12}
+.hl{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+.hitem{border-left:3px solid var(--line);padding:10px 14px;background:var(--panel);border-radius:0 10px 10px 0;margin-bottom:8px}
+.hitem.crit{border-left-color:var(--bad)}.hitem.watch{border-left-color:var(--warn)}.hitem.win{border-left-color:var(--good)}
+.hitem .k{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--muted)}.hitem .t{font-size:13px;margin-top:4px}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;margin-bottom:18px}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th,td{padding:7px 8px;text-align:right;border-bottom:1px solid var(--line)}
+th:first-child,td:first-child{text-align:left}
+thead th{background:var(--panel);color:var(--muted);font-size:11px;font-weight:600}
+tbody tr:hover td{background:var(--panel2)}
+.grp td{color:var(--accent2);font-weight:700;font-size:11px;text-transform:uppercase;background:var(--panel2)}
+.cell-bad{color:var(--bad)}.cell-good{color:var(--good)}
+.vd{font-weight:700;font-size:11px}.vd.up{color:var(--good)}.vd.down{color:var(--bad)}.vd.eq{color:var(--neu)}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:16px}
+.chart-bars{display:flex;align-items:flex-end;gap:6px;height:120px;padding:10px 0}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.bar{width:100%;max-width:48px;background:var(--accent2);border-radius:4px 4px 0 0;min-height:2px}
+.bar-lbl{font-size:10px;color:var(--muted);text-align:center}
+.ua-row td{background:rgba(52,211,153,.06);font-weight:600}
+.filter{margin:12px 0}
+.filter select{padding:8px 12px;border-radius:8px;border:1px solid var(--line);background:var(--panel2);color:var(--txt)}
+footer{color:var(--muted);font-size:12px;border-top:1px solid var(--line);margin-top:34px;padding-top:16px}
+.rank-bad{color:var(--bad);font-weight:700}
+</style></head><body><div class="wrap">
+<header class="top">
+  <span class="badge">BOLT FOOD · UKRAINE · CVP COUNTRY REPORT</span>
+  <h1>Україна — CVP звіт</h1>
+  <div class="sub" id="ovSub"></div>
+  <div class="tabsnav" id="tabsnav">
+    <button data-tab="overview" class="active">Огляд UA</button>
+    <button data-tab="countries">Порівняння країн</button>
+    <button data-tab="weekly">Тижневий rolling</button>
+    <button data-tab="partners">Партнери</button>
+  </div>
+</header>
+
+<div id="tab-overview">
+<section><h2>Ключові висновки</h2><div class="hl" id="insights"></div></section>
+<section><h2>Україна — помісячні CVP метрики</h2>
+  <div class="sub" style="margin-bottom:8px">Орієнтир: <span id="benchNote"></span>. Зелений = краще за медіану країн, червоний = гірше.</div>
+  <div class="tablewrap"><table id="uaTable"></table></div>
+</section>
+</div>
+
+<div id="tab-countries" style="display:none">
+<section><h2>Україна vs інші країни Bolt Market</h2>
+  <div class="sub" style="margin-bottom:8px">Агрегат черв–сер 2026. Джерело: Looker / Databricks fact_provider_monthly & weekly.</div>
+  <div class="tablewrap"><table id="countryTable"></table></div>
+</section>
+</div>
+
+<div id="tab-weekly" style="display:none">
+<section><h2>Тижневий rolling (замовлення)</h2>
+  <div class="panel"><div class="chart-bars" id="weeklyChart"></div></div>
+</section>
+</div>
+
+<div id="tab-partners" style="display:none">
+<section><h2>Усі партнери — рейтинг якості</h2>
+  <div class="sub" style="margin-bottom:8px">Середнє черв–сер 2026, сортовано за обсягом. Клік на партнера — деталізація по місяцях.</div>
+  <div class="tablewrap"><table id="partnerRank"></table></div>
+  <div class="filter"><label>Партнер: </label><select id="partnerSel"></select></div>
+  <div class="tablewrap"><table id="partnerDetail"></table></div>
+</div>
+
+<footer><b>Методологія.</b> Databricks <code>main.ng_delivery</code>: <code>fact_order_delivery</code>, <code>fact_provider_monthly</code>, <code>fact_provider_weekly</code>. Вертикаль store_3p + key accounts. CVP Input: adjustment rate, replacement rate, promo share (Stores report). Період з <span id="dataStart"></span>. <span id="genAt"></span></footer>
+</div>
+<script>
+const R={"generated_at": "2026-09-07 07:43 UTC", "period": "червень–вер 2026", "data_start": "2026-06-01", "months": ["2026-06", "2026-07", "2026-08", "2026-09"], "month_lbl": ["Чер", "Лип", "Сер", "Вер"], "metrics": [{"key": "orders", "label": "Замовлення", "dir": 1, "fmt": "int", "group": "Бізнес", "bench": 66372, "series": [35724, 39299, 49112, 9501]}, {"key": "gmv_eur", "label": "GMV (€)", "dir": 1, "fmt": "eur", "group": "Бізнес", "bench": 2223141.0, "series": [441844, 513210, 648903, 128548]}, {"key": "active_users", "label": "Активні клієнти", "dir": 1, "fmt": "int", "group": "Бізнес", "bench": null, "series": [14791, 15883, 20393, 6278]}, {"key": "new_users", "label": "Нові клієнти", "dir": 1, "fmt": "int", "group": "Бізнес", "bench": null, "series": [1196, 1270, 1922, 320]}, {"key": "aov", "label": "Середній чек (AOV)", "dir": 1, "fmt": "eur", "group": "Бізнес", "bench": null, "series": [12.4, 13.1, 13.2, 13.5]}, {"key": "availability", "label": "Доступність магазинів, %", "dir": 1, "fmt": "pct", "group": "Доступність", "bench": 77.5, "series": [77.1, 79.4, 80.3, 80.8]}, {"key": "dur", "label": "Час доставки, хв", "dir": -1, "fmt": "min", "group": "Швидкість і якість", "bench": 33.7, "series": [28.4, 29.4, 32.0, 32.0]}, {"key": "late", "label": "Запізнення 10+, %", "dir": -1, "fmt": "pct", "group": "Швидкість і якість", "bench": 5.8, "series": [5.7, 5.4, 6.2, 6.8]}, {"key": "lateprep", "label": "Пізня підготовка 10+, %", "dir": -1, "fmt": "pct", "group": "Швидкість і якість", "bench": 5.5, "series": [5.4, 5.9, 9.6, 7.9]}, {"key": "failed", "label": "Зірвані замовлення, %", "dir": -1, "fmt": "pct", "group": "Швидкість і якість", "bench": 3.4, "series": [7.0, 5.7, 7.9, 11.6]}, {"key": "bad", "label": "Bad Order Rate, %", "dir": -1, "fmt": "pct", "group": "Швидкість і якість", "bench": 12.7, "series": [14.8, 13.5, 16.7, 21.4]}, {"key": "adj", "label": "Розбіжності (adjustment), %", "dir": -1, "fmt": "pct", "group": "CVP Input", "bench": 15.6, "series": [18.3, 21.3, 25.5, null]}, {"key": "repl", "label": "Заміни товарів, %", "dir": -1, "fmt": "pct", "group": "CVP Input", "bench": 18.9, "series": [27.2, 39.3, 39.5, null]}, {"key": "promo", "label": "Промо-частка, %", "dir": -1, "fmt": "pct", "group": "CVP Input", "bench": null, "series": [3.1, 2.7, 5.0, null]}, {"key": "cs", "label": "CS-тікети, %", "dir": -1, "fmt": "pct", "group": "Швидкість і якість", "bench": 4.6, "series": [3.8, 3.9, 4.6, 4.4]}, {"key": "compl", "label": "Завершеність, %", "dir": 1, "fmt": "pct", "group": "Швидкість і якість", "bench": 96.6, "series": [93.0, 94.3, 92.1, 88.3]}, {"key": "rating", "label": "Рейтинг", "dir": 1, "fmt": "dec", "group": "Швидкість і якість", "bench": 4.6, "series": [4.77, 4.75, 4.73, 4.71]}], "bench_rows": [{"cc": "ua", "name": "Україна", "bad": 15.6, "late": 5.9, "lateprep": 7.3, "failed": 7.3, "compl": 92.7, "rating": 4.74, "availability": 79.1, "dur": 30.3, "cs": 4.1, "adj": 22.1, "repl": 36.3, "orders": 133639, "gmv_eur": 1732528.0}, {"cc": "ee", "name": "Естонія", "bad": 9.2, "late": 4.0, "lateprep": 0.8, "failed": 3.7, "compl": 96.3, "rating": 4.81, "availability": 76.6, "dur": 28.1, "cs": 2.1, "adj": 13.3, "repl": 34.0, "orders": 216703, "gmv_eur": 7209553.0}, {"cc": "lv", "name": "Латвія", "bad": 10.8, "late": 4.6, "lateprep": 2.0, "failed": 3.8, "compl": 96.2, "rating": 4.72, "availability": 77.5, "dur": 33.9, "cs": 3.6, "adj": 13.4, "repl": 15.3, "orders": 66372, "gmv_eur": 2223141.0}, {"cc": "lt", "name": "Литва", "bad": 12.7, "late": 7.0, "lateprep": 5.5, "failed": 2.6, "compl": 97.4, "rating": 4.64, "availability": 87.5, "dur": 33.7, "cs": 4.5, "adj": 25.1, "repl": 61.6, "orders": 170054, "gmv_eur": 5828546.0}, {"cc": "pl", "name": "Польща", "bad": 10.8, "late": 5.4, "lateprep": 8.5, "failed": 2.8, "compl": 97.2, "rating": 4.59, "availability": 82.6, "dur": 34.9, "cs": 5.8, "adj": 6.8, "repl": 15.2, "orders": 64857, "gmv_eur": 1869953.0}, {"cc": "cz", "name": "Чехія", "bad": 13.6, "late": 5.8, "lateprep": 4.1, "failed": 4.8, "compl": 95.2, "rating": 4.58, "availability": 73.3, "dur": 30.5, "cs": 4.6, "adj": 15.6, "repl": 18.9, "orders": 32951, "gmv_eur": 788008.0}, {"cc": "sk", "name": "Словаччина", "bad": 13.3, "late": 6.4, "lateprep": 5.6, "failed": 2.4, "compl": 97.6, "rating": 4.45, "availability": 74.8, "dur": 29.7, "cs": 5.7, "adj": 36.7, "repl": 29.4, "orders": 35357, "gmv_eur": 923775.0}, {"cc": "ro", "name": "Румунія", "bad": 17.7, "late": 10.2, "lateprep": 13.7, "failed": 3.4, "compl": 96.6, "rating": 4.6, "availability": 82.6, "dur": 44.3, "cs": 6.3, "adj": 46.1, "repl": 16.9, "orders": 290003, "gmv_eur": 8262210.0}], "bench_note": "орієнтир = медіана Bolt Market країн (EE, LV, LT, PL, CZ, SK, RO), черв–сер 2026", "insights": [{"level": "crit", "kind": "Відставання від регіону", "text": "Україна гірша за медіану Bolt Market (черв–сер 2026): заміни: UA 36.3% vs медіана країн 18.9%; розбіжності: UA 22.1% vs медіана країн 15.6%; зірвані замовлення: UA 7.3% vs медіана країн 3.4%; завершеність: UA 92.7% vs медіана країн 96.6%; bad order rate: UA 15.6% vs медіана країн 12.7%."}, {"level": "win", "kind": "Сильні сторони", "text": "UA краща за медіану країн: час доставки (30.3), рейтинг (4.7)."}, {"level": "watch", "kind": "Динаміка обсягу", "text": "Замовлення Чер→Вер: 35,724→9,501 (-73%)."}, {"level": "watch", "kind": "Якість", "text": "Bad Order Rate: 14.8%→21.4%."}, {"level": "crit", "kind": "Партнери — пріоритет", "text": "Найгірші за якістю (середнє черв–сер, >500 замовл.): OKKO CAFE GROUP (bad 29.1%, adj —%); VARUS (bad 23.2%, adj 53.4%); ANRI-PHARM (bad 20.4%, adj 4.7%); BEER MARKET (bad 20.4%, adj —%); RUKAVYCHKA (bad 16.8%, adj 29.2%)."}, {"level": "watch", "kind": "Як покращити", "text": "Знизити failed rate: аудит причин скасувань, SLA прийому замовлень магазинами, push-нотифікації про недоступність SKU. Розбіжності (adjustment): інвентаризація топ-SKU, синхронізація залишків WMS↔Bolt, тренінги зборщиків. Заміни: покращити точність наявності, альтернативи в каталозі, зменшити out-of-stock на ходових позиціях. Завершеність: фокус на acceptance rate магазинів з найнижчим compl, особливо нових партнерів."}], "partners": [{"partner": "VARUS", "orders": 34401, "bad": 23.2, "late": 9.3, "lateprep": 14.8, "failed": 10.3, "adj": 53.4, "repl": 41.2, "availability": 95.1, "dur": 39.8, "rating": 4.52}, {"partner": "LOKO", "orders": 15815, "bad": null, "late": null, "lateprep": 5.3, "failed": 2.0, "adj": 11.8, "repl": 0.0, "availability": 83.3, "dur": null, "rating": 4.57}, {"partner": "HOP HEY", "orders": 11671, "bad": 11.8, "late": 6.3, "lateprep": 6.4, "failed": 4.3, "adj": 14.8, "repl": 24.5, "availability": 95.9, "dur": 26.9, "rating": 4.92}, {"partner": "BEER MARKET", "orders": 8364, "bad": 20.4, "late": 4.0, "lateprep": 4.6, "failed": 15.5, "adj": 0.0, "repl": null, "availability": 73.8, "dur": 25.4, "rating": 4.85}, {"partner": "KOPIYKA", "orders": 7859, "bad": 16.1, "late": 8.5, "lateprep": 13.0, "failed": 5.3, "adj": 51.5, "repl": 26.0, "availability": 90.8, "dur": 32.3, "rating": 4.7}, {"partner": "CAFE RYNOK", "orders": 4938, "bad": 5.8, "late": 2.6, "lateprep": 1.8, "failed": 2.1, "adj": 12.6, "repl": 72.5, "availability": 93.0, "dur": 24.3, "rating": 4.76}, {"partner": "PYVNA BORODA", "orders": 4220, "bad": 13.6, "late": 2.6, "lateprep": 0.4, "failed": 10.3, "adj": 0.0, "repl": null, "availability": 95.0, "dur": 22.7, "rating": 4.91}, {"partner": "BEERLAND K", "orders": 3831, "bad": 15.1, "late": 4.0, "lateprep": 3.7, "failed": 9.4, "adj": 0.0, "repl": null, "availability": 89.8, "dur": 23.9, "rating": 4.79}, {"partner": "REMESLO BREWERY", "orders": 3408, "bad": 7.5, "late": 3.3, "lateprep": 1.6, "failed": 4.2, "adj": 0.0, "repl": null, "availability": 86.8, "dur": 24.2, "rating": 4.95}, {"partner": "LEPRUKON", "orders": 3315, "bad": 9.8, "late": 5.4, "lateprep": 0.0, "failed": 3.6, "adj": 0.0, "repl": null, "availability": 95.2, "dur": 28.0, "rating": 4.91}, {"partner": "TAISTRA", "orders": 2745, "bad": 10.9, "late": 4.6, "lateprep": 0.5, "failed": 5.1, "adj": 23.5, "repl": 26.8, "availability": 81.9, "dur": 25.1, "rating": 4.78}, {"partner": "RUKAVYCHKA", "orders": 2355, "bad": 16.8, "late": 3.6, "lateprep": 2.4, "failed": 11.9, "adj": 29.2, "repl": 16.9, "availability": 27.5, "dur": 28.5, "rating": 4.64}, {"partner": "ANRI-PHARM", "orders": 1899, "bad": 20.4, "late": 4.8, "lateprep": 10.3, "failed": 15.6, "adj": 4.7, "repl": 0.0, "availability": 83.6, "dur": 32.1, "rating": 4.85}, {"partner": "TOCHKA", "orders": 1854, "bad": 5.5, "late": 4.0, "lateprep": 1.4, "failed": 1.4, "adj": 0.0, "repl": null, "availability": 96.9, "dur": 23.9, "rating": 4.9}, {"partner": "OKKO CAFE GROUP", "orders": 1689, "bad": 29.1, "late": 12.3, "lateprep": 28.4, "failed": 15.8, "adj": 0.0, "repl": null, "availability": 98.2, "dur": 36.9, "rating": 4.72}, {"partner": "SPRAGA", "orders": 1503, "bad": 10.1, "late": 4.0, "lateprep": 0.7, "failed": 5.3, "adj": 0.0, "repl": null, "availability": 98.0, "dur": 19.8, "rating": 4.88}, {"partner": "DIMPYVA", "orders": 1336, "bad": 10.0, "late": 3.1, "lateprep": 2.3, "failed": 5.8, "adj": 0.0, "repl": null, "availability": 66.7, "dur": 22.3, "rating": 4.8}, {"partner": "MAXBEER", "orders": 1203, "bad": 5.7, "late": 3.7, "lateprep": 0.7, "failed": 1.5, "adj": 0.0, "repl": null, "availability": 87.6, "dur": 23.1, "rating": 4.96}, {"partner": "CHILL TIME", "orders": 1153, "bad": 10.4, "late": 3.6, "lateprep": 2.2, "failed": 4.1, "adj": 0.0, "repl": null, "availability": 92.7, "dur": 21.0, "rating": 4.7}, {"partner": "PYVNA SOVA GROUP", "orders": 1005, "bad": 7.1, "late": 4.1, "lateprep": 5.0, "failed": 2.1, "adj": 0.0, "repl": null, "availability": 87.8, "dur": 24.3, "rating": 4.81}, {"partner": "MEALTIME", "orders": 958, "bad": 9.9, "late": 3.5, "lateprep": 1.6, "failed": 4.0, "adj": 0.0, "repl": null, "availability": 99.3, "dur": 26.6, "rating": 4.75}, {"partner": "WINETIME", "orders": 770, "bad": 15.3, "late": 5.6, "lateprep": 10.6, "failed": 9.2, "adj": 0.0, "repl": null, "availability": 80.1, "dur": 33.9, "rating": 4.95}, {"partner": "ALTBIER", "orders": 693, "bad": 6.8, "late": 3.3, "lateprep": 1.7, "failed": 3.3, "adj": 0.0, "repl": null, "availability": 67.4, "dur": 24.2, "rating": 4.94}, {"partner": "GOOD BEER VIN", "orders": 661, "bad": 9.3, "late": 3.4, "lateprep": 4.1, "failed": 5.7, "adj": 0.0, "repl": null, "availability": 95.7, "dur": 24.6, "rating": 4.91}, {"partner": "HALYTSKYI KUKHOL", "orders": 598, "bad": 5.7, "late": 2.6, "lateprep": 0.4, "failed": 2.8, "adj": 0.0, "repl": null, "availability": 95.9, "dur": 23.6, "rating": 4.92}, {"partner": "UMANPYVO BRANDSTORE", "orders": 456, "bad": 10.1, "late": 6.1, "lateprep": 4.1, "failed": 3.4, "adj": 0.0, "repl": null, "availability": 97.9, "dur": 22.8, "rating": 4.94}, {"partner": "BRSM", "orders": 447, "bad": 33.0, "late": 6.3, "lateprep": 11.9, "failed": 28.0, "adj": 6.0, "repl": 16.7, "availability": 92.0, "dur": 35.7, "rating": 4.76}, {"partner": "GOOD BEER", "orders": 432, "bad": 5.2, "late": 2.5, "lateprep": 0.5, "failed": 2.5, "adj": 0.0, "repl": null, "availability": 91.5, "dur": 23.3, "rating": 4.96}, {"partner": "OPILLYA GROUP", "orders": 359, "bad": 5.1, "late": 2.0, "lateprep": 2.3, "failed": 2.6, "adj": 0.0, "repl": null, "availability": 92.2, "dur": 24.1, "rating": 4.99}, {"partner": "BEARS BEER", "orders": 347, "bad": 13.1, "late": 2.2, "lateprep": 2.0, "failed": 10.0, "adj": 0.0, "repl": null, "availability": 62.4, "dur": 22.5, "rating": 4.95}, {"partner": "NO TABOO", "orders": 345, "bad": 29.9, "late": 3.7, "lateprep": 1.4, "failed": 24.7, "adj": 6.9, "repl": 17.3, "availability": 95.3, "dur": 31.4, "rating": 4.89}, {"partner": "VAPE STORY", "orders": 342, "bad": 18.4, "late": 3.6, "lateprep": 2.6, "failed": 15.0, "adj": 0.0, "repl": null, "availability": 87.4, "dur": 30.5, "rating": 4.66}, {"partner": "KEGOVA GROUP", "orders": 336, "bad": 4.8, "late": 3.1, "lateprep": 1.9, "failed": 0.5, "adj": 0.0, "repl": null, "availability": 99.2, "dur": 25.5, "rating": 4.81}, {"partner": "SEIM", "orders": 335, "bad": 2.0, "late": 1.1, "lateprep": 0.0, "failed": 0.4, "adj": 0.0, "repl": null, "availability": 95.4, "dur": 21.9, "rating": 4.81}, {"partner": "PIVOMARKET KYIV", "orders": 330, "bad": 11.2, "late": 3.4, "lateprep": 11.1, "failed": 4.9, "adj": 0.0, "repl": null, "availability": 96.8, "dur": 25.1, "rating": 4.69}, {"partner": "RED CAT", "orders": 330, "bad": 11.0, "late": 3.3, "lateprep": 1.0, "failed": 7.0, "adj": 0.0, "repl": null, "availability": 88.5, "dur": 25.0, "rating": 4.87}, {"partner": "UMANPIVO", "orders": 293, "bad": 5.4, "late": 1.1, "lateprep": 2.3, "failed": 3.6, "adj": 0.0, "repl": null, "availability": 92.9, "dur": 23.1, "rating": 4.9}, {"partner": "MAHAZYN PYVNYY UKRAIINSKYJ KRAFT", "orders": 287, "bad": 11.0, "late": 2.9, "lateprep": 2.1, "failed": 7.7, "adj": 0.0, "repl": null, "availability": 92.6, "dur": 22.2, "rating": 4.91}, {"partner": "PRAVDA CRAFT MISSION", "orders": 279, "bad": 7.4, "late": 2.5, "lateprep": 0.4, "failed": 6.5, "adj": 0.0, "repl": null, "availability": 90.9, "dur": 21.3, "rating": 5.0}, {"partner": "PYVOTEKA ODESA", "orders": 271, "bad": 11.3, "late": 7.1, "lateprep": 4.4, "failed": 3.9, "adj": 0.0, "repl": null, "availability": 98.2, "dur": 27.2, "rating": 4.71}, {"partner": "PYVOMARKET GROUP", "orders": 245, "bad": 6.7, "late": 2.5, "lateprep": 0.4, "failed": 5.0, "adj": 0.0, "repl": null, "availability": 96.7, "dur": 28.6, "rating": 4.8}, {"partner": "BEERROOM", "orders": 237, "bad": 3.8, "late": 0.4, "lateprep": 3.0, "failed": 2.9, "adj": 0.0, "repl": null, "availability": 88.3, "dur": 16.8, "rating": 4.89}, {"partner": "LUCKY BEER", "orders": 229, "bad": 2.6, "late": 1.6, "lateprep": 0.0, "failed": 0.6, "adj": 0.0, "repl": null, "availability": 99.6, "dur": 21.7, "rating": 4.93}, {"partner": "LVIVSKI KRANY", "orders": 226, "bad": 2.2, "late": 1.7, "lateprep": 1.2, "failed": 0.0, "adj": 0.0, "repl": null, "availability": 97.1, "dur": 20.2, "rating": 5.0}, {"partner": "BRATER", "orders": 213, "bad": 6.8, "late": 1.3, "lateprep": 4.3, "failed": 2.2, "adj": 0.0, "repl": null, "availability": 60.8, "dur": 23.3, "rating": 4.85}, {"partner": "BEER COMPANY", "orders": 203, "bad": 4.9, "late": 2.9, "lateprep": 0.5, "failed": 1.9, "adj": 0.0, "repl": null, "availability": 94.8, "dur": 19.9, "rating": 4.85}, {"partner": "PYVOTEKA 2020 GROUP", "orders": 202, "bad": 5.4, "late": 3.4, "lateprep": 0.0, "failed": 3.0, "adj": 0.0, "repl": null, "availability": 99.2, "dur": 26.7, "rating": 4.9}, {"partner": "SOLOD BEER MARKET", "orders": 196, "bad": 6.9, "late": 4.5, "lateprep": 0.0, "failed": 2.0, "adj": 0.0, "repl": null, "availability": 99.9, "dur": 24.5, "rating": 4.89}, {"partner": "RODYNNA KOVBASKA", "orders": 194, "bad": 54.0, "late": 3.0, "lateprep": 4.8, "failed": 49.5, "adj": 49.5, "repl": 25.9, "availability": 66.2, "dur": 30.9, "rating": 4.59}, {"partner": "SHOPYVO", "orders": 188, "bad": 6.8, "late": 3.1, "lateprep": 1.0, "failed": 2.6, "adj": 0.0, "repl": null, "availability": 94.9, "dur": 24.2, "rating": 5.0}, {"partner": "PYANA VYSHNYA", "orders": 186, "bad": 9.3, "late": 2.7, "lateprep": 2.0, "failed": 8.2, "adj": 0.0, "repl": null, "availability": 64.5, "dur": 24.6, "rating": 4.92}, {"partner": "PYVNA HAVAN", "orders": 182, "bad": 18.4, "late": 3.0, "lateprep": 4.2, "failed": 13.1, "adj": 0.0, "repl": null, "availability": 94.9, "dur": 21.3, "rating": 4.72}, {"partner": "LITR BEER", "orders": 179, "bad": 3.8, "late": 3.8, "lateprep": 0.5, "failed": 0.0, "adj": 0.0, "repl": null, "availability": 97.6, "dur": 25.4, "rating": 5.0}, {"partner": "VINNYTSKE PUVO", "orders": 177, "bad": 4.0, "late": 2.3, "lateprep": 1.1, "failed": 1.6, "adj": 0.0, "repl": null, "availability": 98.2, "dur": 18.6, "rating": 4.91}, {"partner": "BEER SHOP VINNITSYA", "orders": 175, "bad": 9.2, "late": 2.5, "lateprep": 3.0, "failed": 5.9, "adj": 0.0, "repl": null, "availability": 71.8, "dur": 24.4, "rating": 4.61}, {"partner": "JERKINS AND BEER", "orders": 173, "bad": 15.8, "late": 7.5, "lateprep": 3.4, "failed": 6.7, "adj": 0.0, "repl": null, "availability": 98.2, "dur": 32.9, "rating": 4.99}, {"partner": "BEER EMPORIUM GROUP", "orders": 163, "bad": 3.9, "late": 1.7, "lateprep": 2.6, "failed": 1.7, "adj": 0.0, "repl": null, "availability": 98.3, "dur": 21.2, "rating": 4.95}, {"partner": "PYVNA LIHA", "orders": 153, "bad": 5.8, "late": 4.5, "lateprep": 3.9, "failed": 0.6, "adj": 0.0, "repl": null, "availability": 98.1, "dur": 30.8, "rating": 5.0}, {"partner": "NALYVKY ZI LVOVA", "orders": 148, "bad": 12.7, "late": 5.3, "lateprep": 0.0, "failed": 4.7, "adj": 0.0, "repl": null, "availability": 91.3, "dur": 35.5, "rating": 4.79}, {"partner": "FLOWER SHOP", "orders": 137, "bad": 25.5, "late": 4.2, "lateprep": 17.5, "failed": 20.0, "adj": 0.0, "repl": null, "availability": 73.3, "dur": 46.9, "rating": 4.39}, {"partner": "PYVANDR", "orders": 137, "bad": 15.4, "late": 10.7, "lateprep": 7.2, "failed": 1.6, "adj": 0.0, "repl": null, "availability": 98.7, "dur": 22.8, "rating": 4.37}, {"partner": "BOHEMIAN KINGS BEER GROUP", "orders": 127, "bad": 4.5, "late": 1.3, "lateprep": 0.0, "failed": 3.2, "adj": 0.0, "repl": null, "availability": 64.1, "dur": 26.4, "rating": 4.97}, {"partner": "PYVO MAN", "orders": 121, "bad": 7.6, "late": 4.7, "lateprep": 0.9, "failed": 0.0, "adj": 0.0, "repl": null, "availability": 97.7, "dur": 22.3, "rating": 4.85}, {"partner": "DRAFT BEER VINNYTSIA", "orders": 115, "bad": 6.0, "late": 4.3, "lateprep": 2.6, "failed": 0.8, "adj": 0.0, "repl": null, "availability": 70.0, "dur": 26.0, "rating": 4.77}, {"partner": "MISTO PIVMARKET", "orders": 113, "bad": 1.0, "late": 1.0, "lateprep": 0.0, "failed": 0.0, "adj": 0.0, "repl": null, "availability": 99.5, "dur": 16.0, "rating": 4.92}, {"partner": "MEAL TIME", "orders": 88, "bad": 7.1, "late": 1.2, "lateprep": 0.0, "failed": 2.2, "adj": 0.0, "repl": null, "availability": 97.9, "dur": 28.2, "rating": 4.82}, {"partner": "PIVASOV", "orders": 74, "bad": 16.7, "late": 3.6, "lateprep": 13.5, "failed": 11.9, "adj": 0.0, "repl": null, "availability": 85.6, "dur": 28.4, "rating": 4.84}, {"partner": "BEER SOTA", "orders": 71, "bad": 6.8, "late": 0.0, "lateprep": 0.0, "failed": 5.3, "adj": 0.0, "repl": null, "availability": 33.2, "dur": 24.5, "rating": 5.0}, {"partner": "PIVOVAR", "orders": 64, "bad": 11.9, "late": 7.5, "lateprep": 1.6, "failed": 4.5, "adj": 0.0, "repl": null, "availability": 78.2, "dur": 30.2, "rating": 5.0}, {"partner": "PYVO TUTA GROUP", "orders": 64, "bad": 7.4, "late": 2.9, "lateprep": 3.1, "failed": 5.9, "adj": 0.0, "repl": null, "availability": 98.7, "dur": 25.8, "rating": 4.93}, {"partner": "CRAFT BEER DNIPRO", "orders": 56, "bad": 32.4, "late": 7.0, "lateprep": 3.6, "failed": 21.1, "adj": 0.0, "repl": null, "availability": 69.6, "dur": 33.1, "rating": 4.38}, {"partner": "GOLD BEER PUB", "orders": 51, "bad": 2.0, "late": 2.0, "lateprep": 0.0, "failed": 0.0, "adj": 0.0, "repl": null, "availability": 99.8, "dur": 18.8, "rating": 5.0}, {"partner": "SUSHI VESLA", "orders": 51, "bad": 14.0, "late": 5.3, "lateprep": 2.0, "failed": 10.5, "adj": 0.0, "repl": null, "availability": 58.1, "dur": 37.5, "rating": 5.0}], "top_partners": ["VARUS", "LOKO", "HOP HEY", "BEER MARKET", "KOPIYKA", "CAFE RYNOK", "PYVNA BORODA", "BEERLAND K", "REMESLO BREWERY", "LEPRUKON", "TAISTRA", "RUKAVYCHKA", "ANRI-PHARM", "TOCHKA", "OKKO CAFE GROUP"], "partner_metrics": [{"key": "orders", "label": "Замовлення", "dir": 1, "fmt": "int", "group": "Бізнес", "brands": {"VARUS": [7479.0, 9844.0, 14519.0, 2559.0], "LOKO": [4486.0, 4879.0, 5411.0, 1039.0], "HOP HEY": [3344.0, 3435.0, 4064.0, 828.0], "BEER MARKET": [2633.0, 2629.0, 2639.0, 463.0], "KOPIYKA": [2195.0, 2151.0, 2967.0, 546.0], "CAFE RYNOK": [1472.0, 1501.0, 1667.0, 298.0], "PYVNA BORODA": [1133.0, 1345.0, 1444.0, 298.0], "BEERLAND K": [1118.0, 1159.0, 1307.0, 247.0], "REMESLO BREWERY": [1088.0, 1020.0, 1103.0, 197.0], "LEPRUKON": [857.0, 1030.0, 1189.0, 239.0], "TAISTRA": [974.0, 774.0, 798.0, 199.0], "RUKAVYCHKA": [824.0, 617.0, 749.0, 165.0], "ANRI-PHARM": [512.0, 601.0, 650.0, 136.0], "TOCHKA": [556.0, 608.0, 583.0, 107.0], "OKKO CAFE GROUP": [null, 59.0, 1117.0, 513.0]}}, {"key": "gmv_eur", "label": "GMV (€)", "dir": 1, "fmt": "eur", "group": "Бізнес", "brands": {"VARUS": [101330.0, 156188.6, 233133.2, 43319.1], "LOKO": [67295.6, 73911.7, 79603.7, 16834.0], "HOP HEY": [32504.5, 33733.9, 40398.7, 8423.4], "BEER MARKET": [23717.5, 24056.8, 24064.1, 4128.1], "KOPIYKA": [26813.1, 27038.7, 37564.8, 7111.5], "CAFE RYNOK": [20015.7, 21093.1, 23650.7, 4433.5], "PYVNA BORODA": [10913.7, 13393.8, 13906.4, 2858.5], "BEERLAND K": [12128.0, 13054.2, 14834.2, 2699.5], "REMESLO BREWERY": [14754.2, 13402.3, 14299.0, 2526.9], "LEPRUKON": [8086.2, 10114.4, 11728.4, 2249.4], "TAISTRA": [13641.9, 10815.5, 10606.4, 2544.4], "RUKAVYCHKA": [11374.7, 7747.8, 10259.3, 2164.0], "ANRI-PHARM": [5400.0, 6186.6, 6834.4, 1510.2], "TOCHKA": [6028.7, 6651.6, 6464.0, 1231.7], "OKKO CAFE GROUP": [null, 687.9, 12809.6, 6075.8]}}, {"key": "availability", "label": "Доступність магазинів, %", "dir": 1, "fmt": "pct", "group": "Доступність", "brands": {"VARUS": [99.0, 99.3, 94.8, 87.4], "LOKO": [82.5, 84.1, 85.5, 81.2], "HOP HEY": [96.3, 96.7, 95.7, 94.9], "BEER MARKET": [69.4, 74.6, 77.2, 73.9], "KOPIYKA": [92.3, 92.3, 90.3, 88.2], "CAFE RYNOK": [91.7, 94.3, 92.5, 93.4], "PYVNA BORODA": [95.7, 95.1, 95.0, 94.2], "BEERLAND K": [91.6, 93.5, 88.9, 85.3], "REMESLO BREWERY": [90.8, 88.7, 85.7, 82.0], "LEPRUKON": [93.1, 98.2, 97.0, 92.4], "TAISTRA": [88.6, 86.8, 74.2, 78.0], "RUKAVYCHKA": [28.7, 31.6, 24.2, 25.5], "ANRI-PHARM": [61.0, 88.3, 93.7, 91.3], "TOCHKA": [98.7, 98.8, 97.4, 92.7], "OKKO CAFE GROUP": [null, 99.0, 97.0, 98.7]}}, {"key": "dur", "label": "Час доставки, хв", "dir": -1, "fmt": "min", "group": "Швидкість і якість", "brands": {"VARUS": [35.2, 37.4, 43.0, 43.5], "LOKO": [null, null, null, null], "HOP HEY": [26.9, 27.0, 26.6, 27.1], "BEER MARKET": [25.4, 24.2, 24.8, 27.1], "KOPIYKA": [31.1, 32.0, 34.1, 31.8], "CAFE RYNOK": [24.5, 23.5, 24.5, 24.6], "PYVNA BORODA": [22.2, 23.7, 22.9, 22.0], "BEERLAND K": [23.5, 24.0, 23.8, 24.3], "REMESLO BREWERY": [25.1, 23.7, 23.8, 24.2], "LEPRUKON": [28.9, 28.7, 27.5, 26.7], "TAISTRA": [26.1, 25.0, 23.6, 25.5], "RUKAVYCHKA": [27.2, 29.1, 28.4, 29.3], "ANRI-PHARM": [35.9, 32.7, 29.4, 30.1], "TOCHKA": [23.6, 23.7, 23.5, 24.7], "OKKO CAFE GROUP": [null, 46.0, 32.6, 32.0]}}, {"key": "late", "label": "Запізнення 10+, %", "dir": -1, "fmt": "pct", "group": "Швидкість і якість", "brands": {"VARUS": [9.1, 8.4, 9.8, 9.9], "LOKO": [null, null, null, null], "HOP HEY": [7.0, 6.3, 5.4, 6.4], "BEER MARKET": [3.6, 4.1, 3.4, 4.9], "KOPIYKA": [7.9, 7.7, 8.8, 9.7], "CAFE RYNOK": [2.8, 1.6, 2.6, 3.4], "PYVNA BORODA": [3.4, 3.2, 2.2, 1.5], "BEERLAND K": [3.8, 2.9, 4.0, 5.4], "REMESLO BREWERY": [2.2, 3.0, 3.6, 4.3], "LEPRUKON": [5.8, 5.7, 4.5, 5.6], "TAISTRA": [3.9, 2.8, 5.0, 6.8], "RUKAVYCHKA": [3.7, 2.4, 3.4, 4.7], "ANRI-PHARM": [6.4, 4.6, 4.2, 3.9], "TOCHKA": [3.7, 3.6, 3.3, 5.5], "OKKO CAFE GROUP": [null, 23.0, 6.9, 6.9]}}, {"key": "lateprep", "label": "Пізня підготовка 10+, %", "dir": -1, "fmt": "pct", "group": "Швидкість і якість", "brands": {"VARUS": [10.1, 12.8, 17.4, 18.9], "LOKO": [3.3, 0.6, 15.6, 1.7], "HOP HEY": [7.0, 5.7, 6.5, 6.5], "BEER MARKET": [4.8, 4.7, 4.3, 4.5], "KOPIYKA": [13.0, 12.0, 14.4, 12.5], "CAFE RYNOK": [1.8, 1.9, 1.9, 1.7], "PYVNA BORODA": [0.3, 0.1, 0.3, 1.0], "BEERLAND K": [4.4, 3.4, 3.7, 3.2], "REMESLO BREWERY": [1.3, 1.9, 1.7, 1.5], "LEPRUKON": [0.0, 0.1, 0.0, 0.0], "TAISTRA": [0.7, 0.3, 0.4, 0.5], "RUKAVYCHKA": [2.5, 3.1, 2.0, 1.8], "ANRI-PHARM": [15.4, 11.6, 6.8, 7.4], "TOCHKA": [1.1, 1.5, 1.2, 1.9], "OKKO CAFE GROUP": [null, 69.5, 9.0, 6.6]}}, {"key": "failed", "label": "Зірвані замовлення, %", "dir": -1, "fmt": "pct", "group": "Швидкість і якість", "brands": {"VARUS": [6.1, 4.8, 10.3, 20.0], "LOKO": [2.4, 1.2, 2.6, 1.8], "HOP HEY": [2.8, 3.6, 4.4, 6.5], "BEER MARKET": [19.0, 13.0, 14.6, 15.2], "KOPIYKA": [5.8, 4.7, 4.2, 6.3], "CAFE RYNOK": [2.2, 2.5, 1.7, 2.0], "PYVNA BORODA": [10.9, 11.3, 10.4, 8.6], "BEERLAND K": [10.0, 7.6, 8.9, 11.2], "REMESLO BREWERY": [4.0, 4.0, 3.8, 4.8], "LEPRUKON": [2.3, 3.6, 4.2, 4.4], "TAISTRA": [4.4, 5.8, 6.6, 3.4], "RUKAVYCHKA": [10.3, 11.7, 11.9, 13.6], "ANRI-PHARM": [27.1, 14.3, 9.0, 12.3], "TOCHKA": [1.2, 1.6, 0.0, 2.7], "OKKO CAFE GROUP": [null, 20.3, 10.7, 16.4]}}, {"key": "bad", "label": "Bad Order Rate, %", "dir": -1, "fmt": "pct", "group": "Швидкість і якість", "brands": {"VARUS": [18.8, 16.7, 23.9, 33.3], "LOKO": [null, null, null, null], "HOP HEY": [10.9, 11.3, 10.8, 14.3], "BEER MARKET": [23.2, 17.7, 18.6, 22.0], "KOPIYKA": [15.8, 15.2, 15.8, 17.4], "CAFE RYNOK": [5.7, 5.4, 5.5, 6.4], "PYVNA BORODA": [14.9, 14.7, 13.6, 11.3], "BEERLAND K": [14.7, 12.1, 15.1, 18.7], "REMESLO BREWERY": [6.9, 7.5, 7.2, 8.2], "LEPRUKON": [8.7, 10.0, 9.2, 11.2], "TAISTRA": [9.5, 10.3, 12.9, 10.9], "RUKAVYCHKA": [15.1, 15.7, 16.9, 19.4], "ANRI-PHARM": [33.5, 18.5, 14.2, 15.6], "TOCHKA": [5.7, 6.0, 4.1, 6.4], "OKKO CAFE GROUP": [null, 41.9, 18.8, 26.6]}}, {"key": "adj", "label": "Розбіжності (adjustment), %", "dir": -1, "fmt": "pct", "group": "CVP Input", "brands": {"VARUS": [45.4, 55.1, 59.6, null], "LOKO": [10.9, 12.3, 12.3, null], "HOP HEY": [17.3, 14.4, 12.7, null], "BEER MARKET": [0.0, 0.0, 0.0, null], "KOPIYKA": [56.1, 47.3, 51.2, null], "CAFE RYNOK": [12.6, 12.1, 13.1, null], "PYVNA BORODA": [0.0, 0.0, 0.0, null], "BEERLAND K": [0.0, 0.0, 0.0, null], "REMESLO BREWERY": [0.0, 0.0, 0.0, null], "LEPRUKON": [0.0, 0.0, 0.0, null], "TAISTRA": [28.2, 23.5, 18.8, null], "RUKAVYCHKA": [29.1, 32.4, 26.1, null], "ANRI-PHARM": [8.0, 5.1, 0.9, null], "TOCHKA": [0.0, 0.0, 0.0, null], "OKKO CAFE GROUP": [null, 0.0, 0.0, null]}}, {"key": "repl", "label": "Заміни товарів, %", "dir": -1, "fmt": "pct", "group": "CVP Input", "brands": {"VARUS": [30.3, 47.8, 45.5, null], "LOKO": [0.0, 0.0, 0.0, null], "HOP HEY": [24.4, 24.3, 24.9, null], "BEER MARKET": [null, null, null, null], "KOPIYKA": [27.6, 24.6, 25.8, null], "CAFE RYNOK": [75.1, 69.6, 72.9, null], "PYVNA BORODA": [null, null, null, null], "BEERLAND K": [null, null, null, null], "REMESLO BREWERY": [null, null, null, null], "LEPRUKON": [null, null, null, null], "TAISTRA": [19.9, 29.6, 30.9, null], "RUKAVYCHKA": [17.6, 19.6, 13.4, null], "ANRI-PHARM": [0.0, 0.0, 0.0, null], "TOCHKA": [null, null, null, null], "OKKO CAFE GROUP": [null, null, null, null]}}, {"key": "rating", "label": "Рейтинг", "dir": 1, "fmt": "dec", "group": "Швидкість і якість", "brands": {"VARUS": [4.54, 4.56, 4.52, 4.48], "LOKO": [4.61, 4.64, 4.59, 4.44], "HOP HEY": [4.93, 4.89, 4.91, 4.93], "BEER MARKET": [4.83, 4.84, 4.86, 4.88], "KOPIYKA": [4.79, 4.63, 4.65, 4.71], "CAFE RYNOK": [4.71, 4.66, 4.84, 4.83], "PYVNA BORODA": [4.92, 4.93, 4.89, 4.89], "BEERLAND K": [4.77, 4.79, 4.77, 4.84], "REMESLO BREWERY": [4.98, 4.94, 4.95, 4.93], "LEPRUKON": [4.9, 4.89, 4.94, 4.93], "TAISTRA": [4.86, 4.82, 4.73, 4.72], "RUKAVYCHKA": [4.7, 4.65, 4.65, 4.58], "ANRI-PHARM": [4.76, 4.85, 4.8, 5.0], "TOCHKA": [4.93, 4.89, 4.92, 4.86], "OKKO CAFE GROUP": [null, 4.85, 4.62, 4.7]}}], "weekly": [{"w": "2026-06-01", "orders": 7891, "gmv_eur": 95067}, {"w": "2026-06-08", "orders": 8536, "gmv_eur": 106030}, {"w": "2026-06-15", "orders": 8473, "gmv_eur": 106497}, {"w": "2026-06-22", "orders": 8428, "gmv_eur": 105249}, {"w": "2026-06-29", "orders": 9055, "gmv_eur": 113659}, {"w": "2026-07-06", "orders": 8796, "gmv_eur": 114459}, {"w": "2026-07-13", "orders": 8945, "gmv_eur": 116233}, {"w": "2026-07-20", "orders": 8763, "gmv_eur": 116257}, {"w": "2026-07-27", "orders": 9187, "gmv_eur": 122810}, {"w": "2026-08-03", "orders": 10448, "gmv_eur": 135248}, {"w": "2026-08-10", "orders": 12535, "gmv_eur": 170801}, {"w": "2026-08-17", "orders": 10884, "gmv_eur": 141610}, {"w": "2026-08-24", "orders": 10789, "gmv_eur": 142302}, {"w": "2026-08-31", "orders": 10906, "gmv_eur": 146285}], "country_names": {"ua": "Україна", "ee": "Естонія", "lv": "Латвія", "lt": "Литва", "pl": "Польща", "cz": "Чехія", "sk": "Словаччина", "ro": "Румунія"}};
+const ML=R.month_lbl;
+document.getElementById("ovSub").textContent=`Період: ${R.period}. Помісячний зріз + тижневий rolling. ${R.partners.length} партнерів з даними.`;
+document.getElementById("benchNote").textContent=R.bench_note;
+document.getElementById("dataStart").textContent=R.data_start;
+document.getElementById("genAt").textContent="Згенеровано: "+R.generated_at;
+
+function fmt(v,f){
+  if(v===null||v===undefined||Number.isNaN(v))return "—";
+  if(f==="eur")return "€"+Math.round(v).toLocaleString("uk-UA");
+  if(f==="int")return Math.round(v).toLocaleString("uk-UA");
+  if(f==="dec")return (+v).toFixed(2);
+  if(f==="pct"||f==="min")return Math.round(v)+(f==="min"?" хв":"%");
+  return v;
+}
+
+document.querySelectorAll("#tabsnav button").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll("#tabsnav button").forEach(x=>x.classList.toggle("active",x===b));
+  ["overview","countries","weekly","partners"].forEach(t=>{
+    document.getElementById("tab-"+t).style.display=b.dataset.tab===t?"":"none";
+  });
+});
+
+// Insights
+const ins=document.getElementById("insights");
+(R.insights||[]).forEach(h=>{
+  const d=document.createElement("div");d.className="hitem "+h.level;
+  d.innerHTML=`<div class="k">${h.kind}</div><div class="t">${h.text}</div>`;
+  ins.appendChild(d);
+});
+
+// UA table
+(function(){
+  let h="<thead><tr><th>Показник</th>"+ML.map(m=>`<th>${m}</th>`).join("")+"<th>vs країни</th></tr></thead><tbody>";
+  let cur=null;
+  R.metrics.forEach(m=>{
+    if(m.group!==cur){cur=m.group;h+=`<tr class="grp"><td colspan="${ML.length+2}">${cur}</td></tr>`;}
+    h+="<tr><td>"+m.label+"</td>";
+    m.series.forEach(v=>{
+      let cls="";
+      if(v!==null&&m.bench!==null&&m.dir){
+        cls=((m.dir===1&&v>=m.bench)||(m.dir===-1&&v<=m.bench))?"cell-good":"cell-bad";
+      }
+      h+=`<td class="${cls}">${fmt(v,m.fmt)}</td>`;
+    });
+    let vd="—",vc="eq";
+    if(m.bench!==null){
+      const a=m.series.filter(x=>x!=null);
+      const mean=a.length?a.reduce((x,y)=>x+y,0)/a.length:null;
+      if(mean!==null){
+        const rel=(mean-m.bench)/Math.abs(m.bench||1);
+        if(Math.abs(rel)<=0.05){vd="згідно";vc="eq";}
+        else if(mean>m.bench){vd="вище";vc=m.dir===-1?"down":"up";}
+        else{vd="нижче";vc=m.dir===-1?"up":"down";}
+      }
+    }
+    h+=`<td class="vd ${vc}">${vd}</td></tr>`;
+  });
+  document.getElementById("uaTable").innerHTML=h+"</tbody>";
+})();
+
+// Country comparison
+(function(){
+  const keys=[
+    ["orders","Замовлення","int"],["bad","Bad Order %","pct"],["late","Запізнення 10+ %","pct"],
+    ["lateprep","Пізня підготовка %","pct"],["failed","Зірвані %","pct"],["compl","Завершеність %","pct"],
+    ["adj","Adjustment %","pct"],["repl","Заміни %","pct"],["dur","Час доставки","min"],["rating","Рейтинг","dec"],["availability","Доступність %","pct"]
+  ];
+  let h="<thead><tr><th>Країна</th>"+keys.map(([,l])=>`<th>${l}</th>`).join("")+"</tr></thead><tbody>";
+  const sorted=[...R.bench_rows].sort((a,b)=>(b.orders||0)-(a.orders||0));
+  sorted.forEach(r=>{
+    h+=`<tr class="${r.cc==='ua'?'ua-row':''}"><td>${r.name}</td>`;
+    keys.forEach(([k,,f])=>h+=`<td>${fmt(r[k],f)}</td>`);
+    h+="</tr>";
+  });
+  document.getElementById("countryTable").innerHTML=h+"</tbody>";
+})();
+
+// Weekly chart
+(function(){
+  const host=document.getElementById("weeklyChart");
+  const max=Math.max(...R.weekly.map(w=>w.orders));
+  R.weekly.forEach(w=>{
+    const col=document.createElement("div");col.className="bar-col";
+    const h=Math.max(4,Math.round(w.orders/max*100));
+    col.innerHTML=`<div class="bar" style="height:${h}px" title="${w.orders} замовл."></div>
+      <div class="bar-lbl">${w.w.slice(5)}</div><div class="bar-lbl">${(w.orders/1000).toFixed(1)}k</div>`;
+    host.appendChild(col);
+  });
+})();
+
+// Partners rank
+(function(){
+  const peers=R.bench_rows.filter(r=>r.cc!=='ua');
+  const medBad=peers.map(r=>r.bad).filter(Boolean).sort((a,b)=>a-b);
+  const med=medBad.length?medBad[Math.floor(medBad.length/2)]:null;
+  let h="<thead><tr><th>#</th><th>Партнер</th><th>Замовлення</th><th>Bad %</th><th>Late %</th><th>Adj %</th><th>Repl %</th><th>Failed %</th><th>Avail %</th></tr></thead><tbody>";
+  R.partners.forEach((p,i)=>{
+    const badCls=p.bad&&med&&p.bad>med*1.2?"rank-bad":"";
+    h+=`<tr><td>${i+1}</td><td>${p.partner}</td><td>${fmt(p.orders,"int")}</td>
+      <td class="${badCls}">${fmt(p.bad,"pct")}</td><td>${fmt(p.late,"pct")}</td>
+      <td>${fmt(p.adj,"pct")}</td><td>${fmt(p.repl,"pct")}</td>
+      <td>${fmt(p.failed,"pct")}</td><td>${fmt(p.availability,"pct")}</td></tr>`;
+  });
+  document.getElementById("partnerRank").innerHTML=h+"</tbody>";
+
+  const sel=document.getElementById("partnerSel");
+  R.top_partners.forEach(p=>{const o=document.createElement("option");o.value=p;o.textContent=p;sel.appendChild(o);});
+  function renderDetail(){
+    const p=sel.value;
+    let dh="<thead><tr><th>Метрика</th>"+ML.map(m=>`<th>${m}</th>`).join("")+"</tr></thead><tbody>";
+    let cur=null;
+    R.partner_metrics.forEach(m=>{
+      if(m.group!==cur){cur=m.group;dh+=`<tr class="grp"><td colspan="${ML.length+1}">${cur}</td></tr>`;}
+      const arr=m.brands[p]||[];
+      dh+=`<tr><td>${m.label}</td>`+arr.map(v=>`<td>${fmt(v,m.fmt)}</td>`).join("")+"</tr>";
+    });
+    document.getElementById("partnerDetail").innerHTML=dh+"</tbody>";
+  }
+  sel.onchange=renderDetail;renderDetail();
+})();
+</script></body></html>

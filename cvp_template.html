@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="uk"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Україна · CVP звіт 2026</title>
+<style>
+:root{--bg:#0f1115;--panel:#171a21;--panel2:#1e222b;--line:#2a2f3a;--txt:#e7eaf0;--muted:#9aa4b2;
+--accent:#34d399;--accent2:#60a5fa;--bad:#f87171;--good:#34d399;--warn:#fbbf24;--neu:#94a3b8;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.5}
+.wrap{max-width:1280px;margin:0 auto;padding:24px 18px 80px}
+header.top{border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:14px}
+.badge{display:inline-block;background:rgba(52,211,153,.14);color:var(--accent);font-size:12px;font-weight:600;padding:4px 10px;border-radius:20px}
+h1{font-size:27px;margin:12px 0 6px}h2{font-size:19px;margin:28px 0 12px}
+.sub{color:var(--muted);font-size:14px}
+.tabsnav{display:inline-flex;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:4px;gap:3px;margin:10px 0}
+.tabsnav button{background:transparent;border:none;color:var(--muted);padding:9px 16px;border-radius:9px;cursor:pointer;font-size:13px;font-weight:700}
+.tabsnav button.active{background:var(--accent);color:#0a0d12}
+.hl{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+.hitem{border-left:3px solid var(--line);padding:10px 14px;background:var(--panel);border-radius:0 10px 10px 0;margin-bottom:8px}
+.hitem.crit{border-left-color:var(--bad)}.hitem.watch{border-left-color:var(--warn)}.hitem.win{border-left-color:var(--good)}
+.hitem .k{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--muted)}.hitem .t{font-size:13px;margin-top:4px}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;margin-bottom:18px}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th,td{padding:7px 8px;text-align:right;border-bottom:1px solid var(--line)}
+th:first-child,td:first-child{text-align:left}
+thead th{background:var(--panel);color:var(--muted);font-size:11px;font-weight:600}
+tbody tr:hover td{background:var(--panel2)}
+.grp td{color:var(--accent2);font-weight:700;font-size:11px;text-transform:uppercase;background:var(--panel2)}
+.cell-bad{color:var(--bad)}.cell-good{color:var(--good)}
+.vd{font-weight:700;font-size:11px}.vd.up{color:var(--good)}.vd.down{color:var(--bad)}.vd.eq{color:var(--neu)}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:16px}
+.chart-bars{display:flex;align-items:flex-end;gap:6px;height:120px;padding:10px 0}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.bar{width:100%;max-width:48px;background:var(--accent2);border-radius:4px 4px 0 0;min-height:2px}
+.bar-lbl{font-size:10px;color:var(--muted);text-align:center}
+.ua-row td{background:rgba(52,211,153,.06);font-weight:600}
+.filter{margin:12px 0}
+.filter select{padding:8px 12px;border-radius:8px;border:1px solid var(--line);background:var(--panel2);color:var(--txt)}
+footer{color:var(--muted);font-size:12px;border-top:1px solid var(--line);margin-top:34px;padding-top:16px}
+.rank-bad{color:var(--bad);font-weight:700}
+</style></head><body><div class="wrap">
+<header class="top">
+  <span class="badge">BOLT FOOD · UKRAINE · CVP COUNTRY REPORT</span>
+  <h1>Україна — CVP звіт</h1>
+  <div class="sub" id="ovSub"></div>
+  <div class="tabsnav" id="tabsnav">
+    <button data-tab="overview" class="active">Огляд UA</button>
+    <button data-tab="countries">Порівняння країн</button>
+    <button data-tab="weekly">Тижневий rolling</button>
+    <button data-tab="partners">Партнери</button>
+  </div>
+</header>
+
+<div id="tab-overview">
+<section><h2>Ключові висновки</h2><div class="hl" id="insights"></div></section>
+<section><h2>Україна — помісячні CVP метрики</h2>
+  <div class="sub" style="margin-bottom:8px">Орієнтир: <span id="benchNote"></span>. Зелений = краще за медіану країн, червоний = гірше.</div>
+  <div class="tablewrap"><table id="uaTable"></table></div>
+</section>
+</div>
+
+<div id="tab-countries" style="display:none">
+<section><h2>Україна vs інші країни Bolt Market</h2>
+  <div class="sub" style="margin-bottom:8px">Агрегат черв–сер 2026. Джерело: Looker / Databricks fact_provider_monthly & weekly.</div>
+  <div class="tablewrap"><table id="countryTable"></table></div>
+</section>
+</div>
+
+<div id="tab-weekly" style="display:none">
+<section><h2>Тижневий rolling (замовлення)</h2>
+  <div class="panel"><div class="chart-bars" id="weeklyChart"></div></div>
+</section>
+</div>
+
+<div id="tab-partners" style="display:none">
+<section><h2>Усі партнери — рейтинг якості</h2>
+  <div class="sub" style="margin-bottom:8px">Середнє черв–сер 2026, сортовано за обсягом. Клік на партнера — деталізація по місяцях.</div>
+  <div class="tablewrap"><table id="partnerRank"></table></div>
+  <div class="filter"><label>Партнер: </label><select id="partnerSel"></select></div>
+  <div class="tablewrap"><table id="partnerDetail"></table></div>
+</div>
+
+<footer><b>Методологія.</b> Databricks <code>main.ng_delivery</code>: <code>fact_order_delivery</code>, <code>fact_provider_monthly</code>, <code>fact_provider_weekly</code>. Вертикаль store_3p + key accounts. CVP Input: adjustment rate, replacement rate, promo share (Stores report). Період з <span id="dataStart"></span>. <span id="genAt"></span></footer>
+</div>
+<script>
+const R=/*__CVP_DATA__*/;
+const ML=R.month_lbl;
+document.getElementById("ovSub").textContent=`Період: ${R.period}. Помісячний зріз + тижневий rolling. ${R.partners.length} партнерів з даними.`;
+document.getElementById("benchNote").textContent=R.bench_note;
+document.getElementById("dataStart").textContent=R.data_start;
+document.getElementById("genAt").textContent="Згенеровано: "+R.generated_at;
+
+function fmt(v,f){
+  if(v===null||v===undefined||Number.isNaN(v))return "—";
+  if(f==="eur")return "€"+Math.round(v).toLocaleString("uk-UA");
+  if(f==="int")return Math.round(v).toLocaleString("uk-UA");
+  if(f==="dec")return (+v).toFixed(2);
+  if(f==="pct"||f==="min")return Math.round(v)+(f==="min"?" хв":"%");
+  return v;
+}
+
+document.querySelectorAll("#tabsnav button").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll("#tabsnav button").forEach(x=>x.classList.toggle("active",x===b));
+  ["overview","countries","weekly","partners"].forEach(t=>{
+    document.getElementById("tab-"+t).style.display=b.dataset.tab===t?"":"none";
+  });
+});
+
+// Insights
+const ins=document.getElementById("insights");
+(R.insights||[]).forEach(h=>{
+  const d=document.createElement("div");d.className="hitem "+h.level;
+  d.innerHTML=`<div class="k">${h.kind}</div><div class="t">${h.text}</div>`;
+  ins.appendChild(d);
+});
+
+// UA table
+(function(){
+  let h="<thead><tr><th>Показник</th>"+ML.map(m=>`<th>${m}</th>`).join("")+"<th>vs країни</th></tr></thead><tbody>";
+  let cur=null;
+  R.metrics.forEach(m=>{
+    if(m.group!==cur){cur=m.group;h+=`<tr class="grp"><td colspan="${ML.length+2}">${cur}</td></tr>`;}
+    h+="<tr><td>"+m.label+"</td>";
+    m.series.forEach(v=>{
+      let cls="";
+      if(v!==null&&m.bench!==null&&m.dir){
+        cls=((m.dir===1&&v>=m.bench)||(m.dir===-1&&v<=m.bench))?"cell-good":"cell-bad";
+      }
+      h+=`<td class="${cls}">${fmt(v,m.fmt)}</td>`;
+    });
+    let vd="—",vc="eq";
+    if(m.bench!==null){
+      const a=m.series.filter(x=>x!=null);
+      const mean=a.length?a.reduce((x,y)=>x+y,0)/a.length:null;
+      if(mean!==null){
+        const rel=(mean-m.bench)/Math.abs(m.bench||1);
+        if(Math.abs(rel)<=0.05){vd="згідно";vc="eq";}
+        else if(mean>m.bench){vd="вище";vc=m.dir===-1?"down":"up";}
+        else{vd="нижче";vc=m.dir===-1?"up":"down";}
+      }
+    }
+    h+=`<td class="vd ${vc}">${vd}</td></tr>`;
+  });
+  document.getElementById("uaTable").innerHTML=h+"</tbody>";
+})();
+
+// Country comparison
+(function(){
+  const keys=[
+    ["orders","Замовлення","int"],["bad","Bad Order %","pct"],["late","Запізнення 10+ %","pct"],
+    ["lateprep","Пізня підготовка %","pct"],["failed","Зірвані %","pct"],["compl","Завершеність %","pct"],
+    ["adj","Adjustment %","pct"],["repl","Заміни %","pct"],["dur","Час доставки","min"],["rating","Рейтинг","dec"],["availability","Доступність %","pct"]
+  ];
+  let h="<thead><tr><th>Країна</th>"+keys.map(([,l])=>`<th>${l}</th>`).join("")+"</tr></thead><tbody>";
+  const sorted=[...R.bench_rows].sort((a,b)=>(b.orders||0)-(a.orders||0));
+  sorted.forEach(r=>{
+    h+=`<tr class="${r.cc==='ua'?'ua-row':''}"><td>${r.name}</td>`;
+    keys.forEach(([k,,f])=>h+=`<td>${fmt(r[k],f)}</td>`);
+    h+="</tr>";
+  });
+  document.getElementById("countryTable").innerHTML=h+"</tbody>";
+})();
+
+// Weekly chart
+(function(){
+  const host=document.getElementById("weeklyChart");
+  const max=Math.max(...R.weekly.map(w=>w.orders));
+  R.weekly.forEach(w=>{
+    const col=document.createElement("div");col.className="bar-col";
+    const h=Math.max(4,Math.round(w.orders/max*100));
+    col.innerHTML=`<div class="bar" style="height:${h}px" title="${w.orders} замовл."></div>
+      <div class="bar-lbl">${w.w.slice(5)}</div><div class="bar-lbl">${(w.orders/1000).toFixed(1)}k</div>`;
+    host.appendChild(col);
+  });
+})();
+
+// Partners rank
+(function(){
+  const peers=R.bench_rows.filter(r=>r.cc!=='ua');
+  const medBad=peers.map(r=>r.bad).filter(Boolean).sort((a,b)=>a-b);
+  const med=medBad.length?medBad[Math.floor(medBad.length/2)]:null;
+  let h="<thead><tr><th>#</th><th>Партнер</th><th>Замовлення</th><th>Bad %</th><th>Late %</th><th>Adj %</th><th>Repl %</th><th>Failed %</th><th>Avail %</th></tr></thead><tbody>";
+  R.partners.forEach((p,i)=>{
+    const badCls=p.bad&&med&&p.bad>med*1.2?"rank-bad":"";
+    h+=`<tr><td>${i+1}</td><td>${p.partner}</td><td>${fmt(p.orders,"int")}</td>
+      <td class="${badCls}">${fmt(p.bad,"pct")}</td><td>${fmt(p.late,"pct")}</td>
+      <td>${fmt(p.adj,"pct")}</td><td>${fmt(p.repl,"pct")}</td>
+      <td>${fmt(p.failed,"pct")}</td><td>${fmt(p.availability,"pct")}</td></tr>`;
+  });
+  document.getElementById("partnerRank").innerHTML=h+"</tbody>";
+
+  const sel=document.getElementById("partnerSel");
+  R.top_partners.forEach(p=>{const o=document.createElement("option");o.value=p;o.textContent=p;sel.appendChild(o);});
+  function renderDetail(){
+    const p=sel.value;
+    let dh="<thead><tr><th>Метрика</th>"+ML.map(m=>`<th>${m}</th>`).join("")+"</tr></thead><tbody>";
+    let cur=null;
+    R.partner_metrics.forEach(m=>{
+      if(m.group!==cur){cur=m.group;dh+=`<tr class="grp"><td colspan="${ML.length+1}">${cur}</td></tr>`;}
+      const arr=m.brands[p]||[];
+      dh+=`<tr><td>${m.label}</td>`+arr.map(v=>`<td>${fmt(v,m.fmt)}</td>`).join("")+"</tr>";
+    });
+    document.getElementById("partnerDetail").innerHTML=dh+"</tbody>";
+  }
+  sel.onchange=renderDetail;renderDetail();
+})();
+</script></body></html>
