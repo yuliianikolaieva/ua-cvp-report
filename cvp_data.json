@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-07 08:26 UTC",
+  "generated_at": "2026-09-11 13:16 UTC",
   "looker_url": "https://bolt.cloud.looker.com/dashboards/32511",
   "months": [
     "2026-06",
@@ -412,6 +412,1385 @@
       "cs_ticket": "0.7"
     }
   },
+  "segments": {
+    "total": {
+      "input": [
+        {
+          "key": "active_merchants",
+          "label": "Active Merchants",
+          "fmt": "int",
+          "values": [
+            1474.0,
+            1547.0,
+            1721.0
+          ],
+          "deltas": [
+            "",
+            "5%",
+            "11%"
+          ],
+          "lower_better": false
+        },
+        {
+          "key": "merchant_availability",
+          "label": "Merchant Availability Rate",
+          "fmt": "pct",
+          "values": [
+            77.0,
+            79.0,
+            80.0
+          ],
+          "deltas": [
+            "",
+            "2.3",
+            "1."
+          ],
+          "lower_better": false
+        },
+        {
+          "key": "sku_availability",
+          "label": "SKU Availability",
+          "fmt": "pct",
+          "values": [
+            84.0,
+            84.0,
+            80.0
+          ],
+          "deltas": [
+            "",
+            "-0.4",
+            "-3.8"
+          ],
+          "lower_better": false
+        },
+        {
+          "key": "eater_fees_aov",
+          "label": "Eater Fees, AOV %",
+          "fmt": "pct",
+          "values": [
+            14.0,
+            13.0,
+            13.0
+          ],
+          "deltas": [
+            "",
+            "-0.2",
+            "0."
+          ],
+          "lower_better": false
+        },
+        {
+          "key": "item_promo_gmv",
+          "label": "Item-Level Promo, GMV %",
+          "fmt": "pct",
+          "values": [
+            16.0,
+            19.0,
+            23.0
+          ],
+          "deltas": [
+            "",
+            "2.4",
+            "3.9"
+          ],
+          "lower_better": true
+        },
+        {
+          "key": "campaigns_discount",
+          "label": "Campaigns Discount, GMV %",
+          "fmt": "pct",
+          "values": [
+            5.0,
+            6.0,
+            9.0
+          ],
+          "deltas": [
+            "",
+            "1.2",
+            "2.5"
+          ],
+          "lower_better": true
+        },
+        {
+          "key": "delivery_fee_campaign",
+          "label": "Orders with Delivery Fee Campaign",
+          "fmt": "pct",
+          "values": [
+            21.0,
+            31.0,
+            37.0
+          ],
+          "deltas": [
+            "",
+            "10.6",
+            "6.1"
+          ],
+          "lower_better": true
+        },
+        {
+          "key": "not_delivered",
+          "label": "Not-delivered orders, %",
+          "fmt": "pct",
+          "values": [
+            7.0,
+            6.0,
+            8.0
+          ],
+          "deltas": [
+            "",
+            "-1.3",
+            "2.2"
+          ],
+          "lower_better": true
+        },
+        {
+          "key": "delivery_time",
+          "label": "Total Delivery Time, min",
+          "fmt": "min",
+          "values": [
+            35.0,
+            31.0,
+            57.0
+          ],
+          "deltas": [
+            "",
+            "-10%",
+            "83%"
+          ],
+          "lower_better": true
+        },
+        {
+          "key": "late_delivery_10",
+          "label": "Late Delivery (10+min) Rate",
+          "fmt": "pct",
+          "values": [
+            6.0,
+            5.0,
+            6.0
+          ],
+          "deltas": [
+            "",
+            "-0.3",
+            "0.8"
+          ],
+          "lower_better": true
+        },
+        {
+          "key": "order_defect",
+          "label": "Order Defect Rate",
+          "fmt": "pct",
+          "values": [
+            14.0,
+            18.0,
+            21.0
+          ],
+          "deltas": [
+            "",
+            "3.6",
+            "3.2"
+          ],
+          "lower_better": true
+        },
+        {
+          "key": "order_replacement",
+          "label": "Order Replacement Rate",
+          "fmt": "pct",
+          "values": [
+            25.0,
+            38.0,
+            40.0
+          ],
+          "deltas": [
+            "",
+            "12.8",
+            "1.4"
+          ],
+          "lower_better": true
+        },
+        {
+          "key": "cs_ticket",
+          "label": "CS Ticket Order Rate",
+          "fmt": "pct",
+          "values": [
+            4.0,
+            4.0,
+            5.0
+          ],
+          "deltas": [
+            "",
+            "0.1",
+            "0.7"
+          ],
+          "lower_better": true
+        }
+      ],
+      "gmv": [
+        {
+          "key": "gmv",
+          "label": "GMV",
+          "fmt": "eur",
+          "values": [
+            441844.0,
+            513210.0,
+            648917.0
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "gmv_per_merchant",
+          "label": "GMV per Merchant",
+          "fmt": "eur",
+          "values": [
+            299.76,
+            331.75,
+            377.06
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "orders",
+          "label": "Orders",
+          "fmt": "int",
+          "values": [
+            35724.0,
+            39299.0,
+            49114.0
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "orders_per_merchant",
+          "label": "Orders per Merchant",
+          "fmt": "int",
+          "values": [
+            24.0,
+            25.0,
+            29.0
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "gmv_per_order",
+          "label": "GMV per Order",
+          "fmt": "eur",
+          "values": [
+            12.0,
+            13.0,
+            13.0
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "bolt_plus_share",
+          "label": "Bolt Plus GMV Share",
+          "fmt": "pct",
+          "values": [
+            15.0,
+            16.0,
+            15.0
+          ],
+          "deltas": null,
+          "lower_better": false
+        }
+      ],
+      "users": [
+        {
+          "key": "active_users",
+          "label": "Active Users",
+          "fmt": "int",
+          "values": [
+            14791.0,
+            15883.0,
+            20394.0
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "frequency",
+          "label": "Frequency",
+          "fmt": "dec",
+          "values": [
+            2.42,
+            2.47,
+            2.41
+          ],
+          "deltas": null,
+          "lower_better": false
+        }
+      ],
+      "funnel": [
+        {
+          "key": "impressions",
+          "label": "Impressions",
+          "fmt": "int",
+          "values": [
+            3013643.0,
+            3346143.0,
+            4606884.0
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "discovery_rate",
+          "label": "Discovery Rate",
+          "fmt": "pct",
+          "values": [
+            5.0,
+            5.0,
+            5.0
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "menu_views",
+          "label": "Menu views",
+          "fmt": "int",
+          "values": [
+            154183.0,
+            164352.0,
+            237331.0
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "menu_engagement",
+          "label": "Menu Engagement Rate",
+          "fmt": "pct",
+          "values": [
+            35.0,
+            36.0,
+            34.0
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "cart_abandonment",
+          "label": "Cart Abandonment Rate",
+          "fmt": "pct",
+          "values": [
+            36.0,
+            35.0,
+            42.0
+          ],
+          "deltas": null,
+          "lower_better": true
+        },
+        {
+          "key": "conversion_rate",
+          "label": "Conversion Rate",
+          "fmt": "pct",
+          "values": [
+            22.0,
+            23.0,
+            20.0
+          ],
+          "deltas": null,
+          "lower_better": false
+        }
+      ],
+      "finance": [
+        {
+          "key": "commission_gmv",
+          "label": "Commission, % GMV",
+          "fmt": "pct",
+          "values": [
+            12.3,
+            11.7,
+            11.2
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "commission_aov",
+          "label": "Commission, % AOV",
+          "fmt": "pct",
+          "values": [
+            14.1,
+            13.3,
+            12.7
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "aov",
+          "label": "AOV",
+          "fmt": "eur",
+          "values": [
+            12.37,
+            13.06,
+            13.21
+          ],
+          "deltas": null,
+          "lower_better": false
+        }
+      ]
+    },
+    "ent": {
+      "input": [
+        {
+          "key": "active_merchants",
+          "label": "Active Merchants",
+          "fmt": "int",
+          "values": [
+            933,
+            1000,
+            1172
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "merchant_availability",
+          "label": "Merchant Availability Rate",
+          "fmt": "pct",
+          "values": [
+            83.0,
+            83.5,
+            84.2
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "sku_availability",
+          "label": "SKU Availability",
+          "fmt": "pct",
+          "values": [
+            84.2,
+            83.8,
+            80.1
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "eater_fees_aov",
+          "label": "Eater Fees, AOV %",
+          "fmt": "pct",
+          "values": [
+            11.7,
+            11.5,
+            11.6
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "item_promo_gmv",
+          "label": "Item-Level Promo, GMV %",
+          "fmt": "pct",
+          "values": [
+            3.35,
+            5.69,
+            6.18
+          ],
+          "deltas": null,
+          "lower_better": true
+        },
+        {
+          "key": "campaigns_discount",
+          "label": "Campaigns Discount, GMV %",
+          "fmt": "pct",
+          "values": [
+            null,
+            null,
+            null
+          ],
+          "deltas": null,
+          "lower_better": true
+        },
+        {
+          "key": "delivery_fee_campaign",
+          "label": "Orders with Delivery Fee Campaign",
+          "fmt": "pct",
+          "values": [
+            null,
+            null,
+            null
+          ],
+          "deltas": null,
+          "lower_better": true
+        },
+        {
+          "key": "not_delivered",
+          "label": "Not-delivered orders, %",
+          "fmt": "pct",
+          "values": [
+            7.2,
+            5.7,
+            8.3
+          ],
+          "deltas": null,
+          "lower_better": true
+        },
+        {
+          "key": "delivery_time",
+          "label": "Total Delivery Time, min",
+          "fmt": "min",
+          "values": [
+            29.0,
+            30.1,
+            33.2
+          ],
+          "deltas": null,
+          "lower_better": true
+        },
+        {
+          "key": "late_delivery_10",
+          "label": "Late Delivery (10+min) Rate",
+          "fmt": "pct",
+          "values": [
+            6.0,
+            5.8,
+            6.7
+          ],
+          "deltas": null,
+          "lower_better": true
+        },
+        {
+          "key": "order_defect",
+          "label": "Order Defect Rate",
+          "fmt": "pct",
+          "values": [
+            20.7,
+            24.4,
+            29.3
+          ],
+          "deltas": null,
+          "lower_better": true
+        },
+        {
+          "key": "order_replacement",
+          "label": "Order Replacement Rate",
+          "fmt": "pct",
+          "values": [
+            27.2,
+            39.3,
+            39.5
+          ],
+          "deltas": null,
+          "lower_better": true
+        },
+        {
+          "key": "cs_ticket",
+          "label": "CS Ticket Order Rate",
+          "fmt": "pct",
+          "values": [
+            4.1,
+            4.2,
+            4.9
+          ],
+          "deltas": null,
+          "lower_better": true
+        }
+      ],
+      "gmv": [
+        {
+          "key": "gmv",
+          "label": "GMV",
+          "fmt": "eur",
+          "values": [
+            382687.0,
+            447589.0,
+            573139.0
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "gmv_per_merchant",
+          "label": "GMV per Merchant",
+          "fmt": "eur",
+          "values": [
+            410.0,
+            448.0,
+            489.0
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "orders",
+          "label": "Orders",
+          "fmt": "int",
+          "values": [
+            30741,
+            33896,
+            42768
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "orders_per_merchant",
+          "label": "Orders per Merchant",
+          "fmt": "int",
+          "values": [
+            33.0,
+            34.0,
+            36.0
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "gmv_per_order",
+          "label": "GMV per Order",
+          "fmt": "eur",
+          "values": [
+            12.45,
+            13.2,
+            13.4
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "bolt_plus_share",
+          "label": "Bolt Plus GMV Share",
+          "fmt": "pct",
+          "values": [
+            15.2,
+            15.9,
+            14.8
+          ],
+          "deltas": null,
+          "lower_better": false
+        }
+      ],
+      "users": [
+        {
+          "key": "active_users",
+          "label": "Active Users",
+          "fmt": "int",
+          "values": [
+            13077,
+            14130,
+            18286
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "frequency",
+          "label": "Frequency",
+          "fmt": "dec",
+          "values": [
+            2.35,
+            2.4,
+            2.34
+          ],
+          "deltas": null,
+          "lower_better": false
+        }
+      ],
+      "funnel": [],
+      "finance": [
+        {
+          "key": "commission_gmv",
+          "label": "Commission, % GMV",
+          "fmt": "pct",
+          "values": [
+            10.6,
+            9.9,
+            9.5
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "commission_aov",
+          "label": "Commission, % AOV",
+          "fmt": "pct",
+          "values": [
+            12.0,
+            11.2,
+            10.7
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "aov",
+          "label": "AOV",
+          "fmt": "eur",
+          "values": [
+            12.45,
+            13.2,
+            13.4
+          ],
+          "deltas": null,
+          "lower_better": false
+        }
+      ]
+    },
+    "mm": {
+      "input": [
+        {
+          "key": "active_merchants",
+          "label": "Active Merchants",
+          "fmt": "int",
+          "values": [
+            null,
+            null,
+            null
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "merchant_availability",
+          "label": "Merchant Availability Rate",
+          "fmt": "pct",
+          "values": [
+            62.3,
+            88.6,
+            71.3
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "sku_availability",
+          "label": "SKU Availability",
+          "fmt": "pct",
+          "values": [
+            null,
+            null,
+            null
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "eater_fees_aov",
+          "label": "Eater Fees, AOV %",
+          "fmt": "pct",
+          "values": [
+            null,
+            null,
+            null
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "item_promo_gmv",
+          "label": "Item-Level Promo, GMV %",
+          "fmt": "pct",
+          "values": [
+            null,
+            null,
+            null
+          ],
+          "deltas": null,
+          "lower_better": true
+        },
+        {
+          "key": "campaigns_discount",
+          "label": "Campaigns Discount, GMV %",
+          "fmt": "pct",
+          "values": [
+            null,
+            null,
+            null
+          ],
+          "deltas": null,
+          "lower_better": true
+        },
+        {
+          "key": "delivery_fee_campaign",
+          "label": "Orders with Delivery Fee Campaign",
+          "fmt": "pct",
+          "values": [
+            null,
+            null,
+            null
+          ],
+          "deltas": null,
+          "lower_better": true
+        },
+        {
+          "key": "not_delivered",
+          "label": "Not-delivered orders, %",
+          "fmt": "pct",
+          "values": [
+            null,
+            null,
+            null
+          ],
+          "deltas": null,
+          "lower_better": true
+        },
+        {
+          "key": "delivery_time",
+          "label": "Total Delivery Time, min",
+          "fmt": "min",
+          "values": [
+            null,
+            null,
+            null
+          ],
+          "deltas": null,
+          "lower_better": true
+        },
+        {
+          "key": "late_delivery_10",
+          "label": "Late Delivery (10+min) Rate",
+          "fmt": "pct",
+          "values": [
+            null,
+            null,
+            null
+          ],
+          "deltas": null,
+          "lower_better": true
+        },
+        {
+          "key": "order_defect",
+          "label": "Order Defect Rate",
+          "fmt": "pct",
+          "values": [
+            null,
+            null,
+            null
+          ],
+          "deltas": null,
+          "lower_better": true
+        },
+        {
+          "key": "order_replacement",
+          "label": "Order Replacement Rate",
+          "fmt": "pct",
+          "values": [
+            null,
+            null,
+            null
+          ],
+          "deltas": null,
+          "lower_better": true
+        },
+        {
+          "key": "cs_ticket",
+          "label": "CS Ticket Order Rate",
+          "fmt": "pct",
+          "values": [
+            null,
+            null,
+            null
+          ],
+          "deltas": null,
+          "lower_better": true
+        }
+      ],
+      "gmv": [
+        {
+          "key": "gmv",
+          "label": "GMV",
+          "fmt": "eur",
+          "values": [
+            null,
+            null,
+            null
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "gmv_per_merchant",
+          "label": "GMV per Merchant",
+          "fmt": "eur",
+          "values": [
+            null,
+            null,
+            null
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "orders",
+          "label": "Orders",
+          "fmt": "int",
+          "values": [
+            null,
+            null,
+            null
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "orders_per_merchant",
+          "label": "Orders per Merchant",
+          "fmt": "int",
+          "values": [
+            null,
+            null,
+            null
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "gmv_per_order",
+          "label": "GMV per Order",
+          "fmt": "eur",
+          "values": [
+            null,
+            null,
+            null
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "bolt_plus_share",
+          "label": "Bolt Plus GMV Share",
+          "fmt": "pct",
+          "values": [
+            null,
+            null,
+            null
+          ],
+          "deltas": null,
+          "lower_better": false
+        }
+      ],
+      "users": [
+        {
+          "key": "active_users",
+          "label": "Active Users",
+          "fmt": "int",
+          "values": [
+            null,
+            null,
+            null
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "frequency",
+          "label": "Frequency",
+          "fmt": "dec",
+          "values": [
+            null,
+            null,
+            null
+          ],
+          "deltas": null,
+          "lower_better": false
+        }
+      ],
+      "funnel": [],
+      "finance": [
+        {
+          "key": "commission_gmv",
+          "label": "Commission, % GMV",
+          "fmt": "pct",
+          "values": [
+            null,
+            null,
+            null
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "commission_aov",
+          "label": "Commission, % AOV",
+          "fmt": "pct",
+          "values": [
+            null,
+            null,
+            null
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "aov",
+          "label": "AOV",
+          "fmt": "eur",
+          "values": [
+            null,
+            null,
+            null
+          ],
+          "deltas": null,
+          "lower_better": false
+        }
+      ]
+    },
+    "smb": {
+      "input": [
+        {
+          "key": "active_merchants",
+          "label": "Active Merchants",
+          "fmt": "int",
+          "values": [
+            321,
+            316,
+            331
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "merchant_availability",
+          "label": "Merchant Availability Rate",
+          "fmt": "pct",
+          "values": [
+            65.1,
+            70.0,
+            69.9
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "sku_availability",
+          "label": "SKU Availability",
+          "fmt": "pct",
+          "values": [
+            null,
+            null,
+            null
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "eater_fees_aov",
+          "label": "Eater Fees, AOV %",
+          "fmt": "pct",
+          "values": [
+            13.9,
+            13.9,
+            13.6
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "item_promo_gmv",
+          "label": "Item-Level Promo, GMV %",
+          "fmt": "pct",
+          "values": [
+            2.67,
+            1.88,
+            1.77
+          ],
+          "deltas": null,
+          "lower_better": true
+        },
+        {
+          "key": "campaigns_discount",
+          "label": "Campaigns Discount, GMV %",
+          "fmt": "pct",
+          "values": [
+            null,
+            null,
+            null
+          ],
+          "deltas": null,
+          "lower_better": true
+        },
+        {
+          "key": "delivery_fee_campaign",
+          "label": "Orders with Delivery Fee Campaign",
+          "fmt": "pct",
+          "values": [
+            null,
+            null,
+            null
+          ],
+          "deltas": null,
+          "lower_better": true
+        },
+        {
+          "key": "not_delivered",
+          "label": "Not-delivered orders, %",
+          "fmt": "pct",
+          "values": [
+            6.2,
+            5.6,
+            5.0
+          ],
+          "deltas": null,
+          "lower_better": true
+        },
+        {
+          "key": "delivery_time",
+          "label": "Total Delivery Time, min",
+          "fmt": "min",
+          "values": [
+            25.4,
+            25.4,
+            24.9
+          ],
+          "deltas": null,
+          "lower_better": true
+        },
+        {
+          "key": "late_delivery_10",
+          "label": "Late Delivery (10+min) Rate",
+          "fmt": "pct",
+          "values": [
+            3.9,
+            3.3,
+            3.1
+          ],
+          "deltas": null,
+          "lower_better": true
+        },
+        {
+          "key": "order_defect",
+          "label": "Order Defect Rate",
+          "fmt": "pct",
+          "values": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "deltas": null,
+          "lower_better": true
+        },
+        {
+          "key": "order_replacement",
+          "label": "Order Replacement Rate",
+          "fmt": "pct",
+          "values": [
+            100.0,
+            null,
+            null
+          ],
+          "deltas": null,
+          "lower_better": true
+        },
+        {
+          "key": "cs_ticket",
+          "label": "CS Ticket Order Rate",
+          "fmt": "pct",
+          "values": [
+            2.3,
+            1.9,
+            2.2
+          ],
+          "deltas": null,
+          "lower_better": true
+        }
+      ],
+      "gmv": [
+        {
+          "key": "gmv",
+          "label": "GMV",
+          "fmt": "eur",
+          "values": [
+            59158.0,
+            65621.0,
+            75764.0
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "gmv_per_merchant",
+          "label": "GMV per Merchant",
+          "fmt": "eur",
+          "values": [
+            184.0,
+            208.0,
+            229.0
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "orders",
+          "label": "Orders",
+          "fmt": "int",
+          "values": [
+            4983,
+            5403,
+            6344
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "orders_per_merchant",
+          "label": "Orders per Merchant",
+          "fmt": "int",
+          "values": [
+            16.0,
+            17.0,
+            19.0
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "gmv_per_order",
+          "label": "GMV per Order",
+          "fmt": "eur",
+          "values": [
+            11.87,
+            12.15,
+            11.94
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "bolt_plus_share",
+          "label": "Bolt Plus GMV Share",
+          "fmt": "pct",
+          "values": [
+            15.1,
+            14.1,
+            15.7
+          ],
+          "deltas": null,
+          "lower_better": false
+        }
+      ],
+      "users": [
+        {
+          "key": "active_users",
+          "label": "Active Users",
+          "fmt": "int",
+          "values": [
+            2509,
+            2581,
+            3098
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "frequency",
+          "label": "Frequency",
+          "fmt": "dec",
+          "values": [
+            1.99,
+            2.09,
+            2.05
+          ],
+          "deltas": null,
+          "lower_better": false
+        }
+      ],
+      "funnel": [],
+      "finance": [
+        {
+          "key": "commission_gmv",
+          "label": "Commission, % GMV",
+          "fmt": "pct",
+          "values": [
+            23.0,
+            22.8,
+            22.9
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "commission_aov",
+          "label": "Commission, % AOV",
+          "fmt": "pct",
+          "values": [
+            26.7,
+            26.5,
+            26.5
+          ],
+          "deltas": null,
+          "lower_better": false
+        },
+        {
+          "key": "aov",
+          "label": "AOV",
+          "fmt": "eur",
+          "values": [
+            11.87,
+            12.15,
+            11.94
+          ],
+          "deltas": null,
+          "lower_better": false
+        }
+      ]
+    }
+  },
+  "segment_names": {
+    "total": "Загальний",
+    "ent": "ENT",
+    "mm": "MM",
+    "smb": "SMB"
+  },
+  "segment_cmp": [
+    {
+      "seg": "total",
+      "name": "Загальний",
+      "orders": 49114.0,
+      "gmv": 648917.0,
+      "aov": 13.21,
+      "commission_gmv": 11.2,
+      "order_defect": 21.0,
+      "order_replacement": 40.0,
+      "not_delivered": 8.0,
+      "active_users": 20394.0
+    },
+    {
+      "seg": "ent",
+      "name": "ENT",
+      "orders": 42768,
+      "gmv": 573139.0,
+      "aov": 13.4,
+      "commission_gmv": 9.5,
+      "order_defect": 29.3,
+      "order_replacement": 39.5,
+      "not_delivered": 8.3,
+      "active_users": 18286
+    },
+    {
+      "seg": "mm",
+      "name": "MM",
+      "orders": null,
+      "gmv": null,
+      "aov": null,
+      "commission_gmv": null,
+      "order_defect": null,
+      "order_replacement": null,
+      "not_delivered": null,
+      "active_users": null
+    },
+    {
+      "seg": "smb",
+      "name": "SMB",
+      "orders": 6344,
+      "gmv": 75764.0,
+      "aov": 11.94,
+      "commission_gmv": 22.9,
+      "order_defect": 0.0,
+      "order_replacement": null,
+      "not_delivered": 5.0,
+      "active_users": 3098
+    }
+  ],
   "partners": [
     {
       "brand": "VARUS",
@@ -36715,9 +38094,9 @@
       "merchant_availability": 87.8,
       "sku_availability": 95.0,
       "order_replacement": 61.6,
-      "orders": 54721,
-      "gmv": 1874363.0,
-      "active_users": 23042,
+      "orders": 54747,
+      "gmv": 1875240.0,
+      "active_users": 23057,
       "frequency": 2.37
     },
     {
@@ -40805,13 +42184,13 @@
           }
         },
         "gmv": {
-          "2026-08": {
-            "orders": 144,
-            "gmv": 2438.0
-          },
           "2026-07": {
             "orders": 134,
             "gmv": 2276.0
+          },
+          "2026-08": {
+            "orders": 144,
+            "gmv": 2438.0
           },
           "2026-06": {
             "orders": 116,
@@ -40819,13 +42198,13 @@
           }
         },
         "users": {
-          "2026-08": {
-            "active_users": 108,
-            "frequency": 1.33
-          },
           "2026-07": {
             "active_users": 125,
             "frequency": 1.07
+          },
+          "2026-08": {
+            "active_users": 108,
+            "frequency": 1.33
           },
           "2026-06": {
             "active_users": 97,
@@ -41816,13 +43195,13 @@
             "orders": 40,
             "gmv": 1936.0
           },
-          "2026-07": {
-            "orders": 49,
-            "gmv": 2595.0
-          },
           "2026-08": {
             "orders": 43,
             "gmv": 2445.0
+          },
+          "2026-07": {
+            "orders": 49,
+            "gmv": 2595.0
           }
         },
         "users": {
@@ -41830,13 +43209,13 @@
             "active_users": 37,
             "frequency": 1.08
           },
-          "2026-07": {
-            "active_users": 38,
-            "frequency": 1.29
-          },
           "2026-08": {
             "active_users": 39,
             "frequency": 1.1
+          },
+          "2026-07": {
+            "active_users": 38,
+            "frequency": 1.29
           }
         },
         "summary": {
@@ -42921,18 +44300,6 @@
         "brand": "KONFESTA UAB",
         "mission": "Specialty Stores",
         "input": {
-          "2026-06": {
-            "active_merchants": 15,
-            "merchant_availability": 91.5,
-            "sku_availability": null,
-            "item_promo_gmv": 1.82,
-            "not_delivered": 11.4,
-            "delivery_time": 30.4,
-            "late_delivery_10": 8.2,
-            "order_defect": 0.0,
-            "cs_ticket": 3.3,
-            "order_replacement": null
-          },
           "2026-07": {
             "active_merchants": 16,
             "merchant_availability": 88.2,
@@ -42943,6 +44310,18 @@
             "late_delivery_10": 8.3,
             "order_defect": 0.0,
             "cs_ticket": 2.2,
+            "order_replacement": null
+          },
+          "2026-06": {
+            "active_merchants": 15,
+            "merchant_availability": 91.5,
+            "sku_availability": null,
+            "item_promo_gmv": 1.82,
+            "not_delivered": 11.4,
+            "delivery_time": 30.4,
+            "late_delivery_10": 8.2,
+            "order_defect": 0.0,
+            "cs_ticket": 3.3,
             "order_replacement": null
           },
           "2026-08": {
@@ -44238,18 +45617,6 @@
             "cs_ticket": 9.5,
             "order_replacement": 21.4
           },
-          "2026-06": {
-            "active_merchants": 48,
-            "merchant_availability": 95.9,
-            "sku_availability": 80.9,
-            "item_promo_gmv": 1.23,
-            "not_delivered": 4.6,
-            "delivery_time": 82.8,
-            "late_delivery_10": 14.9,
-            "order_defect": 49.5,
-            "cs_ticket": 11.4,
-            "order_replacement": 21.2
-          },
           "2026-07": {
             "active_merchants": 51,
             "merchant_availability": 98.6,
@@ -44261,6 +45628,18 @@
             "order_defect": 48.1,
             "cs_ticket": 11.4,
             "order_replacement": 17.0
+          },
+          "2026-06": {
+            "active_merchants": 48,
+            "merchant_availability": 95.9,
+            "sku_availability": 80.9,
+            "item_promo_gmv": 1.23,
+            "not_delivered": 4.6,
+            "delivery_time": 82.8,
+            "late_delivery_10": 14.9,
+            "order_defect": 49.5,
+            "cs_ticket": 11.4,
+            "order_replacement": 21.2
           }
         },
         "gmv": {
@@ -44307,7 +45686,7 @@
         "input": {
           "2026-08": {
             "active_merchants": 31,
-            "merchant_availability": 87.6,
+            "merchant_availability": 87.4,
             "sku_availability": 74.0,
             "item_promo_gmv": 0.92,
             "not_delivered": 4.1,
@@ -45060,7 +46439,7 @@
           "2026-08": {
             "active_merchants": 57,
             "merchant_availability": 87.1,
-            "sku_availability": 85.6,
+            "sku_availability": 85.7,
             "item_promo_gmv": 2.51,
             "not_delivered": 13.9,
             "delivery_time": 25.5,
@@ -49603,18 +50982,6 @@
         "brand": "LA DRAFT",
         "mission": "Alcohol Stores",
         "input": {
-          "2026-06": {
-            "active_merchants": 3,
-            "merchant_availability": 96.0,
-            "sku_availability": null,
-            "item_promo_gmv": 0.0,
-            "not_delivered": 0.0,
-            "delivery_time": 34.5,
-            "late_delivery_10": 10.0,
-            "order_defect": 0.0,
-            "cs_ticket": 0.0,
-            "order_replacement": null
-          },
           "2026-08": {
             "active_merchants": 3,
             "merchant_availability": 75.7,
@@ -49625,6 +50992,18 @@
             "late_delivery_10": 3.6,
             "order_defect": 0.0,
             "cs_ticket": 1.8,
+            "order_replacement": null
+          },
+          "2026-06": {
+            "active_merchants": 3,
+            "merchant_availability": 96.0,
+            "sku_availability": null,
+            "item_promo_gmv": 0.0,
+            "not_delivered": 0.0,
+            "delivery_time": 34.5,
+            "late_delivery_10": 10.0,
+            "order_defect": 0.0,
+            "cs_ticket": 0.0,
             "order_replacement": null
           },
           "2026-07": {
@@ -49641,13 +51020,13 @@
           }
         },
         "gmv": {
-          "2026-08": {
-            "orders": 53,
-            "gmv": 1156.0
-          },
           "2026-06": {
             "orders": 30,
             "gmv": 667.0
+          },
+          "2026-08": {
+            "orders": 53,
+            "gmv": 1156.0
           },
           "2026-07": {
             "orders": 55,
@@ -49655,13 +51034,13 @@
           }
         },
         "users": {
-          "2026-08": {
-            "active_users": 24,
-            "frequency": 2.21
-          },
           "2026-06": {
             "active_users": 21,
             "frequency": 1.43
+          },
+          "2026-08": {
+            "active_users": 24,
+            "frequency": 2.21
           },
           "2026-07": {
             "active_users": 27,
@@ -50105,6 +51484,23 @@
       "key": "conversion_rate",
       "label": "Conversion Rate",
       "fmt": "pct"
+    }
+  ],
+  "finance_metrics": [
+    {
+      "key": "commission_gmv",
+      "label": "Commission, % GMV",
+      "fmt": "pct"
+    },
+    {
+      "key": "commission_aov",
+      "label": "Commission, % AOV",
+      "fmt": "pct"
+    },
+    {
+      "key": "aov",
+      "label": "AOV",
+      "fmt": "eur"
     }
   ]
 }

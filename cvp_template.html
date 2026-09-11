@@ -40,6 +40,7 @@ footer{font-size:11px;color:var(--muted);margin-top:24px;padding-top:12px;border
     <button data-t="input">CVP Input</button>
     <button data-t="output">CVP Output</button>
     <button data-t="countries">Країни</button>
+    <button data-t="segments">Сегменти</button>
     <button data-t="partners">Партнери</button>
   </div>
 </header>
@@ -78,6 +79,21 @@ footer{font-size:11px;color:var(--muted);margin-top:24px;padding-top:12px;border
   <h3>Рейтинг партнерів (серпень)</h3><div class="tbl"><table id="tblForeignRank"></table></div>
 </div>
 
+<div id="p-segments" style="display:none">
+  <h2>Сегменти партнерів — ENT / MM / SMB / Загальний</h2>
+  <div class="sub" style="margin-bottom:8px">Загальний — Looker CSV (як вкладки Input/Output); ENT / MM / SMB — Databricks (<code>business_segment_v2</code>). Commission та AOV — Databricks.</div>
+  <h3>Порівняння (серпень)</h3>
+  <div class="tbl"><table id="tblSegCmp"></table></div>
+  <div class="filter"><label>Сегмент: </label><select id="segSel"></select></div>
+  <h3>CVP Input</h3><div class="tbl"><table id="tblSegInput"></table></div>
+  <h3>CVP Output — GMV</h3><div class="tbl"><table id="tblSegGmv"></table></div>
+  <h3>CVP Output — Users</h3><div class="tbl"><table id="tblSegUsers"></table></div>
+  <h3>Commission &amp; AOV</h3><div class="tbl"><table id="tblSegFinance"></table></div>
+  <h3>CVP Output — Funnel</h3>
+  <div class="sub" id="segFunnelNote" style="margin-bottom:6px"></div>
+  <div class="tbl"><table id="tblSegFunnel"></table></div>
+</div>
+
 <div id="p-partners" style="display:none">
   <h2>Партнери — CVP Input + Output</h2>
   <div class="filter"><label>Бренд: </label><select id="brandSel"></select></div>
@@ -114,7 +130,7 @@ function ppCell(d,lb){
 
 document.querySelectorAll("#tabs button").forEach(b=>b.onclick=()=>{
   document.querySelectorAll("#tabs button").forEach(x=>x.classList.toggle("active",x===b));
-  ["overview","input","output","countries","partners"].forEach(t=>{
+  ["overview","input","output","countries","segments","partners"].forEach(t=>{
     document.getElementById("p-"+t).style.display=b.dataset.t===t?"":"none";
   });
 });
@@ -254,6 +270,58 @@ metricTable("tblFunnel",R.funnel_metrics,"funnel");
   cSel.onchange=()=>{fillBrands();};
   bSel.onchange=renderForeign;
   fillBrands();
+})();
+
+// Segments ENT / MM / SMB / Total
+(function(){
+  const cmpKeys=[
+    ["orders","Orders","int"],["gmv","GMV","eur"],["aov","AOV","eur"],
+    ["commission_gmv","Commission % GMV","pct"],
+    ["order_defect","Order Defect %","pct"],["order_replacement","Replacements %","pct"],
+    ["not_delivered","Not-delivered %","pct"],["active_users","Active Users","int"],
+  ];
+  let hc="<thead><tr><th>Сегмент</th>"+cmpKeys.map(([,l])=>`<th>${l}</th>`).join("")+"</tr></thead><tbody>";
+  (R.segment_cmp||[]).forEach(r=>{
+    hc+=`<tr><td>${r.name}</td>`+cmpKeys.map(([k,f])=>`<td>${fmt(r[k],f)}</td>`).join("")+"</tr>";
+  });
+  document.getElementById("tblSegCmp").innerHTML=hc+"</tbody>";
+
+  const sel=document.getElementById("segSel");
+  Object.entries(R.segment_names||{}).forEach(([k,n])=>{
+    const o=document.createElement("option");o.value=k;o.textContent=n;sel.appendChild(o);
+  });
+  function segTable(id, metrics, section){
+    const sec=(R.segments||{})[sel.value]||{};
+    const rows=sec[section]||[];
+    let h=`<thead><tr><th>Метрика</th>`+ML.map(m=>`<th>${m}</th>`).join("")+"</tr></thead><tbody>";
+    metrics.forEach(m=>{
+      const row=rows.find(x=>x.key===m.key)||{values:[]};
+      h+=`<tr><td>${m.label}</td>`+row.values.map(v=>`<td>${fmt(v,m.fmt)}</td>`).join("")+"</tr>";
+    });
+    document.getElementById(id).innerHTML=h+"</tbody>";
+  }
+  function renderSeg(){
+    segTable("tblSegInput",R.input_metrics,"input");
+    segTable("tblSegGmv",R.gmv_metrics,"gmv");
+    segTable("tblSegUsers",R.users_metrics,"users");
+    segTable("tblSegFinance",R.finance_metrics||[],"finance");
+    const sec=(R.segments||{})[sel.value]||{};
+    const fn=document.getElementById("segFunnelNote");
+    const funnel=sec.funnel||[];
+    if(sel.value!=="total"||!funnel.length){
+      fn.textContent=sel.value==="total"?"":"Funnel доступний лише для сегмента Загальний (Looker CSV).";
+      document.getElementById("tblSegFunnel").innerHTML="";
+      return;
+    }
+    fn.textContent="";
+    let hf=`<thead><tr><th>Метрика</th>`+ML.map(m=>`<th>${m}</th>`).join("")+"</tr></thead><tbody>";
+    R.funnel_metrics.forEach(m=>{
+      const row=funnel.find(x=>x.key===m.key)||{values:[]};
+      hf+=`<tr><td>${m.label}</td>`+row.values.map(v=>`<td>${fmt(v,m.fmt)}</td>`).join("")+"</tr>";
+    });
+    document.getElementById("tblSegFunnel").innerHTML=hf+"</tbody>";
+  }
+  sel.onchange=renderSeg;renderSeg();
 })();
 
 // Partners

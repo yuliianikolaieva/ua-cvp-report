@@ -78,6 +78,27 @@ LOWER_BETTER = {
     "order_replacement", "cs_ticket", "cart_abandonment", "campaigns_discount",
     "item_promo_gmv", "delivery_fee_campaign",
 }
+SEGMENTS = ["total", "ent", "mm", "smb"]
+SEGMENT_NAMES = {
+    "total": "Загальний", "ent": "ENT", "mm": "MM", "smb": "SMB",
+}
+SEGMENT_SQL = """
+  CASE
+    WHEN p.business_segment_v2 = 'Enterprise (AM Segment)' THEN 'ent'
+    WHEN p.business_segment_v2 = 'Mid-market (AM Segment)' THEN 'mm'
+    WHEN p.business_segment_v2 = 'SMB (AM Segment)' THEN 'smb'
+    ELSE 'other'
+  END
+"""
+UA_VERTICAL = (
+    "(p.delivery_vertical IN ('store_3p_ent','store_3p_mm_smb','store_unclassified') "
+    "OR p.group_name IN ('ANRI-PHARM','BRSM','VAPORS','PIVASOV'))"
+)
+FINANCE_VAL = [
+    ("commission_gmv", "Commission, % GMV", "pct"),
+    ("commission_aov", "Commission, % AOV", "pct"),
+    ("aov", "AOV", "eur"),
+]
 
 
 def _load_env():
@@ -139,6 +160,33 @@ def rnd(v, d=1):
     if v is None:
         return None
     return round(float(v), d)
+
+
+def _db_connect():
+    from databricks import sql as dbsql
+    kwargs = {}
+    if os.environ.get("DATABRICKS_TLS_NO_VERIFY", "").lower() in ("1", "true", "yes"):
+        kwargs["_tls_no_verify"] = True
+    return dbsql.connect(
+        server_hostname=os.environ["DATABRICKS_HOST"],
+        http_path=f"/sql/1.0/warehouses/{os.environ['DATABRICKS_WAREHOUSE_ID']}",
+        access_token=os.environ["DATABRICKS_TOKEN"],
+        **kwargs,
+    )
+
+
+def _metrics_block(metrics_def, month_data, with_deltas=False):
+    items = []
+    for key, label, fmt in metrics_def:
+        vals = [month_data.get(m, {}).get(key) for m in MONTHS]
+        deltas = None
+        if with_deltas:
+            deltas = [None, None, None]
+        items.append({
+            "key": key, "label": label, "fmt": fmt, "values": vals, "deltas": deltas,
+            "lower_better": key in LOWER_BETTER,
+        })
+    return items
 
 
 def pick_val(row, month, looker_name):
@@ -633,6 +681,190 @@ def fetch_foreign_partners():
     return out
 
 
+def fetch_ua_segments_raw():
+    """CVP Input/Output + Commission по сегментах ENT / MM / SMB (Databricks)."""
+    try:
+        conn = _db_connect()
+    except Exception as e:
+        print("WARN segments:", e)
+        return {}
+    cur = conn.cursor()
+    months_sql = ",".join(f"'{m}'" for m in MONTHS)
+
+    cur.execute(f"""
+      SELECT {SEGMENT_SQL} AS seg,
+        DATE_FORMAT(DATE_TRUNC('month', m.metric_timestamp_local), 'yyyy-MM') AS mo,
+        COUNT(DISTINCT CASE WHEN m.delivered_orders_count>0 THEN m.provider_id END) AS active_merchants,
+        SUM(m.provider_active_rate_value*m.provider_active_rate_weight)/NULLIF(SUM(m.provider_active_rate_weight),0)*100 AS merchant_availability,
+        SUM(m.provider_sku_session_availability_rate_value)/NULLIF(SUM(m.provider_sku_session_availability_rate_weight),0)*100 AS sku_availability,
+        SUM(m.provider_campaign_discount_gmv_share_value*m.provider_campaign_discount_gmv_share_weight)/NULLIF(SUM(m.provider_campaign_discount_gmv_share_weight),0)*100 AS item_promo_gmv,
+        SUM(m.failed_order_rate_value*m.failed_order_rate_weight)/NULLIF(SUM(m.failed_order_rate_weight),0)*100 AS not_delivered,
+        SUM(m.order_total_minutes_per_order_value*m.order_total_minutes_per_order_weight)/NULLIF(SUM(m.order_total_minutes_per_order_weight),0) AS delivery_time,
+        SUM(m.late_delivery_order_10min_rate_value*m.late_delivery_order_10min_rate_weight)/NULLIF(SUM(m.late_delivery_order_10min_rate_weight),0)*100 AS late_delivery_10,
+        SUM(m.order_item_adjustment_rate_value*m.order_item_adjustment_rate_weight)/NULLIF(SUM(m.order_item_adjustment_rate_weight),0)*100 AS order_defect,
+        SUM(m.cs_ticket_order_rate_value*m.cs_ticket_order_rate_weight)/NULLIF(SUM(m.cs_ticket_order_rate_weight),0)*100 AS cs_ticket,
+        SUM(m.delivered_orders_count) AS orders_m
+      FROM main.ng_delivery.fact_provider_monthly m
+      JOIN main.ng_delivery.dim_provider_v2 p ON m.provider_id=p.provider_id
+      WHERE p.country_code='ua' AND m.metric_timestamp_local>='{MONTHS[0]}-01' AND m.metric_timestamp_local<'2026-09-01'
+        AND {UA_VERTICAL}
+      GROUP BY 1, DATE_TRUNC('month', m.metric_timestamp_local)
+      HAVING mo IN ({months_sql})
+    """)
+    mon = cur.fetchall()
+
+    cur.execute(f"""
+      SELECT {SEGMENT_SQL} AS seg,
+        DATE_FORMAT(DATE_TRUNC('month', w.metric_timestamp_local), 'yyyy-MM') AS mo,
+        SUM(w.order_item_replacement_rate_value*w.order_item_replacement_rate_weight)/NULLIF(SUM(w.order_item_replacement_rate_weight),0)*100 AS order_replacement,
+        SUM(w.provider_commission_gmv_share_value*w.provider_commission_gmv_share_weight)/NULLIF(SUM(w.provider_commission_gmv_share_weight),0)*100 AS commission_gmv,
+        SUM(w.provider_commission_aov_share_value*w.provider_commission_aov_share_weight)/NULLIF(SUM(w.provider_commission_aov_share_weight),0)*100 AS commission_aov
+      FROM main.ng_delivery.fact_provider_weekly w
+      JOIN main.ng_delivery.dim_provider_v2 p ON w.provider_id=p.provider_id
+      WHERE p.country_code='ua' AND w.metric_timestamp_local>='{MONTHS[0]}-01' AND w.metric_timestamp_local<'2026-09-01'
+        AND {UA_VERTICAL}
+      GROUP BY 1, DATE_TRUNC('month', w.metric_timestamp_local)
+      HAVING mo IN ({months_sql})
+    """)
+    week = {(r[0], r[1]): r[2:] for r in cur.fetchall()}
+
+    cur.execute(f"""
+      SELECT {SEGMENT_SQL} AS seg,
+        DATE_FORMAT(DATE_TRUNC('month', f.order_created_date), 'yyyy-MM') AS mo,
+        COUNT(*) AS orders,
+        ROUND(SUM(f.order_gmv_eur), 0) AS gmv,
+        COUNT(DISTINCT f.user_id) AS active_users,
+        ROUND(SUM(CASE WHEN f.is_bolt_plus_order THEN f.order_gmv_eur ELSE 0 END)/NULLIF(SUM(f.order_gmv_eur),0)*100, 1) AS bolt_plus_share,
+        ROUND(SUM(f.delivery_price_eur)/NULLIF(SUM(f.order_gmv_eur),0)*100, 1) AS eater_fees_aov
+      FROM main.ng_delivery.fact_order_delivery f
+      JOIN main.ng_delivery.dim_provider_v2 p ON f.provider_id=p.provider_id
+      WHERE f.city_country_code='ua' AND f.order_state='delivered'
+        AND f.order_created_date>='{MONTHS[0]}-01' AND f.order_created_date<'2026-09-01' AND {UA_VERTICAL}
+      GROUP BY 1, DATE_TRUNC('month', f.order_created_date)
+      HAVING mo IN ({months_sql})
+    """)
+    ord_rows = cur.fetchall()
+    cur.close()
+    conn.close()
+
+    by_seg = {s: {m: {} for m in MONTHS} for s in ("ent", "mm", "smb", "other")}
+    for r in mon:
+        seg, mo = r[0], r[1]
+        by_seg.setdefault(seg, {m: {} for m in MONTHS})
+        am = r[2]
+        by_seg[seg][mo].update({
+            "active_merchants": int(am) if am else None,
+            "merchant_availability": rnd(r[3]), "sku_availability": rnd(r[4]),
+            "item_promo_gmv": rnd(r[5], 2), "not_delivered": rnd(r[6]),
+            "delivery_time": rnd(r[7]), "late_delivery_10": rnd(r[8]),
+            "order_defect": rnd(r[9]), "cs_ticket": rnd(r[10]),
+        })
+        wk = week.get((seg, mo))
+        if wk:
+            by_seg[seg][mo].update({
+                "order_replacement": rnd(wk[0]),
+                "commission_gmv": rnd(wk[1]), "commission_aov": rnd(wk[2]),
+            })
+
+    for r in ord_rows:
+        seg, mo, orders, gmv, au, bp, ef = r
+        by_seg.setdefault(seg, {m: {} for m in MONTHS})
+        orders = int(orders)
+        gmv = float(gmv)
+        am = by_seg[seg][mo].get("active_merchants")
+        by_seg[seg][mo].update({
+            "orders": orders, "gmv": gmv,
+            "gmv_per_order": rnd(gmv / orders, 2) if orders else None,
+            "aov": rnd(gmv / orders, 2) if orders else None,
+            "active_users": int(au) if au else None,
+            "frequency": rnd(orders / au, 2) if au else None,
+            "bolt_plus_share": rnd(bp), "eater_fees_aov": rnd(ef),
+            "gmv_per_merchant": rnd(gmv / am, 0) if am else None,
+            "orders_per_merchant": rnd(orders / am, 0) if am else None,
+        })
+
+    return by_seg
+
+
+def build_segments(country):
+    """Сегменти: total (Looker) + ENT/MM/SMB (Databricks)."""
+    db = fetch_ua_segments_raw()
+    segments = {}
+
+    segments["total"] = {
+        "input": country["input"],
+        "gmv": country["gmv"],
+        "users": country["users"],
+        "funnel": country["funnel"],
+        "finance": _metrics_block(FINANCE_VAL, {m: {} for m in MONTHS}),
+    }
+
+    # Commission + AOV для total — зважено по замовленнях з сегментів Databricks
+    total_fin = {m: {} for m in MONTHS}
+    tot_orders = {m: 0 for m in MONTHS}
+    tot_gmv = {m: 0.0 for m in MONTHS}
+    comm_gmv_w = {m: [0.0, 0.0] for m in MONTHS}
+    comm_aov_w = {m: [0.0, 0.0] for m in MONTHS}
+    for seg in ("ent", "mm", "smb", "other"):
+        for m in MONTHS:
+            d = db.get(seg, {}).get(m, {})
+            o, g = d.get("orders"), d.get("gmv")
+            if o:
+                tot_orders[m] += o
+                tot_gmv[m] += g or 0
+            if d.get("commission_gmv") is not None and o:
+                comm_gmv_w[m][0] += d["commission_gmv"] * o
+                comm_gmv_w[m][1] += o
+            if d.get("commission_aov") is not None and o:
+                comm_aov_w[m][0] += d["commission_aov"] * o
+                comm_aov_w[m][1] += o
+    for m in MONTHS:
+        if tot_orders[m]:
+            total_fin[m]["aov"] = rnd(tot_gmv[m] / tot_orders[m], 2)
+        if comm_gmv_w[m][1]:
+            total_fin[m]["commission_gmv"] = rnd(comm_gmv_w[m][0] / comm_gmv_w[m][1])
+        if comm_aov_w[m][1]:
+            total_fin[m]["commission_aov"] = rnd(comm_aov_w[m][0] / comm_aov_w[m][1])
+    segments["total"]["finance"] = _metrics_block(FINANCE_VAL, total_fin)
+
+    for seg in ("ent", "mm", "smb"):
+        md = db.get(seg, {m: {} for m in MONTHS})
+        segments[seg] = {
+            "input": _metrics_block(INPUT_VAL, md),
+            "gmv": _metrics_block(GMV_VAL, md),
+            "users": _metrics_block(USERS_VAL, md),
+            "funnel": [],
+            "finance": _metrics_block(FINANCE_VAL, md),
+        }
+
+    # Порівняння серпень — ключові метрики по сегментах
+    cmp_keys = [
+        ("orders", "Orders", "int", False), ("gmv", "GMV", "eur", False),
+        ("aov", "AOV", "eur", False), ("commission_gmv", "Commission % GMV", "pct", False),
+        ("order_defect", "Order Defect %", "pct", True),
+        ("order_replacement", "Replacements %", "pct", True),
+        ("not_delivered", "Not-delivered %", "pct", True),
+        ("active_users", "Active Users", "int", False),
+    ]
+    cmp = []
+    for seg in SEGMENTS:
+        row = {"seg": seg, "name": SEGMENT_NAMES[seg]}
+        md_aug = {}
+        if seg == "total":
+            for sec in ("gmv", "input", "users", "finance"):
+                for item in segments[seg][sec]:
+                    md_aug[item["key"]] = item["values"][-1]
+        else:
+            for sec in ("gmv", "input", "users", "finance"):
+                for item in segments[seg][sec]:
+                    md_aug[item["key"]] = item["values"][-1]
+        for key, label, fmt, lb in cmp_keys:
+            row[key] = md_aug.get(key)
+        cmp.append(row)
+
+    return segments, cmp
+
+
 def build_insights(country, bench_rows):
     insights = []
     aug = {m["key"]: m["values"][-1] for sec in [country["input"], country["gmv"], country["users"], country["funnel"]]
@@ -689,6 +921,7 @@ def main():
     partners = build_partners()
     bench_rows, bench_metric_defs = fetch_country_bench_full()
     foreign_partners = fetch_foreign_partners()
+    segments, segment_cmp = build_segments(country)
     insights = build_insights(country, bench_rows)
 
     R = {
@@ -697,6 +930,9 @@ def main():
         "months": MONTHS,
         "month_lbl": [MONTH_LBL[m] for m in MONTHS],
         "country": country,
+        "segments": segments,
+        "segment_names": SEGMENT_NAMES,
+        "segment_cmp": segment_cmp,
         "partners": partners,
         "bench_rows": bench_rows,
         "bench_metric_defs": [{"key": k, "label": l, "fmt": f, "lower_better": lb} for k, l, f, lb in bench_metric_defs],
@@ -707,12 +943,13 @@ def main():
         "gmv_metrics": [{"key": k, "label": l, "fmt": f} for k, l, f in GMV_VAL],
         "users_metrics": [{"key": k, "label": l, "fmt": f} for k, l, f in USERS_VAL],
         "funnel_metrics": [{"key": k, "label": l, "fmt": f} for k, l, f in FUNNEL_VAL],
+        "finance_metrics": [{"key": k, "label": l, "fmt": f} for k, l, f in FINANCE_VAL],
     }
 
     (_ROOT / "cvp_data.json").write_text(json.dumps(R, ensure_ascii=False, indent=2), encoding="utf-8")
     tpl = (_ROOT / "cvp_template.html").read_text(encoding="utf-8")
     (_ROOT / "index.html").write_text(tpl.replace("/*__CVP_DATA__*/", json.dumps(R, ensure_ascii=False)), encoding="utf-8")
-    print(f"OK | partners={len(partners)} | foreign={sum(len(v) for v in foreign_partners.values())} | insights={len(insights)}")
+    print(f"OK | partners={len(partners)} | foreign={sum(len(v) for v in foreign_partners.values())} | segments={len(segments)} | insights={len(insights)}")
 
 
 if __name__ == "__main__":
