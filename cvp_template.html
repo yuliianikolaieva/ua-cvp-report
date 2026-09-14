@@ -93,7 +93,9 @@ footer{font-size:11px;color:var(--muted);margin-top:24px;padding-top:12px;border
   <h3>CVP Input</h3><div class="tbl"><table id="tblSegInput"></table></div>
   <h3>CVP Output — GMV</h3><div class="tbl"><table id="tblSegGmv"></table></div>
   <h3>CVP Output — Users</h3><div class="tbl"><table id="tblSegUsers"></table></div>
-  <h3>Commission &amp; AOV</h3><div class="tbl"><table id="tblSegFinance"></table></div>
+  <h3>Commission &amp; AOV</h3>
+  <div class="sub" style="margin-bottom:6px">Commission % GMV → Commission % AOV → AOV. У кожному блоці: <b>Total</b>, <b>ENT</b>, <b>SMB</b> (Databricks).</div>
+  <div class="tbl"><table id="tblSegFinance"></table></div>
   <h3>CVP Output — Funnel</h3>
   <div class="sub" id="segFunnelNote" style="margin-bottom:6px"></div>
   <div class="tbl"><table id="tblSegFunnel"></table></div>
@@ -338,6 +340,19 @@ metricTable("tblFunnel",R.funnel_metrics,"funnel");
   });
   document.getElementById("tblSegCmp").innerHTML=hc+"</tbody>";
 
+  (function renderFinanceMatrix(){
+    const sections=R.finance_matrix||[];
+    const cols=ML.length+1;
+    let h=`<thead><tr><th>Сегмент</th>`+ML.map(m=>`<th>${m}</th>`).join("")+`</tr></thead><tbody>`;
+    sections.forEach(sec=>{
+      h+=`<tr><td colspan="${cols}" style="font-weight:600;background:#fafafa;text-transform:uppercase;font-size:11px">${sec.title}</td></tr>`;
+      (sec.rows||[]).forEach(r=>{
+        h+=`<tr><td>${r.segment}</td>`+r.values.map(v=>`<td>${fmt(v,r.fmt)}</td>`).join("")+"</tr>";
+      });
+    });
+    document.getElementById("tblSegFinance").innerHTML=h+"</tbody>";
+  })();
+
   const sel=document.getElementById("segSel");
   Object.entries(R.segment_names||{}).forEach(([k,n])=>{
     const o=document.createElement("option");o.value=k;o.textContent=n;sel.appendChild(o);
@@ -356,7 +371,6 @@ metricTable("tblFunnel",R.funnel_metrics,"funnel");
     segTable("tblSegInput",R.input_metrics,"input");
     segTable("tblSegGmv",R.gmv_metrics,"gmv");
     segTable("tblSegUsers",R.users_metrics,"users");
-    segTable("tblSegFinance",R.finance_metrics||[],"finance");
     const sec=(R.segments||{})[sel.value]||{};
     const fn=document.getElementById("segFunnelNote");
     const funnel=sec.funnel||[];

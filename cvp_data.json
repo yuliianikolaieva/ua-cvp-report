@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-14 07:45 UTC",
+  "generated_at": "2026-09-14 07:46 UTC",
   "looker_url": "https://bolt.cloud.looker.com/dashboards/32511",
   "months": [
     "2026-06",
@@ -41767,39 +41767,39 @@
           }
         },
         "gmv": {
-          "2026-09": {
-            "orders": 51,
-            "gmv": 1406.0
+          "2026-06": {
+            "orders": 70,
+            "gmv": 1736.0
           },
           "2026-08": {
             "orders": 84,
             "gmv": 2151.0
           },
+          "2026-09": {
+            "orders": 51,
+            "gmv": 1406.0
+          },
           "2026-07": {
             "orders": 74,
             "gmv": 1917.0
-          },
-          "2026-06": {
-            "orders": 70,
-            "gmv": 1736.0
           }
         },
         "users": {
-          "2026-09": {
-            "active_users": 48,
-            "frequency": 1.06
+          "2026-06": {
+            "active_users": 57,
+            "frequency": 1.23
           },
           "2026-08": {
             "active_users": 74,
             "frequency": 1.14
           },
+          "2026-09": {
+            "active_users": 48,
+            "frequency": 1.06
+          },
           "2026-07": {
             "active_users": 61,
             "frequency": 1.21
-          },
-          "2026-06": {
-            "active_users": 57,
-            "frequency": 1.23
           }
         },
         "summary": {
@@ -42064,10 +42064,6 @@
           }
         },
         "gmv": {
-          "2026-09": {
-            "orders": 42,
-            "gmv": 1232.0
-          },
           "2026-06": {
             "orders": 78,
             "gmv": 2020.0
@@ -42079,13 +42075,13 @@
           "2026-08": {
             "orders": 105,
             "gmv": 2816.0
+          },
+          "2026-09": {
+            "orders": 42,
+            "gmv": 1232.0
           }
         },
         "users": {
-          "2026-09": {
-            "active_users": 39,
-            "frequency": 1.08
-          },
           "2026-06": {
             "active_users": 67,
             "frequency": 1.16
@@ -42097,6 +42093,10 @@
           "2026-08": {
             "active_users": 79,
             "frequency": 1.33
+          },
+          "2026-09": {
+            "active_users": 39,
+            "frequency": 1.08
           }
         },
         "summary": {
@@ -42262,6 +42262,10 @@
           }
         },
         "gmv": {
+          "2026-06": {
+            "orders": 62,
+            "gmv": 2587.0
+          },
           "2026-07": {
             "orders": 85,
             "gmv": 4161.0
@@ -42273,13 +42277,13 @@
           "2026-08": {
             "orders": 71,
             "gmv": 3486.0
-          },
-          "2026-06": {
-            "orders": 62,
-            "gmv": 2587.0
           }
         },
         "users": {
+          "2026-06": {
+            "active_users": 42,
+            "frequency": 1.48
+          },
           "2026-07": {
             "active_users": 58,
             "frequency": 1.47
@@ -42291,10 +42295,6 @@
           "2026-08": {
             "active_users": 52,
             "frequency": 1.37
-          },
-          "2026-06": {
-            "active_users": 42,
-            "frequency": 1.48
           }
         },
         "summary": {
@@ -42685,13 +42685,13 @@
             "orders": 83,
             "gmv": 1457.0
           },
-          "2026-08": {
-            "orders": 58,
-            "gmv": 989.0
-          },
           "2026-06": {
             "orders": 95,
             "gmv": 1602.0
+          },
+          "2026-08": {
+            "orders": 58,
+            "gmv": 989.0
           }
         },
         "users": {
@@ -42699,13 +42699,13 @@
             "active_users": 40,
             "frequency": 2.08
           },
-          "2026-08": {
-            "active_users": 33,
-            "frequency": 1.76
-          },
           "2026-06": {
             "active_users": 41,
             "frequency": 2.32
+          },
+          "2026-08": {
+            "active_users": 33,
+            "frequency": 1.76
           }
         },
         "summary": {
@@ -42760,10 +42760,6 @@
           }
         },
         "gmv": {
-          "2026-08": {
-            "orders": 58,
-            "gmv": 2875.0
-          },
           "2026-07": {
             "orders": 70,
             "gmv": 3910.0
@@ -42771,13 +42767,13 @@
           "2026-06": {
             "orders": 91,
             "gmv": 4305.0
+          },
+          "2026-08": {
+            "orders": 58,
+            "gmv": 2875.0
           }
         },
         "users": {
-          "2026-08": {
-            "active_users": 56,
-            "frequency": 1.04
-          },
           "2026-07": {
             "active_users": 62,
             "frequency": 1.13
@@ -42785,6 +42781,10 @@
           "2026-06": {
             "active_users": 87,
             "frequency": 1.05
+          },
+          "2026-08": {
+            "active_users": 56,
+            "frequency": 1.04
           }
         },
         "summary": {
@@ -43293,10 +43293,6 @@
           }
         },
         "gmv": {
-          "2026-07": {
-            "orders": 61,
-            "gmv": 960.0
-          },
           "2026-08": {
             "orders": 53,
             "gmv": 943.0
@@ -43304,13 +43300,13 @@
           "2026-06": {
             "orders": 81,
             "gmv": 1333.0
+          },
+          "2026-07": {
+            "orders": 61,
+            "gmv": 960.0
           }
         },
         "users": {
-          "2026-07": {
-            "active_users": 50,
-            "frequency": 1.22
-          },
           "2026-08": {
             "active_users": 49,
             "frequency": 1.08
@@ -43318,6 +43314,10 @@
           "2026-06": {
             "active_users": 68,
             "frequency": 1.19
+          },
+          "2026-07": {
+            "active_users": 50,
+            "frequency": 1.22
           }
         },
         "summary": {
@@ -43376,13 +43376,13 @@
             "orders": 38,
             "gmv": 1458.0
           },
-          "2026-06": {
-            "orders": 41,
-            "gmv": 1407.0
-          },
           "2026-07": {
             "orders": 35,
             "gmv": 1446.0
+          },
+          "2026-06": {
+            "orders": 41,
+            "gmv": 1407.0
           }
         },
         "users": {
@@ -43390,13 +43390,13 @@
             "active_users": 31,
             "frequency": 1.23
           },
-          "2026-06": {
-            "active_users": 34,
-            "frequency": 1.21
-          },
           "2026-07": {
             "active_users": 32,
             "frequency": 1.09
+          },
+          "2026-06": {
+            "active_users": 34,
+            "frequency": 1.21
           }
         },
         "summary": {
@@ -44693,18 +44693,6 @@
             "cs_ticket": 2.8,
             "order_replacement": null
           },
-          "2026-08": {
-            "active_merchants": 1,
-            "merchant_availability": 98.7,
-            "sku_availability": null,
-            "item_promo_gmv": 17.23,
-            "not_delivered": 0.0,
-            "delivery_time": 30.0,
-            "late_delivery_10": 2.2,
-            "order_defect": 0.0,
-            "cs_ticket": 1.4,
-            "order_replacement": null
-          },
           "2026-07": {
             "active_merchants": 1,
             "merchant_availability": 100.0,
@@ -44715,6 +44703,18 @@
             "late_delivery_10": 2.5,
             "order_defect": 0.0,
             "cs_ticket": 2.9,
+            "order_replacement": null
+          },
+          "2026-08": {
+            "active_merchants": 1,
+            "merchant_availability": 98.7,
+            "sku_availability": null,
+            "item_promo_gmv": 17.23,
+            "not_delivered": 0.0,
+            "delivery_time": 30.0,
+            "late_delivery_10": 2.2,
+            "order_defect": 0.0,
+            "cs_ticket": 1.4,
             "order_replacement": null
           },
           "2026-06": {
@@ -44735,13 +44735,13 @@
             "orders": 84,
             "gmv": 1305.0
           },
-          "2026-08": {
-            "orders": 144,
-            "gmv": 2438.0
-          },
           "2026-07": {
             "orders": 134,
             "gmv": 2276.0
+          },
+          "2026-08": {
+            "orders": 144,
+            "gmv": 2438.0
           },
           "2026-06": {
             "orders": 116,
@@ -44753,13 +44753,13 @@
             "active_users": 58,
             "frequency": 1.45
           },
-          "2026-08": {
-            "active_users": 108,
-            "frequency": 1.33
-          },
           "2026-07": {
             "active_users": 125,
             "frequency": 1.07
+          },
+          "2026-08": {
+            "active_users": 108,
+            "frequency": 1.33
           },
           "2026-06": {
             "active_users": 97,
@@ -45234,13 +45234,13 @@
             "orders": 110,
             "gmv": 1944.0
           },
-          "2026-09": {
-            "orders": 59,
-            "gmv": 1079.0
-          },
           "2026-06": {
             "orders": 76,
             "gmv": 1423.0
+          },
+          "2026-09": {
+            "orders": 59,
+            "gmv": 1079.0
           }
         },
         "users": {
@@ -45252,13 +45252,13 @@
             "active_users": 100,
             "frequency": 1.1
           },
-          "2026-09": {
-            "active_users": 51,
-            "frequency": 1.16
-          },
           "2026-06": {
             "active_users": 68,
             "frequency": 1.12
+          },
+          "2026-09": {
+            "active_users": 51,
+            "frequency": 1.16
           }
         },
         "summary": {
@@ -45630,13 +45630,13 @@
             "orders": 44,
             "gmv": 1860.0
           },
-          "2026-07": {
-            "orders": 107,
-            "gmv": 4522.0
-          },
           "2026-06": {
             "orders": 86,
             "gmv": 3345.0
+          },
+          "2026-07": {
+            "orders": 107,
+            "gmv": 4522.0
           }
         },
         "users": {
@@ -45648,13 +45648,13 @@
             "active_users": 22,
             "frequency": 2.0
           },
-          "2026-07": {
-            "active_users": 57,
-            "frequency": 1.88
-          },
           "2026-06": {
             "active_users": 41,
             "frequency": 2.1
+          },
+          "2026-07": {
+            "active_users": 57,
+            "frequency": 1.88
           }
         },
         "summary": {
@@ -45816,13 +45816,13 @@
             "orders": 77,
             "gmv": 4397.0
           },
-          "2026-06": {
-            "orders": 53,
-            "gmv": 2430.0
-          },
           "2026-09": {
             "orders": 33,
             "gmv": 1875.0
+          },
+          "2026-06": {
+            "orders": 53,
+            "gmv": 2430.0
           }
         },
         "users": {
@@ -45834,13 +45834,13 @@
             "active_users": 72,
             "frequency": 1.07
           },
-          "2026-06": {
-            "active_users": 49,
-            "frequency": 1.08
-          },
           "2026-09": {
             "active_users": 32,
             "frequency": 1.03
+          },
+          "2026-06": {
+            "active_users": 49,
+            "frequency": 1.08
           }
         },
         "summary": {
@@ -45966,13 +45966,13 @@
             "orders": 40,
             "gmv": 1936.0
           },
-          "2026-08": {
-            "orders": 43,
-            "gmv": 2445.0
-          },
           "2026-07": {
             "orders": 49,
             "gmv": 2595.0
+          },
+          "2026-08": {
+            "orders": 43,
+            "gmv": 2445.0
           }
         },
         "users": {
@@ -45980,13 +45980,13 @@
             "active_users": 37,
             "frequency": 1.08
           },
-          "2026-08": {
-            "active_users": 39,
-            "frequency": 1.1
-          },
           "2026-07": {
             "active_users": 38,
             "frequency": 1.29
+          },
+          "2026-08": {
+            "active_users": 39,
+            "frequency": 1.1
           }
         },
         "summary": {
@@ -46158,6 +46158,85 @@
         }
       },
       {
+        "brand": "LAUKU BAUDA",
+        "mission": "Specialty Stores",
+        "input": {
+          "2026-06": {
+            "active_merchants": 6,
+            "merchant_availability": 72.2,
+            "sku_availability": null,
+            "item_promo_gmv": 0.0,
+            "not_delivered": 17.0,
+            "delivery_time": 28.5,
+            "late_delivery_10": 0.0,
+            "order_defect": 0.0,
+            "cs_ticket": 4.3,
+            "order_replacement": null
+          },
+          "2026-07": {
+            "active_merchants": 6,
+            "merchant_availability": 83.4,
+            "sku_availability": null,
+            "item_promo_gmv": 8.55,
+            "not_delivered": 9.1,
+            "delivery_time": 31.0,
+            "late_delivery_10": 0.0,
+            "order_defect": 0.0,
+            "cs_ticket": 4.5,
+            "order_replacement": null
+          },
+          "2026-08": {
+            "active_merchants": 6,
+            "merchant_availability": 74.7,
+            "sku_availability": null,
+            "item_promo_gmv": 0.18,
+            "not_delivered": 9.1,
+            "delivery_time": 31.5,
+            "late_delivery_10": 5.5,
+            "order_defect": 0.0,
+            "cs_ticket": 0.0,
+            "order_replacement": null
+          }
+        },
+        "gmv": {
+          "2026-06": {
+            "orders": 39,
+            "gmv": 1309.0
+          },
+          "2026-08": {
+            "orders": 50,
+            "gmv": 1636.0
+          },
+          "2026-07": {
+            "orders": 40,
+            "gmv": 1334.0
+          }
+        },
+        "users": {
+          "2026-06": {
+            "active_users": 32,
+            "frequency": 1.22
+          },
+          "2026-08": {
+            "active_users": 41,
+            "frequency": 1.22
+          },
+          "2026-07": {
+            "active_users": 36,
+            "frequency": 1.11
+          }
+        },
+        "summary": {
+          "orders": null,
+          "gmv": null,
+          "active_users": null,
+          "frequency": null,
+          "order_defect": null,
+          "order_replacement": null,
+          "not_delivered": null
+        }
+      },
+      {
         "brand": null,
         "mission": "Specialty Stores",
         "input": {
@@ -46204,85 +46283,6 @@
           "2026-07": {
             "active_users": 80,
             "frequency": 1.18
-          }
-        },
-        "summary": {
-          "orders": null,
-          "gmv": null,
-          "active_users": null,
-          "frequency": null,
-          "order_defect": null,
-          "order_replacement": null,
-          "not_delivered": null
-        }
-      },
-      {
-        "brand": "LAUKU BAUDA",
-        "mission": "Specialty Stores",
-        "input": {
-          "2026-06": {
-            "active_merchants": 6,
-            "merchant_availability": 72.2,
-            "sku_availability": null,
-            "item_promo_gmv": 0.0,
-            "not_delivered": 17.0,
-            "delivery_time": 28.5,
-            "late_delivery_10": 0.0,
-            "order_defect": 0.0,
-            "cs_ticket": 4.3,
-            "order_replacement": null
-          },
-          "2026-07": {
-            "active_merchants": 6,
-            "merchant_availability": 83.4,
-            "sku_availability": null,
-            "item_promo_gmv": 8.55,
-            "not_delivered": 9.1,
-            "delivery_time": 31.0,
-            "late_delivery_10": 0.0,
-            "order_defect": 0.0,
-            "cs_ticket": 4.5,
-            "order_replacement": null
-          },
-          "2026-08": {
-            "active_merchants": 6,
-            "merchant_availability": 74.7,
-            "sku_availability": null,
-            "item_promo_gmv": 0.18,
-            "not_delivered": 9.1,
-            "delivery_time": 31.5,
-            "late_delivery_10": 5.5,
-            "order_defect": 0.0,
-            "cs_ticket": 0.0,
-            "order_replacement": null
-          }
-        },
-        "gmv": {
-          "2026-06": {
-            "orders": 39,
-            "gmv": 1309.0
-          },
-          "2026-07": {
-            "orders": 40,
-            "gmv": 1334.0
-          },
-          "2026-08": {
-            "orders": 50,
-            "gmv": 1636.0
-          }
-        },
-        "users": {
-          "2026-06": {
-            "active_users": 32,
-            "frequency": 1.22
-          },
-          "2026-07": {
-            "active_users": 36,
-            "frequency": 1.11
-          },
-          "2026-08": {
-            "active_users": 41,
-            "frequency": 1.22
           }
         },
         "summary": {
@@ -47627,18 +47627,6 @@
         "brand": "KONFESTA UAB",
         "mission": "Specialty Stores",
         "input": {
-          "2026-06": {
-            "active_merchants": 15,
-            "merchant_availability": 91.5,
-            "sku_availability": null,
-            "item_promo_gmv": 1.82,
-            "not_delivered": 11.4,
-            "delivery_time": 30.4,
-            "late_delivery_10": 8.2,
-            "order_defect": 0.0,
-            "cs_ticket": 3.3,
-            "order_replacement": null
-          },
           "2026-07": {
             "active_merchants": 16,
             "merchant_availability": 88.2,
@@ -47649,6 +47637,18 @@
             "late_delivery_10": 8.3,
             "order_defect": 0.0,
             "cs_ticket": 2.2,
+            "order_replacement": null
+          },
+          "2026-06": {
+            "active_merchants": 15,
+            "merchant_availability": 91.5,
+            "sku_availability": null,
+            "item_promo_gmv": 1.82,
+            "not_delivered": 11.4,
+            "delivery_time": 30.4,
+            "late_delivery_10": 8.2,
+            "order_defect": 0.0,
+            "cs_ticket": 3.3,
             "order_replacement": null
           },
           "2026-08": {
@@ -47677,13 +47677,13 @@
           }
         },
         "gmv": {
-          "2026-06": {
-            "orders": 163,
-            "gmv": 4450.0
-          },
           "2026-07": {
             "orders": 174,
             "gmv": 4887.0
+          },
+          "2026-06": {
+            "orders": 163,
+            "gmv": 4450.0
           },
           "2026-08": {
             "orders": 149,
@@ -47695,13 +47695,13 @@
           }
         },
         "users": {
-          "2026-06": {
-            "active_users": 141,
-            "frequency": 1.16
-          },
           "2026-07": {
             "active_users": 148,
             "frequency": 1.18
+          },
+          "2026-06": {
+            "active_users": 141,
+            "frequency": 1.16
           },
           "2026-08": {
             "active_users": 135,
@@ -48166,85 +48166,6 @@
         }
       },
       {
-        "brand": "LODISSEY",
-        "mission": "Specialty Stores",
-        "input": {
-          "2026-06": {
-            "active_merchants": 1,
-            "merchant_availability": 98.2,
-            "sku_availability": null,
-            "item_promo_gmv": 0.27,
-            "not_delivered": 1.3,
-            "delivery_time": 37.5,
-            "late_delivery_10": 10.5,
-            "order_defect": 0.0,
-            "cs_ticket": 3.9,
-            "order_replacement": null
-          },
-          "2026-08": {
-            "active_merchants": 1,
-            "merchant_availability": 99.8,
-            "sku_availability": null,
-            "item_promo_gmv": 0.0,
-            "not_delivered": 3.4,
-            "delivery_time": 37.3,
-            "late_delivery_10": 8.6,
-            "order_defect": 0.0,
-            "cs_ticket": 3.4,
-            "order_replacement": null
-          },
-          "2026-07": {
-            "active_merchants": 1,
-            "merchant_availability": 97.7,
-            "sku_availability": null,
-            "item_promo_gmv": 0.0,
-            "not_delivered": 6.2,
-            "delivery_time": 36.1,
-            "late_delivery_10": 4.7,
-            "order_defect": 0.0,
-            "cs_ticket": 4.7,
-            "order_replacement": null
-          }
-        },
-        "gmv": {
-          "2026-06": {
-            "orders": 75,
-            "gmv": 1503.0
-          },
-          "2026-08": {
-            "orders": 56,
-            "gmv": 1273.0
-          },
-          "2026-07": {
-            "orders": 60,
-            "gmv": 1245.0
-          }
-        },
-        "users": {
-          "2026-06": {
-            "active_users": 55,
-            "frequency": 1.36
-          },
-          "2026-08": {
-            "active_users": 49,
-            "frequency": 1.14
-          },
-          "2026-07": {
-            "active_users": 45,
-            "frequency": 1.33
-          }
-        },
-        "summary": {
-          "orders": null,
-          "gmv": null,
-          "active_users": null,
-          "frequency": null,
-          "order_defect": null,
-          "order_replacement": null,
-          "not_delivered": null
-        }
-      },
-      {
         "brand": "PLUS PLUS PLUS",
         "mission": "Specialty Stores",
         "input": {
@@ -48311,6 +48232,85 @@
           "2026-08": {
             "active_users": 41,
             "frequency": 1.2
+          }
+        },
+        "summary": {
+          "orders": null,
+          "gmv": null,
+          "active_users": null,
+          "frequency": null,
+          "order_defect": null,
+          "order_replacement": null,
+          "not_delivered": null
+        }
+      },
+      {
+        "brand": "LODISSEY",
+        "mission": "Specialty Stores",
+        "input": {
+          "2026-06": {
+            "active_merchants": 1,
+            "merchant_availability": 98.2,
+            "sku_availability": null,
+            "item_promo_gmv": 0.27,
+            "not_delivered": 1.3,
+            "delivery_time": 37.5,
+            "late_delivery_10": 10.5,
+            "order_defect": 0.0,
+            "cs_ticket": 3.9,
+            "order_replacement": null
+          },
+          "2026-08": {
+            "active_merchants": 1,
+            "merchant_availability": 99.8,
+            "sku_availability": null,
+            "item_promo_gmv": 0.0,
+            "not_delivered": 3.4,
+            "delivery_time": 37.3,
+            "late_delivery_10": 8.6,
+            "order_defect": 0.0,
+            "cs_ticket": 3.4,
+            "order_replacement": null
+          },
+          "2026-07": {
+            "active_merchants": 1,
+            "merchant_availability": 97.7,
+            "sku_availability": null,
+            "item_promo_gmv": 0.0,
+            "not_delivered": 6.2,
+            "delivery_time": 36.1,
+            "late_delivery_10": 4.7,
+            "order_defect": 0.0,
+            "cs_ticket": 4.7,
+            "order_replacement": null
+          }
+        },
+        "gmv": {
+          "2026-06": {
+            "orders": 75,
+            "gmv": 1503.0
+          },
+          "2026-08": {
+            "orders": 56,
+            "gmv": 1273.0
+          },
+          "2026-07": {
+            "orders": 60,
+            "gmv": 1245.0
+          }
+        },
+        "users": {
+          "2026-06": {
+            "active_users": 55,
+            "frequency": 1.36
+          },
+          "2026-08": {
+            "active_users": 49,
+            "frequency": 1.14
+          },
+          "2026-07": {
+            "active_users": 45,
+            "frequency": 1.33
           }
         },
         "summary": {
@@ -48724,13 +48724,13 @@
             "orders": 50,
             "gmv": 1237.0
           },
-          "2026-07": {
-            "orders": 52,
-            "gmv": 1244.0
-          },
           "2026-06": {
             "orders": 42,
             "gmv": 994.0
+          },
+          "2026-07": {
+            "orders": 52,
+            "gmv": 1244.0
           }
         },
         "users": {
@@ -48738,13 +48738,13 @@
             "active_users": 30,
             "frequency": 1.67
           },
-          "2026-07": {
-            "active_users": 31,
-            "frequency": 1.68
-          },
           "2026-06": {
             "active_users": 24,
             "frequency": 1.75
+          },
+          "2026-07": {
+            "active_users": 31,
+            "frequency": 1.68
           }
         },
         "summary": {
@@ -49123,18 +49123,6 @@
             "cs_ticket": 9.5,
             "order_replacement": 21.4
           },
-          "2026-06": {
-            "active_merchants": 48,
-            "merchant_availability": 95.9,
-            "sku_availability": 80.9,
-            "item_promo_gmv": 1.23,
-            "not_delivered": 4.6,
-            "delivery_time": 82.8,
-            "late_delivery_10": 14.9,
-            "order_defect": 49.5,
-            "cs_ticket": 11.4,
-            "order_replacement": 21.2
-          },
           "2026-07": {
             "active_merchants": 51,
             "merchant_availability": 98.6,
@@ -49146,6 +49134,18 @@
             "order_defect": 48.1,
             "cs_ticket": 11.4,
             "order_replacement": 17.0
+          },
+          "2026-06": {
+            "active_merchants": 48,
+            "merchant_availability": 95.9,
+            "sku_availability": 80.9,
+            "item_promo_gmv": 1.23,
+            "not_delivered": 4.6,
+            "delivery_time": 82.8,
+            "late_delivery_10": 14.9,
+            "order_defect": 49.5,
+            "cs_ticket": 11.4,
+            "order_replacement": 21.2
           }
         },
         "gmv": {
@@ -49869,13 +49869,13 @@
           }
         },
         "gmv": {
-          "2026-06": {
-            "orders": 57,
-            "gmv": 1589.0
-          },
           "2026-07": {
             "orders": 50,
             "gmv": 1444.0
+          },
+          "2026-06": {
+            "orders": 57,
+            "gmv": 1589.0
           },
           "2026-08": {
             "orders": 46,
@@ -49883,13 +49883,13 @@
           }
         },
         "users": {
-          "2026-06": {
-            "active_users": 43,
-            "frequency": 1.33
-          },
           "2026-07": {
             "active_users": 40,
             "frequency": 1.25
+          },
+          "2026-06": {
+            "active_users": 43,
+            "frequency": 1.33
           },
           "2026-08": {
             "active_users": 33,
@@ -50069,13 +50069,13 @@
             "orders": 781,
             "gmv": 10587.0
           },
-          "2026-09": {
-            "orders": 401,
-            "gmv": 6358.0
-          },
           "2026-06": {
             "orders": 917,
             "gmv": 12965.0
+          },
+          "2026-09": {
+            "orders": 401,
+            "gmv": 6358.0
           }
         },
         "users": {
@@ -50087,13 +50087,13 @@
             "active_users": 571,
             "frequency": 1.37
           },
-          "2026-09": {
-            "active_users": 316,
-            "frequency": 1.27
-          },
           "2026-06": {
             "active_users": 669,
             "frequency": 1.37
+          },
+          "2026-09": {
+            "active_users": 316,
+            "frequency": 1.27
           }
         },
         "summary": {
@@ -51314,6 +51314,85 @@
         }
       },
       {
+        "brand": "VAPE WORLD",
+        "mission": "Tobacco Stores",
+        "input": {
+          "2026-07": {
+            "active_merchants": 8,
+            "merchant_availability": 90.8,
+            "sku_availability": null,
+            "item_promo_gmv": 0.0,
+            "not_delivered": 15.5,
+            "delivery_time": 22.9,
+            "late_delivery_10": 4.1,
+            "order_defect": 0.0,
+            "cs_ticket": 1.7,
+            "order_replacement": null
+          },
+          "2026-06": {
+            "active_merchants": 7,
+            "merchant_availability": 93.6,
+            "sku_availability": null,
+            "item_promo_gmv": 0.0,
+            "not_delivered": 5.3,
+            "delivery_time": 32.7,
+            "late_delivery_10": 11.1,
+            "order_defect": 0.0,
+            "cs_ticket": 5.3,
+            "order_replacement": null
+          },
+          "2026-08": {
+            "active_merchants": 14,
+            "merchant_availability": 97.8,
+            "sku_availability": null,
+            "item_promo_gmv": 0.0,
+            "not_delivered": 16.9,
+            "delivery_time": 26.3,
+            "late_delivery_10": 3.9,
+            "order_defect": 0.0,
+            "cs_ticket": 3.9,
+            "order_replacement": null
+          }
+        },
+        "gmv": {
+          "2026-06": {
+            "orders": 36,
+            "gmv": 661.0
+          },
+          "2026-08": {
+            "orders": 64,
+            "gmv": 1847.0
+          },
+          "2026-07": {
+            "orders": 49,
+            "gmv": 1292.0
+          }
+        },
+        "users": {
+          "2026-06": {
+            "active_users": 30,
+            "frequency": 1.2
+          },
+          "2026-08": {
+            "active_users": 52,
+            "frequency": 1.23
+          },
+          "2026-07": {
+            "active_users": 35,
+            "frequency": 1.4
+          }
+        },
+        "summary": {
+          "orders": null,
+          "gmv": null,
+          "active_users": null,
+          "frequency": null,
+          "order_defect": null,
+          "order_replacement": null,
+          "not_delivered": null
+        }
+      },
+      {
         "brand": "LEKARNA MUZEUM",
         "mission": "Specialty Stores",
         "input": {
@@ -51360,85 +51439,6 @@
           "2026-07": {
             "active_users": 124,
             "frequency": 1.08
-          }
-        },
-        "summary": {
-          "orders": null,
-          "gmv": null,
-          "active_users": null,
-          "frequency": null,
-          "order_defect": null,
-          "order_replacement": null,
-          "not_delivered": null
-        }
-      },
-      {
-        "brand": "VAPE WORLD",
-        "mission": "Tobacco Stores",
-        "input": {
-          "2026-07": {
-            "active_merchants": 8,
-            "merchant_availability": 90.8,
-            "sku_availability": null,
-            "item_promo_gmv": 0.0,
-            "not_delivered": 15.5,
-            "delivery_time": 22.9,
-            "late_delivery_10": 4.1,
-            "order_defect": 0.0,
-            "cs_ticket": 1.7,
-            "order_replacement": null
-          },
-          "2026-06": {
-            "active_merchants": 7,
-            "merchant_availability": 93.6,
-            "sku_availability": null,
-            "item_promo_gmv": 0.0,
-            "not_delivered": 5.3,
-            "delivery_time": 32.7,
-            "late_delivery_10": 11.1,
-            "order_defect": 0.0,
-            "cs_ticket": 5.3,
-            "order_replacement": null
-          },
-          "2026-08": {
-            "active_merchants": 14,
-            "merchant_availability": 97.8,
-            "sku_availability": null,
-            "item_promo_gmv": 0.0,
-            "not_delivered": 16.9,
-            "delivery_time": 26.3,
-            "late_delivery_10": 3.9,
-            "order_defect": 0.0,
-            "cs_ticket": 3.9,
-            "order_replacement": null
-          }
-        },
-        "gmv": {
-          "2026-07": {
-            "orders": 49,
-            "gmv": 1292.0
-          },
-          "2026-06": {
-            "orders": 36,
-            "gmv": 661.0
-          },
-          "2026-08": {
-            "orders": 64,
-            "gmv": 1847.0
-          }
-        },
-        "users": {
-          "2026-07": {
-            "active_users": 35,
-            "frequency": 1.4
-          },
-          "2026-06": {
-            "active_users": 30,
-            "frequency": 1.2
-          },
-          "2026-08": {
-            "active_users": 52,
-            "frequency": 1.23
           }
         },
         "summary": {
@@ -51730,10 +51730,6 @@
           }
         },
         "gmv": {
-          "2026-06": {
-            "orders": 32,
-            "gmv": 736.0
-          },
           "2026-07": {
             "orders": 48,
             "gmv": 1157.0
@@ -51741,13 +51737,13 @@
           "2026-08": {
             "orders": 80,
             "gmv": 2164.0
+          },
+          "2026-06": {
+            "orders": 32,
+            "gmv": 736.0
           }
         },
         "users": {
-          "2026-06": {
-            "active_users": 31,
-            "frequency": 1.03
-          },
           "2026-07": {
             "active_users": 46,
             "frequency": 1.04
@@ -51755,6 +51751,10 @@
           "2026-08": {
             "active_users": 74,
             "frequency": 1.08
+          },
+          "2026-06": {
+            "active_users": 31,
+            "frequency": 1.03
           }
         },
         "summary": {
@@ -51892,13 +51892,13 @@
             "orders": 48,
             "gmv": 613.0
           },
-          "2026-07": {
-            "orders": 34,
-            "gmv": 562.0
-          },
           "2026-08": {
             "orders": 32,
             "gmv": 441.0
+          },
+          "2026-07": {
+            "orders": 34,
+            "gmv": 562.0
           }
         },
         "users": {
@@ -51906,13 +51906,13 @@
             "active_users": 26,
             "frequency": 1.85
           },
-          "2026-07": {
-            "active_users": 19,
-            "frequency": 1.79
-          },
           "2026-08": {
             "active_users": 20,
             "frequency": 1.6
+          },
+          "2026-07": {
+            "active_users": 19,
+            "frequency": 1.79
           }
         },
         "summary": {
@@ -52046,13 +52046,13 @@
           }
         },
         "gmv": {
-          "2026-07": {
-            "orders": 51,
-            "gmv": 895.0
-          },
           "2026-06": {
             "orders": 39,
             "gmv": 638.0
+          },
+          "2026-07": {
+            "orders": 51,
+            "gmv": 895.0
           },
           "2026-08": {
             "orders": 51,
@@ -52060,13 +52060,13 @@
           }
         },
         "users": {
-          "2026-07": {
-            "active_users": 21,
-            "frequency": 2.43
-          },
           "2026-06": {
             "active_users": 19,
             "frequency": 2.05
+          },
+          "2026-07": {
+            "active_users": 21,
+            "frequency": 2.43
           },
           "2026-08": {
             "active_users": 22,
@@ -52717,6 +52717,10 @@
             "orders": 44,
             "gmv": 837.0
           },
+          "2026-06": {
+            "orders": 85,
+            "gmv": 1635.0
+          },
           "2026-08": {
             "orders": 65,
             "gmv": 1247.0
@@ -52724,16 +52728,16 @@
           "2026-07": {
             "orders": 76,
             "gmv": 1483.0
-          },
-          "2026-06": {
-            "orders": 85,
-            "gmv": 1635.0
           }
         },
         "users": {
           "2026-09": {
             "active_users": 16,
             "frequency": 2.75
+          },
+          "2026-06": {
+            "active_users": 32,
+            "frequency": 2.66
           },
           "2026-08": {
             "active_users": 23,
@@ -52742,10 +52746,6 @@
           "2026-07": {
             "active_users": 21,
             "frequency": 3.62
-          },
-          "2026-06": {
-            "active_users": 32,
-            "frequency": 2.66
           }
         },
         "summary": {
@@ -52919,13 +52919,13 @@
             "orders": 31,
             "gmv": 468.0
           },
-          "2026-08": {
-            "orders": 83,
-            "gmv": 1048.0
-          },
           "2026-09": {
             "orders": 32,
             "gmv": 452.0
+          },
+          "2026-08": {
+            "orders": 83,
+            "gmv": 1048.0
           }
         },
         "users": {
@@ -52937,13 +52937,13 @@
             "active_users": 24,
             "frequency": 1.29
           },
-          "2026-08": {
-            "active_users": 42,
-            "frequency": 1.98
-          },
           "2026-09": {
             "active_users": 24,
             "frequency": 1.33
+          },
+          "2026-08": {
+            "active_users": 42,
+            "frequency": 1.98
           }
         },
         "summary": {
@@ -53314,6 +53314,10 @@
           }
         },
         "gmv": {
+          "2026-06": {
+            "orders": 51,
+            "gmv": 1147.0
+          },
           "2026-08": {
             "orders": 44,
             "gmv": 890.0
@@ -53321,13 +53325,13 @@
           "2026-07": {
             "orders": 57,
             "gmv": 1157.0
-          },
-          "2026-06": {
-            "orders": 51,
-            "gmv": 1147.0
           }
         },
         "users": {
+          "2026-06": {
+            "active_users": 34,
+            "frequency": 1.5
+          },
           "2026-08": {
             "active_users": 23,
             "frequency": 1.91
@@ -53335,10 +53339,6 @@
           "2026-07": {
             "active_users": 31,
             "frequency": 1.84
-          },
-          "2026-06": {
-            "active_users": 34,
-            "frequency": 1.5
           }
         },
         "summary": {
@@ -54282,6 +54282,10 @@
             "orders": 178,
             "gmv": 3210.0
           },
+          "2026-09": {
+            "orders": 79,
+            "gmv": 1446.0
+          },
           "2026-06": {
             "orders": 203,
             "gmv": 3307.0
@@ -54289,16 +54293,16 @@
           "2026-08": {
             "orders": 211,
             "gmv": 3588.0
-          },
-          "2026-09": {
-            "orders": 79,
-            "gmv": 1446.0
           }
         },
         "users": {
           "2026-07": {
             "active_users": 124,
             "frequency": 1.44
+          },
+          "2026-09": {
+            "active_users": 69,
+            "frequency": 1.14
           },
           "2026-06": {
             "active_users": 120,
@@ -54307,10 +54311,6 @@
           "2026-08": {
             "active_users": 143,
             "frequency": 1.48
-          },
-          "2026-09": {
-            "active_users": 69,
-            "frequency": 1.14
           }
         },
         "summary": {
@@ -54832,14 +54832,6 @@
           }
         },
         "gmv": {
-          "2026-07": {
-            "orders": 85,
-            "gmv": 1612.0
-          },
-          "2026-09": {
-            "orders": 38,
-            "gmv": 658.0
-          },
           "2026-06": {
             "orders": 84,
             "gmv": 1384.0
@@ -54847,17 +54839,17 @@
           "2026-08": {
             "orders": 91,
             "gmv": 1570.0
+          },
+          "2026-07": {
+            "orders": 85,
+            "gmv": 1612.0
+          },
+          "2026-09": {
+            "orders": 38,
+            "gmv": 658.0
           }
         },
         "users": {
-          "2026-07": {
-            "active_users": 37,
-            "frequency": 2.3
-          },
-          "2026-09": {
-            "active_users": 21,
-            "frequency": 1.81
-          },
           "2026-06": {
             "active_users": 38,
             "frequency": 2.21
@@ -54865,6 +54857,14 @@
           "2026-08": {
             "active_users": 41,
             "frequency": 2.22
+          },
+          "2026-07": {
+            "active_users": 37,
+            "frequency": 2.3
+          },
+          "2026-09": {
+            "active_users": 21,
+            "frequency": 1.81
           }
         },
         "summary": {
@@ -54923,6 +54923,10 @@
             "orders": 50,
             "gmv": 754.0
           },
+          "2026-09": {
+            "orders": 33,
+            "gmv": 503.0
+          },
           "2026-08": {
             "orders": 120,
             "gmv": 1956.0
@@ -54930,10 +54934,6 @@
           "2026-07": {
             "orders": 116,
             "gmv": 1982.0
-          },
-          "2026-09": {
-            "orders": 33,
-            "gmv": 503.0
           }
         },
         "users": {
@@ -54941,16 +54941,16 @@
             "active_users": 40,
             "frequency": 1.25
           },
+          "2026-09": {
+            "active_users": 28,
+            "frequency": 1.18
+          },
           "2026-08": {
             "active_users": 100,
             "frequency": 1.2
           },
           "2026-07": {
             "active_users": 98,
-            "frequency": 1.18
-          },
-          "2026-09": {
-            "active_users": 28,
             "frequency": 1.18
           }
         },
@@ -55429,10 +55429,6 @@
           }
         },
         "gmv": {
-          "2026-07": {
-            "orders": 49,
-            "gmv": 2222.0
-          },
           "2026-06": {
             "orders": 48,
             "gmv": 2178.0
@@ -55440,13 +55436,13 @@
           "2026-08": {
             "orders": 44,
             "gmv": 2128.0
+          },
+          "2026-07": {
+            "orders": 49,
+            "gmv": 2222.0
           }
         },
         "users": {
-          "2026-07": {
-            "active_users": 48,
-            "frequency": 1.02
-          },
           "2026-06": {
             "active_users": 46,
             "frequency": 1.04
@@ -55454,6 +55450,10 @@
           "2026-08": {
             "active_users": 41,
             "frequency": 1.07
+          },
+          "2026-07": {
+            "active_users": 48,
+            "frequency": 1.02
           }
         },
         "summary": {
@@ -55900,6 +55900,113 @@
       "key": "aov",
       "label": "AOV",
       "fmt": "eur"
+    }
+  ],
+  "finance_matrix": [
+    {
+      "title": "Commission % GMV",
+      "rows": [
+        {
+          "segment": "Total",
+          "fmt": "pct",
+          "values": [
+            12.3,
+            11.7,
+            11.2,
+            11.2
+          ]
+        },
+        {
+          "segment": "ENT",
+          "fmt": "pct",
+          "values": [
+            10.6,
+            9.9,
+            9.5,
+            9.4
+          ]
+        },
+        {
+          "segment": "SMB",
+          "fmt": "pct",
+          "values": [
+            23.0,
+            22.8,
+            22.9,
+            23.1
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Commission % AOV",
+      "rows": [
+        {
+          "segment": "Total",
+          "fmt": "pct",
+          "values": [
+            14.1,
+            13.3,
+            12.7,
+            12.7
+          ]
+        },
+        {
+          "segment": "ENT",
+          "fmt": "pct",
+          "values": [
+            12.0,
+            11.2,
+            10.7,
+            10.6
+          ]
+        },
+        {
+          "segment": "SMB",
+          "fmt": "pct",
+          "values": [
+            26.7,
+            26.5,
+            26.5,
+            26.9
+          ]
+        }
+      ]
+    },
+    {
+      "title": "AOV",
+      "rows": [
+        {
+          "segment": "Total",
+          "fmt": "eur",
+          "values": [
+            12.37,
+            13.06,
+            13.21,
+            13.46
+          ]
+        },
+        {
+          "segment": "ENT",
+          "fmt": "eur",
+          "values": [
+            12.45,
+            13.2,
+            13.4,
+            13.69
+          ]
+        },
+        {
+          "segment": "SMB",
+          "fmt": "eur",
+          "values": [
+            11.87,
+            12.15,
+            11.94,
+            11.91
+          ]
+        }
+      ]
     }
   ],
   "wow": {

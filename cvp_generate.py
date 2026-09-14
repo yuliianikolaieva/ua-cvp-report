@@ -101,6 +101,11 @@ FINANCE_VAL = [
     ("commission_aov", "Commission, % AOV", "pct"),
     ("aov", "AOV", "eur"),
 ]
+FINANCE_MATRIX_SPECS = [
+    ("commission_gmv", "Commission % GMV", "pct", [("total", "Total"), ("ent", "ENT"), ("smb", "SMB")]),
+    ("commission_aov", "Commission % AOV", "pct", [("total", "Total"), ("ent", "ENT"), ("smb", "SMB")]),
+    ("aov", "AOV", "eur", [("total", "Total"), ("ent", "ENT"), ("smb", "SMB")]),
+]
 WOW_METRICS = [
     ("orders", "Orders", "int", False),
     ("gmv", "GMV", "eur", False),
@@ -1126,6 +1131,23 @@ def build_segments(country):
     return segments, cmp
 
 
+def build_finance_matrix(segments):
+    """Commission & AOV: Total → ENT → SMB по кожній метриці."""
+    sections = []
+    for fkey, title, fmt, seg_list in FINANCE_MATRIX_SPECS:
+        rows = []
+        for seg_key, seg_label in seg_list:
+            fin = segments.get(seg_key, {}).get("finance", [])
+            item = next((x for x in fin if x["key"] == fkey), None)
+            rows.append({
+                "segment": seg_label,
+                "fmt": fmt,
+                "values": item["values"] if item else [None] * len(MONTHS),
+            })
+        sections.append({"title": title, "rows": rows})
+    return sections
+
+
 def build_insights(country, bench_rows):
     insights = []
     aug = {m["key"]: m["values"][-1] for sec in [country["input"], country["gmv"], country["users"], country["funnel"]]
@@ -1184,6 +1206,7 @@ def main():
     bench_by_month, bench_metric_defs, bench_rows = fetch_country_bench_monthly()
     foreign_partners = fetch_foreign_partners()
     segments, segment_cmp = build_segments(country)
+    finance_matrix = build_finance_matrix(segments)
     wow = fetch_ua_wow()
     insights = build_insights(country, bench_rows) + build_wow_insights(wow)
 
@@ -1211,6 +1234,7 @@ def main():
         "users_metrics": [{"key": k, "label": l, "fmt": f} for k, l, f in USERS_VAL],
         "funnel_metrics": [{"key": k, "label": l, "fmt": f} for k, l, f in FUNNEL_VAL],
         "finance_metrics": [{"key": k, "label": l, "fmt": f} for k, l, f in FINANCE_VAL],
+        "finance_matrix": finance_matrix,
         "wow": wow,
     }
 
