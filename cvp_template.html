@@ -47,7 +47,7 @@ footer{font-size:11px;color:var(--muted);margin-top:24px;padding-top:12px;border
 
 <div id="p-overview">
   <div class="hl" id="insights"></div>
-  <h2>Ключові метрики (серпень + PP vs липень)</h2>
+  <h2 id="kpiTitle">Ключові метрики</h2>
   <div class="tbl"><table id="kpiAug"></table></div>
 </div>
 
@@ -107,7 +107,7 @@ footer{font-size:11px;color:var(--muted);margin-top:24px;padding-top:12px;border
 <script>
 const R=/*__CVP_DATA__*/;
 const ML=R.month_lbl, MS=R.months;
-document.getElementById("hdr").innerHTML=`Черв–сер 2026 · ${R.partners.length} партнерів · <a href="${R.looker_url}" target="_blank">Looker →</a>`;
+document.getElementById("hdr").innerHTML=`${R.period_label||"CVP"} · ${R.partners.length} партнерів · <a href="${R.looker_url}" target="_blank">Looker →</a>`;
 document.getElementById("genAt").textContent="Згенеровано: "+R.generated_at;
 
 function fmt(v,f){
@@ -151,7 +151,8 @@ const ins=document.getElementById("insights");
     ["input","not_delivered","Not-delivered","pct"],["input","late_delivery_10","Late Delivery 10+","pct"],
     ["users","active_users","Active Users","int"],["funnel","conversion_rate","Conversion Rate","pct"],
   ];
-  let h=`<thead><tr><th>Метрика</th><th>${ML[2]} (сер)</th><th>${ML[1]} (лип)</th><th>PP (з CSV)</th></tr></thead><tbody>`;
+  document.getElementById("kpiTitle").textContent=`Ключові метрики (${ML[2]} + PP vs ${ML[1]})`;
+  let h=`<thead><tr><th>Метрика</th><th>${ML[2]}</th><th>${ML[1]}</th><th>PP (з CSV)</th></tr></thead><tbody>`;
   keys.forEach(([sec,key,lab,f])=>{
     const m=R.country[sec].find(x=>x.key===key);
     const aug=m.values[2], jul=m.values[1];

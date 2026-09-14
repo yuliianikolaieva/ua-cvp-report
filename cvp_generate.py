@@ -18,8 +18,10 @@ import csv
 
 _ROOT = Path(__file__).parent
 _DATA = _ROOT / "data"
-MONTHS = ["2026-06", "2026-07", "2026-08"]
-MONTH_LBL = {"2026-06": "Чер", "2026-07": "Лип", "2026-08": "Сер"}
+MONTHS = ["2026-07", "2026-08", "2026-09"]
+MONTH_LBL = {"2026-06": "Чер", "2026-07": "Лип", "2026-08": "Сер", "2026-09": "Вер"}
+DATA_END = "2026-10-01"  # exclusive end for SQL (includes full/partial Sep)
+LATEST_MONTH = MONTHS[-1]
 COUNTRIES = ["ua", "ee", "lv", "lt", "pl", "cz", "sk", "ro"]
 COUNTRY_NAMES = {
     "ua": "Україна", "ee": "Естонія", "lv": "Латвія", "lt": "Литва",
@@ -272,13 +274,112 @@ def build_country_section():
                           "lower_better": key in LOWER_BETTER})
         return items
 
-    return {
+    country_db = fetch_ua_country_db()
+
+    def patch_block(items, section):
+        for item in items:
+            for i, m in enumerate(MONTHS):
+                if item["values"][i] is not None:
+                    continue
+                item["values"][i] = (country_db.get(m) or {}).get(section, {}).get(item["key"])
+
+    out = {
         "input": block(INPUT_VAL, map_input_row),
         "gmv": block(GMV_VAL, map_gmv_row),
         "users": block(USERS_VAL, map_users_row),
         "funnel": block(FUNNEL_VAL, map_funnel_row),
-        "aug_deltas": map_input_delta(inp, "2026-08"),
+        "aug_deltas": map_input_delta(inp, LATEST_MONTH) if LATEST_MONTH in inp else {},
     }
+    patch_block(out["input"], "input")
+    patch_block(out["gmv"], "gmv")
+    patch_block(out["users"], "users")
+    return out
+
+
+def fetch_ua_country_db():
+    """Country UA по місяцях з Databricks (доповнення, коли немає Looker CSV)."""
+    try:
+        conn = _db_connect()
+    except Exception:
+        return {}
+    cur = conn.cursor()
+    months_sql = ",".join(f"'{m}'" for m in MONTHS)
+    cur.execute(f"""
+      SELECT DATE_FORMAT(DATE_TRUNC('month', m.metric_timestamp_local), 'yyyy-MM') AS mo,
+        COUNT(DISTINCT CASE WHEN m.delivered_orders_count>0 THEN m.provider_id END) AS active_merchants,
+        SUM(m.provider_active_rate_value*m.provider_active_rate_weight)/NULLIF(SUM(m.provider_active_rate_weight),0)*100 AS merchant_availability,
+        SUM(m.provider_sku_session_availability_rate_value)/NULLIF(SUM(m.provider_sku_session_availability_rate_weight),0)*100 AS sku_availability,
+        SUM(m.provider_campaign_discount_gmv_share_value*m.provider_campaign_discount_gmv_share_weight)/NULLIF(SUM(m.provider_campaign_discount_gmv_share_weight),0)*100 AS item_promo_gmv,
+        SUM(m.failed_order_rate_value*m.failed_order_rate_weight)/NULLIF(SUM(m.failed_order_rate_weight),0)*100 AS not_delivered,
+        SUM(m.order_total_minutes_per_order_value*m.order_total_minutes_per_order_weight)/NULLIF(SUM(m.order_total_minutes_per_order_weight),0) AS delivery_time,
+        SUM(m.late_delivery_order_10min_rate_value*m.late_delivery_order_10min_rate_weight)/NULLIF(SUM(m.late_delivery_order_10min_rate_weight),0)*100 AS late_delivery_10,
+        SUM(m.order_item_adjustment_rate_value*m.order_item_adjustment_rate_weight)/NULLIF(SUM(m.order_item_adjustment_rate_weight),0)*100 AS order_defect,
+        SUM(m.cs_ticket_order_rate_value*m.cs_ticket_order_rate_weight)/NULLIF(SUM(m.cs_ticket_order_rate_weight),0)*100 AS cs_ticket
+      FROM main.ng_delivery.fact_provider_monthly m
+      JOIN main.ng_delivery.dim_provider_v2 p ON m.provider_id=p.provider_id
+      WHERE p.country_code='ua' AND m.metric_timestamp_local>='{MONTHS[0]}-01' AND m.metric_timestamp_local<'{DATA_END}' AND {UA_VERTICAL}
+      GROUP BY DATE_TRUNC('month', m.metric_timestamp_local)
+      HAVING mo IN ({months_sql})
+    """)
+    mon = {r[0]: r for r in cur.fetchall()}
+    cur.execute(f"""
+      SELECT DATE_FORMAT(DATE_TRUNC('month', w.metric_timestamp_local), 'yyyy-MM') AS mo,
+        SUM(w.order_item_replacement_rate_value*w.order_item_replacement_rate_weight)/NULLIF(SUM(w.order_item_replacement_rate_weight),0)*100 AS order_replacement
+      FROM main.ng_delivery.fact_provider_weekly w
+      JOIN main.ng_delivery.dim_provider_v2 p ON w.provider_id=p.provider_id
+      WHERE p.country_code='ua' AND w.metric_timestamp_local>='{MONTHS[0]}-01' AND w.metric_timestamp_local<'{DATA_END}' AND {UA_VERTICAL}
+      GROUP BY DATE_TRUNC('month', w.metric_timestamp_local)
+      HAVING mo IN ({months_sql})
+    """)
+    repl = {r[0]: r[1] for r in cur.fetchall()}
+    cur.execute(f"""
+      SELECT DATE_FORMAT(DATE_TRUNC('month', f.order_created_date), 'yyyy-MM') AS mo,
+        COUNT(*) AS orders, ROUND(SUM(f.order_gmv_eur),0) AS gmv,
+        COUNT(DISTINCT f.user_id) AS active_users,
+        ROUND(SUM(CASE WHEN f.is_bolt_plus_order THEN f.order_gmv_eur ELSE 0 END)/NULLIF(SUM(f.order_gmv_eur),0)*100, 1) AS bolt_plus_share
+      FROM main.ng_delivery.fact_order_delivery f
+      JOIN main.ng_delivery.dim_provider_v2 p ON f.provider_id=p.provider_id
+      WHERE f.city_country_code='ua' AND f.order_state='delivered'
+        AND f.order_created_date>='{MONTHS[0]}-01' AND f.order_created_date<'{DATA_END}' AND {UA_VERTICAL}
+      GROUP BY DATE_TRUNC('month', f.order_created_date)
+      HAVING mo IN ({months_sql})
+    """)
+    ord_rows = {r[0]: r for r in cur.fetchall()}
+    cur.close()
+    conn.close()
+
+    out = {}
+    for m in MONTHS:
+        inp = {}
+        if m in mon:
+            r = mon[m]
+            am = r[1]
+            inp = {
+                "active_merchants": int(am) if am else None,
+                "merchant_availability": rnd(r[2]), "sku_availability": rnd(r[3]),
+                "item_promo_gmv": rnd(r[4], 2), "not_delivered": rnd(r[5]),
+                "delivery_time": rnd(r[6]), "late_delivery_10": rnd(r[7]),
+                "order_defect": rnd(r[8]), "cs_ticket": rnd(r[9]),
+                "order_replacement": rnd(repl.get(m)),
+            }
+        gmv = {}
+        usr = {}
+        if m in ord_rows:
+            r = ord_rows[m]
+            orders, gmv_v, au, bp = int(r[1]), float(r[2]), int(r[3]), r[4]
+            gmv = {
+                "orders": orders, "gmv": gmv_v,
+                "gmv_per_order": rnd(gmv_v / orders, 2) if orders else None,
+                "orders_per_merchant": rnd(orders / inp.get("active_merchants"), 0) if inp.get("active_merchants") else None,
+                "gmv_per_merchant": rnd(gmv_v / inp.get("active_merchants"), 0) if inp.get("active_merchants") else None,
+                "bolt_plus_share": rnd(bp),
+            }
+            usr = {
+                "active_users": au,
+                "frequency": rnd(orders / au, 2) if au else None,
+            }
+        out[m] = {"input": inp, "gmv": gmv, "users": usr}
+    return out
 
 
 def _input_partner_path():
@@ -314,22 +415,22 @@ def build_partners():
             m: map_input_delta(r, m) for m in MONTHS if m in r
         }
 
-    # GMV по партнерах — лише Databricks (немає в Looker CSV export)
-    db_partners = fetch_partner_db(gmv_only=True)
+    db_partners = fetch_partner_db(gmv_only=False)
     for b, db in db_partners.items():
         if b not in by_brand:
             by_brand[b] = {"brand": b, "mission": db.get("mission", "")}
-        by_brand[b].setdefault("gmv", {})
-        for m in MONTHS:
-            if m in db.get("gmv", {}):
-                by_brand[b]["gmv"][m] = db["gmv"][m]
+        for sec in ("gmv", "input", "users"):
+            by_brand[b].setdefault(sec, {})
+            for m in MONTHS:
+                if m in db.get(sec, {}):
+                    by_brand[b][sec][m] = db[sec][m]
 
     partners = []
     for b, d in by_brand.items():
-        aug_users = (d.get("users") or {}).get("2026-08", {})
-        aug_funnel = (d.get("funnel") or {}).get("2026-08", {})
-        aug_input = (d.get("input") or {}).get("2026-08", {})
-        aug_gmv = (d.get("gmv") or {}).get("2026-08", {})
+        aug_users = (d.get("users") or {}).get(LATEST_MONTH, {})
+        aug_funnel = (d.get("funnel") or {}).get(LATEST_MONTH, {})
+        aug_input = (d.get("input") or {}).get(LATEST_MONTH, {})
+        aug_gmv = (d.get("gmv") or {}).get(LATEST_MONTH, {})
         orders = aug_gmv.get("orders") or 0
         partners.append({
             "brand": b, "mission": d.get("mission", ""),
@@ -390,7 +491,7 @@ def fetch_partner_db(gmv_only=False):
         SUM(m.cs_ticket_order_rate_value*m.cs_ticket_order_rate_weight)/NULLIF(SUM(m.cs_ticket_order_rate_weight),0)*100 AS cs_ticket
       FROM main.ng_delivery.fact_provider_monthly m
       JOIN main.ng_delivery.dim_provider_v2 p ON m.provider_id=p.provider_id
-      WHERE p.country_code='ua' AND m.metric_timestamp_local>='{MONTHS[0]}-01' AND m.metric_timestamp_local<'2026-09-01' AND {vertical}
+      WHERE p.country_code='ua' AND m.metric_timestamp_local>='{MONTHS[0]}-01' AND m.metric_timestamp_local<'{DATA_END}' AND {vertical}
       GROUP BY p.group_name, DATE_TRUNC('month', m.metric_timestamp_local)
     """)
         mon = cur.fetchall()
@@ -399,7 +500,7 @@ def fetch_partner_db(gmv_only=False):
         SUM(w.order_item_replacement_rate_value*w.order_item_replacement_rate_weight)/NULLIF(SUM(w.order_item_replacement_rate_weight),0)*100 AS order_replacement
       FROM main.ng_delivery.fact_provider_weekly w
       JOIN main.ng_delivery.dim_provider_v2 p ON w.provider_id=p.provider_id
-      WHERE p.country_code='ua' AND w.metric_timestamp_local>='{MONTHS[0]}-01' AND w.metric_timestamp_local<'2026-09-01' AND {vertical}
+      WHERE p.country_code='ua' AND w.metric_timestamp_local>='{MONTHS[0]}-01' AND w.metric_timestamp_local<'{DATA_END}' AND {vertical}
       GROUP BY p.group_name, DATE_TRUNC('month', w.metric_timestamp_local)
     """)
         repl = {(r[0], r[1]): r[2] for r in cur.fetchall()}
@@ -412,10 +513,20 @@ def fetch_partner_db(gmv_only=False):
       FROM main.ng_delivery.fact_order_delivery f
       JOIN main.ng_delivery.dim_provider_v2 p ON f.provider_id=p.provider_id
       WHERE f.city_country_code='ua' AND f.order_state='delivered'
-        AND f.order_created_date>='{MONTHS[0]}-01' AND f.order_created_date<'2026-09-01' AND {vertical}
+        AND f.order_created_date>='{MONTHS[0]}-01' AND f.order_created_date<'{DATA_END}' AND {vertical}
       GROUP BY p.group_name, DATE_TRUNC('month', f.order_created_date)
     """)
     gmv_rows = cur.fetchall()
+    cur.execute(f"""
+      SELECT p.group_name AS brand, DATE_FORMAT(DATE_TRUNC('month', f.order_created_date), 'yyyy-MM') AS m,
+        COUNT(DISTINCT f.user_id) AS active_users, COUNT(*) AS orders
+      FROM main.ng_delivery.fact_order_delivery f
+      JOIN main.ng_delivery.dim_provider_v2 p ON f.provider_id=p.provider_id
+      WHERE f.city_country_code='ua' AND f.order_state='delivered'
+        AND f.order_created_date>='{MONTHS[0]}-01' AND f.order_created_date<'{DATA_END}' AND {vertical}
+      GROUP BY p.group_name, DATE_TRUNC('month', f.order_created_date)
+    """)
+    user_rows = cur.fetchall()
     cur.close()
     conn.close()
 
@@ -423,7 +534,7 @@ def fetch_partner_db(gmv_only=False):
     if not gmv_only:
         for r in mon:
             brand, mission, m = r[0], r[1], r[2]
-            out.setdefault(brand, {"mission": mission, "input": {}, "gmv": {}})
+            out.setdefault(brand, {"mission": mission, "input": {}, "gmv": {}, "users": {}})
             out[brand]["input"][m] = {
                 "active_merchants": r[3], "merchant_availability": round(r[4], 1) if r[4] else None,
                 "sku_availability": round(r[5], 1) if r[5] else None,
@@ -436,8 +547,14 @@ def fetch_partner_db(gmv_only=False):
                 "order_replacement": round(repl.get((brand, m)), 1) if repl.get((brand, m)) else None,
             }
     for brand, m, orders, gmv in gmv_rows:
-        out.setdefault(brand, {"mission": "", "input": {}, "gmv": {}})
+        out.setdefault(brand, {"mission": "", "input": {}, "gmv": {}, "users": {}})
         out[brand]["gmv"][m] = {"orders": int(orders), "gmv": float(gmv)}
+    for brand, m, au, orders in user_rows:
+        out.setdefault(brand, {"mission": "", "input": {}, "gmv": {}, "users": {}})
+        out[brand]["users"][m] = {
+            "active_users": int(au),
+            "frequency": rnd(orders / au, 2) if au else None,
+        }
     return out
 
 
@@ -468,7 +585,7 @@ def fetch_country_bench():
         SUM(m.provider_sku_session_availability_rate_value)/NULLIF(SUM(m.provider_sku_session_availability_rate_weight),0)*100 AS sku_availability
       FROM main.ng_delivery.fact_provider_monthly m
       JOIN main.ng_delivery.dim_provider_v2 p ON m.provider_id=p.provider_id
-      WHERE p.country_code IN ({cc}) AND m.metric_timestamp_local>='{MONTHS[0]}-01' AND m.metric_timestamp_local<'2026-09-01'
+      WHERE p.country_code IN ({cc}) AND m.metric_timestamp_local>='{MONTHS[0]}-01' AND m.metric_timestamp_local<'{DATA_END}'
         AND {vertical} AND p.is_bolt_market_provider=true
       GROUP BY p.country_code
     """)
@@ -480,7 +597,7 @@ def fetch_country_bench():
         /NULLIF(SUM(w.order_item_replacement_rate_weight),0)*100
       FROM main.ng_delivery.fact_provider_weekly w
       JOIN main.ng_delivery.dim_provider_v2 p ON w.provider_id=p.provider_id
-      WHERE p.country_code IN ({cc}) AND w.metric_timestamp_local>='{MONTHS[0]}-01' AND w.metric_timestamp_local<'2026-09-01'
+      WHERE p.country_code IN ({cc}) AND w.metric_timestamp_local>='{MONTHS[0]}-01' AND w.metric_timestamp_local<'{DATA_END}'
         AND {vertical} AND p.is_bolt_market_provider=true
       GROUP BY p.country_code
     """)
@@ -489,9 +606,10 @@ def fetch_country_bench():
     cur.close()
     conn.close()
 
-    # UA from CSV Aug
     _, input_rows = parse_looker_csv(_DATA / "📥 CVP Input (4).csv")
-    ua_csv = map_input_row(input_rows[0], "2026-08")
+    ua_csv = map_input_row(input_rows[0], LATEST_MONTH)
+    if ua_csv.get("order_defect") is None:
+        ua_csv = (fetch_ua_country_db().get(LATEST_MONTH) or {}).get("input", {})
     qual["ua"] = {k: ua_csv.get(k) for k in ["not_delivered", "late_delivery_10", "order_defect",
                                                 "delivery_time", "merchant_availability", "sku_availability",
                                                 "order_replacement"]}
@@ -510,8 +628,13 @@ def fetch_country_bench_full():
     # Output country-level: GMV/Users з CSV для UA, Databricks для інших
     _, gmv_rows = parse_looker_csv(_DATA / "📤 CVP Output - GMV (4).csv")
     _, users_rows = parse_looker_csv(_DATA / "📤 CVP Output - Users (7).csv")
-    ua_gmv = map_gmv_row(gmv_rows[0], "2026-08")
-    ua_users = map_users_row(users_rows[0], "2026-08")
+    ua_gmv = map_gmv_row(gmv_rows[0], LATEST_MONTH)
+    ua_users = map_users_row(users_rows[0], LATEST_MONTH)
+    ua_db = (fetch_ua_country_db().get(LATEST_MONTH) or {})
+    if ua_gmv.get("orders") is None:
+        ua_gmv = ua_db.get("gmv", {})
+    if ua_users.get("active_users") is None:
+        ua_users = ua_db.get("users", {})
     by_cc["ua"].update({
         "orders": ua_gmv.get("orders"), "gmv": ua_gmv.get("gmv"),
         "active_users": ua_users.get("active_users"), "frequency": ua_users.get("frequency"),
@@ -538,7 +661,7 @@ def fetch_country_bench_full():
           FROM main.ng_delivery.fact_order_delivery f
           JOIN main.ng_delivery.dim_provider_v2 p ON f.provider_id=p.provider_id
           WHERE f.city_country_code IN ({peers}) AND f.order_state='delivered'
-            AND f.order_created_date>='2026-08-01' AND f.order_created_date<'2026-09-01' AND {vertical}
+            AND f.order_created_date>='{LATEST_MONTH}-01' AND f.order_created_date<'{DATA_END}' AND {vertical}
           GROUP BY 1
         """)
         for cc, orders, gmv, au in cur.fetchall():
@@ -602,7 +725,7 @@ def fetch_foreign_partners():
         SUM(m.delivered_orders_count) AS orders_m
       FROM main.ng_delivery.fact_provider_monthly m
       JOIN main.ng_delivery.dim_provider_v2 p ON m.provider_id=p.provider_id
-      WHERE p.country_code IN ({peers}) AND m.metric_timestamp_local>='{MONTHS[0]}-01' AND m.metric_timestamp_local<'2026-09-01' AND {vertical}
+      WHERE p.country_code IN ({peers}) AND m.metric_timestamp_local>='{MONTHS[0]}-01' AND m.metric_timestamp_local<'{DATA_END}' AND {vertical}
       GROUP BY p.country_code, p.group_name, DATE_TRUNC('month', m.metric_timestamp_local)
       HAVING SUM(m.delivered_orders_count) >= 30
     """)
@@ -613,7 +736,7 @@ def fetch_foreign_partners():
         SUM(w.order_item_replacement_rate_value*w.order_item_replacement_rate_weight)/NULLIF(SUM(w.order_item_replacement_rate_weight),0)*100 AS order_replacement
       FROM main.ng_delivery.fact_provider_weekly w
       JOIN main.ng_delivery.dim_provider_v2 p ON w.provider_id=p.provider_id
-      WHERE p.country_code IN ({peers}) AND w.metric_timestamp_local>='{MONTHS[0]}-01' AND w.metric_timestamp_local<'2026-09-01' AND {vertical}
+      WHERE p.country_code IN ({peers}) AND w.metric_timestamp_local>='{MONTHS[0]}-01' AND w.metric_timestamp_local<'{DATA_END}' AND {vertical}
       GROUP BY p.country_code, p.group_name, DATE_TRUNC('month', w.metric_timestamp_local)
     """)
     repl = {(r[0], r[1], r[2]): r[3] for r in cur.fetchall()}
@@ -624,7 +747,7 @@ def fetch_foreign_partners():
       FROM main.ng_delivery.fact_order_delivery f
       JOIN main.ng_delivery.dim_provider_v2 p ON f.provider_id=p.provider_id
       WHERE f.city_country_code IN ({peers}) AND f.order_state='delivered'
-        AND f.order_created_date>='{MONTHS[0]}-01' AND f.order_created_date<'2026-09-01' AND {vertical}
+        AND f.order_created_date>='{MONTHS[0]}-01' AND f.order_created_date<'{DATA_END}' AND {vertical}
       GROUP BY p.country_code, p.group_name, DATE_TRUNC('month', f.order_created_date)
       HAVING COUNT(*) >= 30
     """)
@@ -660,9 +783,9 @@ def fetch_foreign_partners():
     for cc, brands in by_country.items():
         plist = []
         for brand, d in brands.items():
-            aug_in = d["input"].get("2026-08", {})
-            aug_g = d["gmv"].get("2026-08", {})
-            aug_u = d["users"].get("2026-08", {})
+            aug_in = d["input"].get(LATEST_MONTH, {})
+            aug_g = d["gmv"].get(LATEST_MONTH, {})
+            aug_u = d["users"].get(LATEST_MONTH, {})
             total_orders = sum((d["gmv"].get(m) or {}).get("orders", 0) for m in MONTHS)
             if total_orders < 100:
                 continue
@@ -706,7 +829,7 @@ def fetch_ua_segments_raw():
         SUM(m.delivered_orders_count) AS orders_m
       FROM main.ng_delivery.fact_provider_monthly m
       JOIN main.ng_delivery.dim_provider_v2 p ON m.provider_id=p.provider_id
-      WHERE p.country_code='ua' AND m.metric_timestamp_local>='{MONTHS[0]}-01' AND m.metric_timestamp_local<'2026-09-01'
+      WHERE p.country_code='ua' AND m.metric_timestamp_local>='{MONTHS[0]}-01' AND m.metric_timestamp_local<'{DATA_END}'
         AND {UA_VERTICAL}
       GROUP BY 1, DATE_TRUNC('month', m.metric_timestamp_local)
       HAVING mo IN ({months_sql})
@@ -721,7 +844,7 @@ def fetch_ua_segments_raw():
         SUM(w.provider_commission_aov_share_value*w.provider_commission_aov_share_weight)/NULLIF(SUM(w.provider_commission_aov_share_weight),0)*100 AS commission_aov
       FROM main.ng_delivery.fact_provider_weekly w
       JOIN main.ng_delivery.dim_provider_v2 p ON w.provider_id=p.provider_id
-      WHERE p.country_code='ua' AND w.metric_timestamp_local>='{MONTHS[0]}-01' AND w.metric_timestamp_local<'2026-09-01'
+      WHERE p.country_code='ua' AND w.metric_timestamp_local>='{MONTHS[0]}-01' AND w.metric_timestamp_local<'{DATA_END}'
         AND {UA_VERTICAL}
       GROUP BY 1, DATE_TRUNC('month', w.metric_timestamp_local)
       HAVING mo IN ({months_sql})
@@ -739,7 +862,7 @@ def fetch_ua_segments_raw():
       FROM main.ng_delivery.fact_order_delivery f
       JOIN main.ng_delivery.dim_provider_v2 p ON f.provider_id=p.provider_id
       WHERE f.city_country_code='ua' AND f.order_state='delivered'
-        AND f.order_created_date>='{MONTHS[0]}-01' AND f.order_created_date<'2026-09-01' AND {UA_VERTICAL}
+        AND f.order_created_date>='{MONTHS[0]}-01' AND f.order_created_date<'{DATA_END}' AND {UA_VERTICAL}
       GROUP BY 1, DATE_TRUNC('month', f.order_created_date)
       HAVING mo IN ({months_sql})
     """)
@@ -879,10 +1002,11 @@ def build_insights(country, bench_rows):
             return None
         return a, b, (a - b) / abs(b) * 100 if b else 0
 
+    lbl_last, lbl_prev = MONTH_LBL[MONTHS[-1]], MONTH_LBL[MONTHS[-2]]
     t = trend(country["gmv"], "orders")
     if t:
         insights.append({"level": "win" if t[2] > 0 else "watch", "kind": "Обсяг",
-                         "text": f"Замовлення Лип→Сер: {int(t[1]):,}→{int(t[0]):,} ({t[2]:+.0f}%)."})
+                         "text": f"Замовлення {lbl_prev}→{lbl_last}: {int(t[1]):,}→{int(t[0]):,} ({t[2]:+.0f}%)."})
 
     for key, label in [("order_defect", "Order Defect Rate"), ("order_replacement", "Replacements"),
                        ("not_delivered", "Not-delivered"), ("late_delivery_10", "Late Delivery 10+")]:
@@ -890,7 +1014,7 @@ def build_insights(country, bench_rows):
         if t:
             worse = (key in LOWER_BETTER and t[0] > t[1]) or (key not in LOWER_BETTER and t[0] < t[1])
             insights.append({"level": "crit" if worse else "win", "kind": label,
-                             "text": f"{label}: {t[1]:.1f}→{t[0]:.1f} (сер vs лип)."})
+                             "text": f"{label}: {t[1]:.1f}→{t[0]:.1f} ({lbl_last} vs {lbl_prev})."})
 
     ua = next(r for r in bench_rows if r["cc"] == "ua")
     peers = [r for r in bench_rows if r["cc"] != "ua" and r.get("order_defect")]
@@ -907,8 +1031,8 @@ def build_insights(country, bench_rows):
     # PP from Aug CSV
     bad_pp = aug_d.get("order_defect")
     if bad_pp:
-        insights.append({"level": "watch" if str(bad_pp).startswith("-") else "crit", "kind": "Серпень PP",
-                         "text": f"Order Defect Rate PP vs лип: {bad_pp} п.п.; Replacements PP: {aug_d.get('order_replacement', '—')}."})
+        insights.append({"level": "watch" if str(bad_pp).startswith("-") else "crit", "kind": f"{lbl_last} PP",
+                         "text": f"Order Defect Rate PP vs {lbl_prev}: {bad_pp} п.п.; Replacements PP: {aug_d.get('order_replacement', '—')}."})
     return insights
 
 
@@ -929,6 +1053,8 @@ def main():
         "looker_url": "https://bolt.cloud.looker.com/dashboards/32511",
         "months": MONTHS,
         "month_lbl": [MONTH_LBL[m] for m in MONTHS],
+        "period_label": f"{MONTH_LBL[MONTHS[0]]}–{MONTH_LBL[MONTHS[-1]]} {MONTHS[-1][:4]}",
+        "latest_month": LATEST_MONTH,
         "country": country,
         "segments": segments,
         "segment_names": SEGMENT_NAMES,
