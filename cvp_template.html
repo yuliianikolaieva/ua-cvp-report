@@ -49,6 +49,9 @@ footer{font-size:11px;color:var(--muted);margin-top:24px;padding-top:12px;border
   <div class="hl" id="insights"></div>
   <h2 id="kpiTitle">Ключові метрики</h2>
   <div class="tbl"><table id="kpiAug"></table></div>
+  <h2 id="wowTitle">WoW — тиждень до тижня</h2>
+  <div class="sub" id="wowSub" style="margin-bottom:8px"></div>
+  <div class="tbl"><table id="tblWow"></table></div>
 </div>
 
 <div id="p-input" style="display:none">
@@ -127,6 +130,16 @@ function ppCell(d,lb){
   const sign=n>0?"+":"";
   return `<div class="pp ${cls}">${sign}${d}${String(d).includes("ppt")||String(d).includes("%")?"":" п.п."}</div>`;
 }
+function wowCell(m){
+  const v=m.wow_pct!=null?m.wow_pct:m.wow_pp;
+  if(v==null||Number.isNaN(v))return "—";
+  const good=m.lower_better?(v<0):(v>0);
+  const cls=good?"down":"up";
+  const sign=v>0?"+":"";
+  if(m.wow_pct!=null)return `<div class="pp ${cls}">${sign}${v}% WoW</div>`;
+  const suf=m.fmt==="min"?" хв":" п.п.";
+  return `<div class="pp ${cls}">${sign}${v}${suf} WoW</div>`;
+}
 
 document.querySelectorAll("#tabs button").forEach(b=>b.onclick=()=>{
   document.querySelectorAll("#tabs button").forEach(x=>x.classList.toggle("active",x===b));
@@ -160,6 +173,25 @@ const ins=document.getElementById("insights");
     h+=`<tr><td>${lab}</td><td>${fmt(aug,f)}</td><td>${fmt(jul,f)}</td><td>${ppCell(d)}</td></tr>`;
   });
   document.getElementById("kpiAug").innerHTML=h+"</tbody>";
+})();
+
+// WoW overview
+(function(){
+  const w=R.wow||{};
+  const el=document.getElementById("tblWow");
+  if(!w.metrics||!w.metrics.length){
+    document.getElementById("wowTitle").style.display="none";
+    document.getElementById("wowSub").style.display="none";
+    el.parentElement.style.display="none";
+    return;
+  }
+  document.getElementById("wowSub").textContent=
+    `${w.label_cur||""} vs ${w.label_prev||""} · Databricks · повний ISO-тиждень (пн–нд)`;
+  let h=`<thead><tr><th>Метрика</th><th>Останній тиждень</th><th>Попередній</th><th>WoW</th></tr></thead><tbody>`;
+  w.metrics.forEach(m=>{
+    h+=`<tr><td>${m.label}</td><td>${fmt(m.cur,m.fmt)}</td><td>${fmt(m.prev,m.fmt)}</td><td>${wowCell(m)}</td></tr>`;
+  });
+  el.innerHTML=h+"</tbody>";
 })();
 
 function metricTable(secId, metrics, section){

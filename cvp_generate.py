@@ -101,6 +101,27 @@ FINANCE_VAL = [
     ("commission_aov", "Commission, % AOV", "pct"),
     ("aov", "AOV", "eur"),
 ]
+WOW_METRICS = [
+    ("orders", "Orders", "int", False),
+    ("gmv", "GMV", "eur", False),
+    ("active_users", "Active Users", "int", False),
+    ("merchant_availability", "Merchant Availability %", "pct", False),
+    ("sku_availability", "SKU Availability %", "pct", False),
+    ("not_delivered", "Not-delivered %", "pct", True),
+    ("order_defect", "Order Defect %", "pct", True),
+    ("order_replacement", "Replacements %", "pct", True),
+    ("late_delivery_10", "Late Delivery 10+ %", "pct", True),
+    ("delivery_time", "Delivery Time", "min", True),
+    ("commission_gmv", "Commission % GMV", "pct", False),
+]
+WOW_PERIOD_SQL = """
+  CASE
+    WHEN ts >= DATE_ADD(DATE_TRUNC('week', CURRENT_DATE()), -7)
+     AND ts < DATE_TRUNC('week', CURRENT_DATE()) THEN 'cur'
+    WHEN ts >= DATE_ADD(DATE_TRUNC('week', CURRENT_DATE()), -14)
+     AND ts < DATE_ADD(DATE_TRUNC('week', CURRENT_DATE()), -7) THEN 'prev'
+  END
+"""
 
 
 def _load_env():
@@ -380,6 +401,129 @@ def fetch_ua_country_db():
             }
         out[m] = {"input": inp, "gmv": gmv, "users": usr}
     return out
+
+
+def _wow_change(cur, prev, fmt):
+    if cur is None or prev is None:
+        return None, None
+    if fmt in ("int", "eur"):
+        if not prev:
+            return None, None
+        return rnd((cur - prev) / abs(prev) * 100, 1), None
+    if fmt == "min":
+        return None, rnd(cur - prev, 1)
+    return None, rnd(cur - prev, 1)
+
+
+def fetch_ua_wow():
+    """WoW: останній повний ISO-тиждень vs попередній (UA grocery vertical)."""
+    try:
+        conn = _db_connect()
+    except Exception as e:
+        print("WARN wow:", e)
+        return {}
+    cur = conn.cursor()
+    period = WOW_PERIOD_SQL.replace("ts", "w.metric_timestamp_local")
+    cur.execute(f"""
+      SELECT {period} AS p,
+        SUM(w.provider_active_rate_value*w.provider_active_rate_weight)/NULLIF(SUM(w.provider_active_rate_weight),0)*100 AS merchant_availability,
+        SUM(w.provider_sku_session_availability_rate_value)/NULLIF(SUM(w.provider_sku_session_availability_rate_weight),0)*100 AS sku_availability,
+        SUM(w.failed_order_rate_value*w.failed_order_rate_weight)/NULLIF(SUM(w.failed_order_rate_weight),0)*100 AS not_delivered,
+        SUM(w.order_total_minutes_per_order_value*w.order_total_minutes_per_order_weight)/NULLIF(SUM(w.order_total_minutes_per_order_weight),0) AS delivery_time,
+        SUM(w.late_delivery_order_10min_rate_value*w.late_delivery_order_10min_rate_weight)/NULLIF(SUM(w.late_delivery_order_10min_rate_weight),0)*100 AS late_delivery_10,
+        SUM(w.order_item_adjustment_rate_value*w.order_item_adjustment_rate_weight)/NULLIF(SUM(w.order_item_adjustment_rate_weight),0)*100 AS order_defect,
+        SUM(w.order_item_replacement_rate_value*w.order_item_replacement_rate_weight)/NULLIF(SUM(w.order_item_replacement_rate_weight),0)*100 AS order_replacement,
+        SUM(w.provider_commission_gmv_share_value*w.provider_commission_gmv_share_weight)/NULLIF(SUM(w.provider_commission_gmv_share_weight),0)*100 AS commission_gmv
+      FROM main.ng_delivery.fact_provider_weekly w
+      JOIN main.ng_delivery.dim_provider_v2 p ON w.provider_id=p.provider_id
+      WHERE p.country_code='ua' AND {UA_VERTICAL}
+        AND w.metric_timestamp_local >= DATE_ADD(DATE_TRUNC('week', CURRENT_DATE()), -14)
+        AND w.metric_timestamp_local < DATE_TRUNC('week', CURRENT_DATE())
+      GROUP BY 1
+      HAVING p IS NOT NULL
+    """)
+    ops = {r[0]: r[1:] for r in cur.fetchall()}
+    period_o = WOW_PERIOD_SQL.replace("ts", "f.order_created_date")
+    cur.execute(f"""
+      SELECT {period_o} AS p,
+        COUNT(*) AS orders, ROUND(SUM(f.order_gmv_eur),0) AS gmv,
+        COUNT(DISTINCT f.user_id) AS active_users
+      FROM main.ng_delivery.fact_order_delivery f
+      JOIN main.ng_delivery.dim_provider_v2 p ON f.provider_id=p.provider_id
+      WHERE f.city_country_code='ua' AND f.order_state='delivered' AND {UA_VERTICAL}
+        AND f.order_created_date >= DATE_ADD(DATE_TRUNC('week', CURRENT_DATE()), -14)
+        AND f.order_created_date < DATE_TRUNC('week', CURRENT_DATE())
+      GROUP BY 1
+      HAVING p IS NOT NULL
+    """)
+    ord_ = {r[0]: {"orders": int(r[1]), "gmv": float(r[2]), "active_users": int(r[3])} for r in cur.fetchall()}
+    cur.execute("""
+      SELECT DATE_FORMAT(DATE_ADD(DATE_TRUNC('week', CURRENT_DATE()), -7), 'yyyy-MM-dd') AS w_cur,
+        DATE_FORMAT(DATE_ADD(DATE_TRUNC('week', CURRENT_DATE()), -14), 'yyyy-MM-dd') AS w_prev
+    """)
+    w_cur, w_prev = cur.fetchone()
+    cur.close()
+    conn.close()
+
+    if "cur" not in ops and "cur" not in ord_:
+        return {}
+
+    keys_ops = [
+        "merchant_availability", "sku_availability", "not_delivered", "delivery_time",
+        "late_delivery_10", "order_defect", "order_replacement", "commission_gmv",
+    ]
+    by_key = {}
+    if "cur" in ops or "prev" in ops:
+        for i, k in enumerate(keys_ops):
+            by_key[k] = {
+                "cur": rnd(ops.get("cur", [None] * len(keys_ops))[i]) if ops.get("cur") else None,
+                "prev": rnd(ops.get("prev", [None] * len(keys_ops))[i]) if ops.get("prev") else None,
+            }
+    for k in ("orders", "gmv", "active_users"):
+        by_key[k] = {
+            "cur": ord_.get("cur", {}).get(k),
+            "prev": ord_.get("prev", {}).get(k),
+        }
+
+    metrics = []
+    for key, label, fmt, lb in WOW_METRICS:
+        v = by_key.get(key, {})
+        c, p = v.get("cur"), v.get("prev")
+        wow_pct, wow_pp = _wow_change(c, p, fmt)
+        metrics.append({
+            "key": key, "label": label, "fmt": fmt, "lower_better": lb,
+            "cur": c, "prev": p, "wow_pct": wow_pct, "wow_pp": wow_pp,
+        })
+    return {
+        "week_cur": w_cur, "week_prev": w_prev,
+        "label_cur": f"тиждень з {w_cur}",
+        "label_prev": f"тиждень з {w_prev}",
+        "metrics": metrics,
+    }
+
+
+def build_wow_insights(wow):
+    if not wow.get("metrics"):
+        return []
+    insights = []
+    by = {m["key"]: m for m in wow["metrics"]}
+    o = by.get("orders")
+    if o and o.get("wow_pct") is not None:
+        insights.append({
+            "level": "win" if o["wow_pct"] > 0 else "watch",
+            "kind": "WoW · Orders",
+            "text": f"Orders: {int(o['prev'] or 0):,}→{int(o['cur'] or 0):,} ({o['wow_pct']:+.1f}% WoW).",
+        })
+    for key, label in [("order_defect", "Order Defect"), ("order_replacement", "Replacements")]:
+        m = by.get(key)
+        if m and m.get("wow_pp") is not None and m.get("cur") is not None and m.get("prev") is not None:
+            worse = (m["lower_better"] and m["wow_pp"] > 0) or (not m["lower_better"] and m["wow_pp"] < 0)
+            insights.append({
+                "level": "crit" if worse else "win",
+                "kind": f"WoW · {label}",
+                "text": f"{label}: {m['prev']:.1f}→{m['cur']:.1f} ({m['wow_pp']:+.1f} п.п. WoW).",
+            })
+    return insights
 
 
 def _input_partner_path():
@@ -1046,7 +1190,8 @@ def main():
     bench_rows, bench_metric_defs = fetch_country_bench_full()
     foreign_partners = fetch_foreign_partners()
     segments, segment_cmp = build_segments(country)
-    insights = build_insights(country, bench_rows)
+    wow = fetch_ua_wow()
+    insights = build_insights(country, bench_rows) + build_wow_insights(wow)
 
     R = {
         "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
@@ -1070,6 +1215,7 @@ def main():
         "users_metrics": [{"key": k, "label": l, "fmt": f} for k, l, f in USERS_VAL],
         "funnel_metrics": [{"key": k, "label": l, "fmt": f} for k, l, f in FUNNEL_VAL],
         "finance_metrics": [{"key": k, "label": l, "fmt": f} for k, l, f in FINANCE_VAL],
+        "wow": wow,
     }
 
     (_ROOT / "cvp_data.json").write_text(json.dumps(R, ensure_ascii=False, indent=2), encoding="utf-8")
