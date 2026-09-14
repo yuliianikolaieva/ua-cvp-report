@@ -66,7 +66,9 @@ footer{font-size:11px;color:var(--muted);margin-top:24px;padding-top:12px;border
 </div>
 
 <div id="p-countries" style="display:none">
-  <h2>Порівняння країн (серпень / агрегат черв–сер)</h2>
+  <h2>Порівняння країн по місяцях</h2>
+  <div class="sub" style="margin-bottom:8px">Червень 2026 — поточний місяць. UA — Looker CSV (де є) + Databricks; інші країни — Databricks.</div>
+  <div class="filter"><label>Місяць: </label><select id="benchMonthSel"></select></div>
   <div class="legend">
     <span><i class="dot" style="background:var(--good-bg);border:1px solid var(--good)"></i>UA краще за медіану інших країн</span>
     <span><i class="dot" style="background:var(--bad-bg);border:1px solid var(--bad)"></i>UA гірше за медіану</span>
@@ -74,18 +76,18 @@ footer{font-size:11px;color:var(--muted);margin-top:24px;padding-top:12px;border
   <div class="tbl"><table id="tblCountries"></table></div>
 
   <h2>Партнери по країнах — CVP Input + Output</h2>
-  <div class="sub" style="margin-bottom:8px">Україна — Looker CSV; інші країни — Databricks (топ партнерів за замовленнями, серпень).</div>
+  <div class="sub" style="margin-bottom:8px">Україна — Looker CSV; інші країни — Databricks (топ партнерів за замовленнями, останній місяць).</div>
   <div class="filter"><label>Країна: </label><select id="countrySel"></select>
     <label style="margin-left:12px">Партнер: </label><select id="foreignBrandSel"></select></div>
   <h3>CVP Input</h3><div class="tbl"><table id="tblForeignInput"></table></div>
   <h3>CVP Output</h3><div class="tbl"><table id="tblForeignOut"></table></div>
-  <h3>Рейтинг партнерів (серпень)</h3><div class="tbl"><table id="tblForeignRank"></table></div>
+  <h3 id="foreignRankTitle">Рейтинг партнерів</h3><div class="tbl"><table id="tblForeignRank"></table></div>
 </div>
 
 <div id="p-segments" style="display:none">
   <h2>Сегменти партнерів — ENT / MM / SMB / Загальний</h2>
   <div class="sub" style="margin-bottom:8px">Загальний — Looker CSV (як вкладки Input/Output); ENT / MM / SMB — Databricks (<code>business_segment_v2</code>). Commission та AOV — Databricks.</div>
-  <h3>Порівняння (серпень)</h3>
+  <h3 id="segCmpTitle">Порівняння сегментів</h3>
   <div class="tbl"><table id="tblSegCmp"></table></div>
   <div class="filter"><label>Сегмент: </label><select id="segSel"></select></div>
   <h3>CVP Input</h3><div class="tbl"><table id="tblSegInput"></table></div>
@@ -102,7 +104,7 @@ footer{font-size:11px;color:var(--muted);margin-top:24px;padding-top:12px;border
   <div class="filter"><label>Бренд: </label><select id="brandSel"></select></div>
   <h3>CVP Input</h3><div class="tbl"><table id="tblPartnerInput"></table></div>
   <h3>CVP Output — Users & Funnel</h3><div class="tbl"><table id="tblPartnerOut"></table></div>
-  <h3>Рейтинг (серпень)</h3><div class="tbl"><table id="tblPartnerRank"></table></div>
+  <h3 id="partnerRankTitle">Рейтинг</h3><div class="tbl"><table id="tblPartnerRank"></table></div>
 </div>
 
 <footer>Джерело: <a href="https://bolt.cloud.looker.com/dashboards/32511" target="_blank">Looker dashboard 32511</a> CSV exports (CVP Input 4/5, Output GMV/Users/Funnel) + Databricks для країн / partner GMV. <span id="genAt"></span></footer>
@@ -164,12 +166,13 @@ const ins=document.getElementById("insights");
     ["input","not_delivered","Not-delivered","pct"],["input","late_delivery_10","Late Delivery 10+","pct"],
     ["users","active_users","Active Users","int"],["funnel","conversion_rate","Conversion Rate","pct"],
   ];
-  document.getElementById("kpiTitle").textContent=`Ключові метрики (${ML[2]} + PP vs ${ML[1]})`;
-  let h=`<thead><tr><th>Метрика</th><th>${ML[2]}</th><th>${ML[1]}</th><th>PP (з CSV)</th></tr></thead><tbody>`;
+  const li=ML.length-1, pi=ML.length-2;
+  document.getElementById("kpiTitle").textContent=`Ключові метрики (${ML[li]} + PP vs ${ML[pi]})`;
+  let h=`<thead><tr><th>Метрика</th><th>${ML[li]}</th><th>${ML[pi]}</th><th>PP (з CSV)</th></tr></thead><tbody>`;
   keys.forEach(([sec,key,lab,f])=>{
     const m=R.country[sec].find(x=>x.key===key);
-    const aug=m.values[2], jul=m.values[1];
-    const d=m.deltas?m.deltas[2]:null;
+    const aug=m.values[li], jul=m.values[pi];
+    const d=m.deltas?m.deltas[li]:null;
     h+=`<tr><td>${lab}</td><td>${fmt(aug,f)}</td><td>${fmt(jul,f)}</td><td>${ppCell(d)}</td></tr>`;
   });
   document.getElementById("kpiAug").innerHTML=h+"</tbody>";
@@ -212,42 +215,58 @@ metricTable("tblGmv",R.gmv_metrics,"gmv");
 metricTable("tblUsers",R.users_metrics,"users");
 metricTable("tblFunnel",R.funnel_metrics,"funnel");
 
-// Countries — UA colored vs peer median
+// Countries — by month, UA colored vs peer median
 (function(){
   const defs=R.bench_metric_defs||[];
-  const peers=R.bench_rows.filter(r=>r.cc!=="ua");
-  const ua=R.bench_rows.find(r=>r.cc==="ua")||{};
-  function med(k){
+  const byMo=R.bench_by_month||{};
+  const mSel=document.getElementById("benchMonthSel");
+  (R.bench_months||R.months||[]).forEach((m,i)=>{
+    const o=document.createElement("option");o.value=m;o.textContent=(R.month_lbl[i]||m)+" "+m; mSel.appendChild(o);
+  });
+  if(mSel.options.length)mSel.selectedIndex=mSel.options.length-1;
+  function med(rows,k){
+    const peers=rows.filter(r=>r.cc!=="ua");
     const v=peers.map(p=>p[k]).filter(x=>x!=null&&!isNaN(x)).sort((a,b)=>a-b);
     if(!v.length)return null;
-    const m=Math.floor(v.length/2);
-    return v.length%2?v[m]:(v[m-1]+v[m])/2;
+    const mid=Math.floor(v.length/2);
+    return v.length%2?v[mid]:(v[mid-1]+v[mid])/2;
   }
-  function uaCell(k, fmtType, lb){
-    const v=ua[k], m=med(k);
-    if(v==null)return `<td>—</td>`;
-    let cls="cell-neu";
-    if(m!=null){
-      const better=lb?(v<m):(v>m);
-      const worse=lb?(v>m):(v<m);
-      if(better)cls="cell-good"; else if(worse)cls="cell-bad";
+  function renderBenchMonth(){
+    const rows=byMo[mSel.value]||[];
+    const ua=rows.find(r=>r.cc==="ua")||{};
+    function uaCell(k, fmtType, lb){
+      const v=ua[k], m=med(rows,k);
+      if(v==null)return `<td>—</td>`;
+      let cls="cell-neu";
+      if(m!=null){
+        const better=lb?(v<m):(v>m);
+        const worse=lb?(v>m):(v<m);
+        if(better)cls="cell-good"; else if(worse)cls="cell-bad";
+      }
+      return `<td class="${cls}">${fmtType==="min"?fmt(v,"min"):fmt(v,fmtType)}</td>`;
     }
-    return `<td class="${cls}">${fmtType==="min"?fmt(v,"min"):fmt(v,fmtType)}</td>`;
+    let h="<thead><tr><th>Країна</th>"+defs.map(d=>`<th>${d.label}</th>`).join("")+"</tr></thead><tbody>";
+    rows.forEach(r=>{
+      h+=`<tr class="${r.cc==='ua'?'ua-row':''}"><td>${r.name}</td>`;
+      if(r.cc==="ua"){
+        defs.forEach(d=>{h+=uaCell(d.key,d.fmt,d.lower_better);});
+      }else{
+        defs.forEach(d=>{
+          const v=r[d.key];
+          h+=`<td>${v==null?"—":(d.fmt==="min"?fmt(v,"min"):fmt(v,d.fmt))}</td>`;
+        });
+      }
+      h+="</tr>";
+    });
+    document.getElementById("tblCountries").innerHTML=h+"</tbody>";
   }
-  let h="<thead><tr><th>Країна</th>"+defs.map(d=>`<th>${d.label}</th>`).join("")+"</tr></thead><tbody>";
-  R.bench_rows.forEach(r=>{
-    h+=`<tr class="${r.cc==='ua'?'ua-row':''}"><td>${r.name}</td>`;
-    if(r.cc==="ua"){
-      defs.forEach(d=>{h+=uaCell(d.key,d.fmt,d.lower_better);});
-    }else{
-      defs.forEach(d=>{
-        const v=r[d.key];
-        h+=`<td>${v==null?"—":(d.fmt==="min"?fmt(v,"min"):fmt(v,d.fmt))}</td>`;
-      });
-    }
-    h+="</tr>";
-  });
-  document.getElementById("tblCountries").innerHTML=h+"</tbody>";
+  mSel.onchange=renderBenchMonth;
+  renderBenchMonth();
+
+  const lastLbl=ML[ML.length-1]||"";
+  document.getElementById("foreignRankTitle").textContent=`Рейтинг партнерів (${lastLbl})`;
+  document.getElementById("segCmpTitle").textContent=`Порівняння сегментів (${lastLbl})`;
+  document.getElementById("partnerRankTitle").textContent=`Рейтинг (${lastLbl})`;
 
   // Foreign partners by country
   const cSel=document.getElementById("countrySel");
