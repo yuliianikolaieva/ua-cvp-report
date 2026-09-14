@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-14 07:22 UTC",
+  "generated_at": "2026-09-14 07:23 UTC",
   "looker_url": "https://bolt.cloud.looker.com/dashboards/32511",
   "months": [
     "2026-07",
@@ -33076,13 +33076,13 @@
             "orders": 84,
             "gmv": 1305.0
           },
-          "2026-08": {
-            "orders": 144,
-            "gmv": 2438.0
-          },
           "2026-07": {
             "orders": 134,
             "gmv": 2276.0
+          },
+          "2026-08": {
+            "orders": 144,
+            "gmv": 2438.0
           }
         },
         "users": {
@@ -33090,13 +33090,13 @@
             "active_users": 58,
             "frequency": 1.45
           },
-          "2026-08": {
-            "active_users": 108,
-            "frequency": 1.33
-          },
           "2026-07": {
             "active_users": 125,
             "frequency": 1.07
+          },
+          "2026-08": {
+            "active_users": 108,
+            "frequency": 1.33
           }
         },
         "summary": {
@@ -37923,23 +37923,23 @@
           }
         },
         "gmv": {
-          "2026-08": {
-            "orders": 51,
-            "gmv": 840.0
-          },
           "2026-07": {
             "orders": 51,
             "gmv": 895.0
+          },
+          "2026-08": {
+            "orders": 51,
+            "gmv": 840.0
           }
         },
         "users": {
-          "2026-08": {
-            "active_users": 22,
-            "frequency": 2.32
-          },
           "2026-07": {
             "active_users": 21,
             "frequency": 2.43
+          },
+          "2026-08": {
+            "active_users": 22,
+            "frequency": 2.32
           }
         },
         "summary": {
