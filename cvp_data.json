@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-11 13:16 UTC",
+  "generated_at": "2026-09-14 07:07 UTC",
   "looker_url": "https://bolt.cloud.looker.com/dashboards/32511",
   "months": [
     "2026-06",
@@ -43195,13 +43195,13 @@
             "orders": 40,
             "gmv": 1936.0
           },
-          "2026-08": {
-            "orders": 43,
-            "gmv": 2445.0
-          },
           "2026-07": {
             "orders": 49,
             "gmv": 2595.0
+          },
+          "2026-08": {
+            "orders": 43,
+            "gmv": 2445.0
           }
         },
         "users": {
@@ -43209,13 +43209,13 @@
             "active_users": 37,
             "frequency": 1.08
           },
-          "2026-08": {
-            "active_users": 39,
-            "frequency": 1.1
-          },
           "2026-07": {
             "active_users": 38,
             "frequency": 1.29
+          },
+          "2026-08": {
+            "active_users": 39,
+            "frequency": 1.1
           }
         },
         "summary": {
@@ -44300,18 +44300,6 @@
         "brand": "KONFESTA UAB",
         "mission": "Specialty Stores",
         "input": {
-          "2026-07": {
-            "active_merchants": 16,
-            "merchant_availability": 88.2,
-            "sku_availability": null,
-            "item_promo_gmv": 1.4,
-            "not_delivered": 3.9,
-            "delivery_time": 30.4,
-            "late_delivery_10": 8.3,
-            "order_defect": 0.0,
-            "cs_ticket": 2.2,
-            "order_replacement": null
-          },
           "2026-06": {
             "active_merchants": 15,
             "merchant_availability": 91.5,
@@ -44322,6 +44310,18 @@
             "late_delivery_10": 8.2,
             "order_defect": 0.0,
             "cs_ticket": 3.3,
+            "order_replacement": null
+          },
+          "2026-07": {
+            "active_merchants": 16,
+            "merchant_availability": 88.2,
+            "sku_availability": null,
+            "item_promo_gmv": 1.4,
+            "not_delivered": 3.9,
+            "delivery_time": 30.4,
+            "late_delivery_10": 8.3,
+            "order_defect": 0.0,
+            "cs_ticket": 2.2,
             "order_replacement": null
           },
           "2026-08": {
@@ -45617,18 +45617,6 @@
             "cs_ticket": 9.5,
             "order_replacement": 21.4
           },
-          "2026-07": {
-            "active_merchants": 51,
-            "merchant_availability": 98.6,
-            "sku_availability": 78.4,
-            "item_promo_gmv": 1.4,
-            "not_delivered": 2.8,
-            "delivery_time": 78.3,
-            "late_delivery_10": 13.6,
-            "order_defect": 48.1,
-            "cs_ticket": 11.4,
-            "order_replacement": 17.0
-          },
           "2026-06": {
             "active_merchants": 48,
             "merchant_availability": 95.9,
@@ -45640,6 +45628,18 @@
             "order_defect": 49.5,
             "cs_ticket": 11.4,
             "order_replacement": 21.2
+          },
+          "2026-07": {
+            "active_merchants": 51,
+            "merchant_availability": 98.6,
+            "sku_availability": 78.4,
+            "item_promo_gmv": 1.4,
+            "not_delivered": 2.8,
+            "delivery_time": 78.3,
+            "late_delivery_10": 13.6,
+            "order_defect": 48.1,
+            "cs_ticket": 11.4,
+            "order_replacement": 17.0
           }
         },
         "gmv": {
@@ -45647,13 +45647,13 @@
             "orders": 1488,
             "gmv": 43788.0
           },
-          "2026-07": {
-            "orders": 1540,
-            "gmv": 46516.0
-          },
           "2026-06": {
             "orders": 1302,
             "gmv": 39134.0
+          },
+          "2026-07": {
+            "orders": 1540,
+            "gmv": 46516.0
           }
         },
         "users": {
@@ -45661,13 +45661,13 @@
             "active_users": 1054,
             "frequency": 1.41
           },
-          "2026-07": {
-            "active_users": 1071,
-            "frequency": 1.44
-          },
           "2026-06": {
             "active_users": 946,
             "frequency": 1.38
+          },
+          "2026-07": {
+            "active_users": 1071,
+            "frequency": 1.44
           }
         },
         "summary": {
@@ -50982,18 +50982,6 @@
         "brand": "LA DRAFT",
         "mission": "Alcohol Stores",
         "input": {
-          "2026-08": {
-            "active_merchants": 3,
-            "merchant_availability": 75.7,
-            "sku_availability": null,
-            "item_promo_gmv": 0.16,
-            "not_delivered": 3.6,
-            "delivery_time": 32.4,
-            "late_delivery_10": 3.6,
-            "order_defect": 0.0,
-            "cs_ticket": 1.8,
-            "order_replacement": null
-          },
           "2026-06": {
             "active_merchants": 3,
             "merchant_availability": 96.0,
@@ -51004,6 +50992,18 @@
             "late_delivery_10": 10.0,
             "order_defect": 0.0,
             "cs_ticket": 0.0,
+            "order_replacement": null
+          },
+          "2026-08": {
+            "active_merchants": 3,
+            "merchant_availability": 75.7,
+            "sku_availability": null,
+            "item_promo_gmv": 0.16,
+            "not_delivered": 3.6,
+            "delivery_time": 32.4,
+            "late_delivery_10": 3.6,
+            "order_defect": 0.0,
+            "cs_ticket": 1.8,
             "order_replacement": null
           },
           "2026-07": {
@@ -51020,10 +51020,6 @@
           }
         },
         "gmv": {
-          "2026-06": {
-            "orders": 30,
-            "gmv": 667.0
-          },
           "2026-08": {
             "orders": 53,
             "gmv": 1156.0
@@ -51031,13 +51027,13 @@
           "2026-07": {
             "orders": 55,
             "gmv": 1322.0
+          },
+          "2026-06": {
+            "orders": 30,
+            "gmv": 667.0
           }
         },
         "users": {
-          "2026-06": {
-            "active_users": 21,
-            "frequency": 1.43
-          },
           "2026-08": {
             "active_users": 24,
             "frequency": 2.21
@@ -51045,6 +51041,10 @@
           "2026-07": {
             "active_users": 27,
             "frequency": 2.04
+          },
+          "2026-06": {
+            "active_users": 21,
+            "frequency": 1.43
           }
         },
         "summary": {
