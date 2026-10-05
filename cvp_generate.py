@@ -412,38 +412,29 @@ def _sql_data_end():
 
 
 def fetch_ua_funnel_db():
-    """Funnel UA (Databricks) — коли в Looker CSV немає місяця. Наближено до Mixpanel store funnel."""
+    """Funnel UA Stores (Looker 32511) — etl_delivery_provider_eater_session_funnel_aggregates + UA vertical."""
     try:
         conn = _db_connect()
     except Exception as e:
         print("WARN funnel db:", e)
         return {}
     months_sql = ",".join(f"'{m}'" for m in MONTHS)
+    data_end = _sql_data_end()
     cur = conn.cursor()
     cur.execute(f"""
-      WITH s AS (
-        SELECT DATE_FORMAT(DATE_TRUNC('month', session_started_date), 'yyyy-MM') AS mo,
-          session_started_date,
-          has_providers_list_viewed_event,
-          has_market_provider_viewed_event,
-          has_market_product_added_event,
-          has_market_cart_viewed_event,
-          has_market_order_placed
-        FROM main.ng_delivery.int_session_user_mixpanel_funnel_metrics
-        WHERE session_started_date >= '{MONTHS[0]}-01' AND session_started_date < '{_sql_data_end()}'
-      )
-      SELECT mo,
-        COUNT(*) AS impressions,
-        SUM(CASE WHEN has_providers_list_viewed_event THEN 1 ELSE 0 END)*100.0/COUNT(*) AS discovery_rate,
-        SUM(CASE WHEN has_market_provider_viewed_event THEN 1 ELSE 0 END) AS menu_views,
-        SUM(CASE WHEN has_market_product_added_event AND has_market_provider_viewed_event THEN 1 ELSE 0 END)*100.0
-          /NULLIF(SUM(CASE WHEN has_market_provider_viewed_event THEN 1 ELSE 0 END),0) AS menu_engagement,
-        SUM(CASE WHEN has_market_cart_viewed_event AND NOT has_market_order_placed THEN 1 ELSE 0 END)*100.0
-          /NULLIF(SUM(CASE WHEN has_market_cart_viewed_event THEN 1 ELSE 0 END),0) AS cart_abandonment,
-        SUM(CASE WHEN has_market_order_placed THEN 1 ELSE 0 END)*100.0
-          /NULLIF(SUM(CASE WHEN has_market_provider_viewed_event THEN 1 ELSE 0 END),0) AS conversion_rate
-      FROM s
-      GROUP BY mo
+      SELECT DATE_FORMAT(DATE_TRUNC('month', s.session_date), 'yyyy-MM') AS mo,
+        SUM(s.sessions_with_impressions_available) AS impressions,
+        SUM(s.sessions_viewed) * 100.0 / NULLIF(SUM(s.sessions_with_impressions_available), 0) AS discovery_rate,
+        SUM(s.sessions_viewed) AS menu_views,
+        SUM(s.sessions_added) * 100.0 / NULLIF(SUM(s.sessions_viewed), 0) AS menu_engagement,
+        (SUM(s.sessions_added) - SUM(s.sessions_ordered)) * 100.0 / NULLIF(SUM(s.sessions_added), 0) AS cart_abandonment,
+        SUM(s.sessions_ordered) * 100.0 / NULLIF(SUM(s.sessions_viewed), 0) AS conversion_rate
+      FROM main.ng_delivery.etl_delivery_provider_eater_session_funnel_aggregates s
+      JOIN main.ng_delivery.dim_provider_v2 p ON s.provider_id = p.provider_id
+      WHERE p.country_code = 'ua'
+        AND s.session_date >= '{MONTHS[0]}-01' AND s.session_date < '{data_end}'
+        AND {UA_VERTICAL}
+      GROUP BY DATE_TRUNC('month', s.session_date)
       HAVING mo IN ({months_sql})
     """)
     out = {}

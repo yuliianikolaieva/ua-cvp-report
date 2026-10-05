@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-05 11:42 UTC",
+  "generated_at": "2026-10-05 12:14 UTC",
   "looker_url": "https://bolt.cloud.looker.com/dashboards/32511",
   "months": [
     "2026-06",
@@ -369,7 +369,7 @@
           3013643.0,
           3346143.0,
           4606884.0,
-          19476962
+          4693919
         ],
         "deltas": null,
         "lower_better": false
@@ -382,7 +382,7 @@
           5.0,
           5.0,
           5.0,
-          10.1
+          4.7
         ],
         "deltas": null,
         "lower_better": false
@@ -395,7 +395,7 @@
           154183.0,
           164352.0,
           237331.0,
-          1806153
+          218992
         ],
         "deltas": null,
         "lower_better": false
@@ -408,7 +408,7 @@
           35.0,
           36.0,
           34.0,
-          43.2
+          34.6
         ],
         "deltas": null,
         "lower_better": false
@@ -421,7 +421,7 @@
           36.0,
           35.0,
           42.0,
-          34.1
+          38.5
         ],
         "deltas": null,
         "lower_better": true
@@ -434,7 +434,7 @@
           22.0,
           23.0,
           20.0,
-          26.2
+          21.3
         ],
         "deltas": null,
         "lower_better": false
@@ -807,7 +807,7 @@
             3013643.0,
             3346143.0,
             4606884.0,
-            19476962
+            4693919
           ],
           "deltas": null,
           "lower_better": false
@@ -820,7 +820,7 @@
             5.0,
             5.0,
             5.0,
-            10.1
+            4.7
           ],
           "deltas": null,
           "lower_better": false
@@ -833,7 +833,7 @@
             154183.0,
             164352.0,
             237331.0,
-            1806153
+            218992
           ],
           "deltas": null,
           "lower_better": false
@@ -846,7 +846,7 @@
             35.0,
             36.0,
             34.0,
-            43.2
+            34.6
           ],
           "deltas": null,
           "lower_better": false
@@ -859,7 +859,7 @@
             36.0,
             35.0,
             42.0,
-            34.1
+            38.5
           ],
           "deltas": null,
           "lower_better": true
@@ -872,7 +872,7 @@
             22.0,
             23.0,
             20.0,
-            26.2
+            21.3
           ],
           "deltas": null,
           "lower_better": false
@@ -40792,7 +40792,7 @@
     {
       "level": "win",
       "kind": "WoW · Orders",
-      "text": "Orders: 10,886→10,972 (+0.8% WoW)."
+      "text": "Orders: 10,886→10,974 (+0.8% WoW)."
     },
     {
       "level": "crit",
@@ -41083,7 +41083,7 @@
         "label": "Orders",
         "fmt": "int",
         "lower_better": false,
-        "cur": 10972,
+        "cur": 10974,
         "prev": 10886,
         "wow_pct": 0.8,
         "wow_pp": null
@@ -41093,7 +41093,7 @@
         "label": "GMV",
         "fmt": "eur",
         "lower_better": false,
-        "cur": 151930.0,
+        "cur": 151947.0,
         "prev": 150414.0,
         "wow_pct": 1.0,
         "wow_pp": null
@@ -41103,9 +41103,9 @@
         "label": "Active Users",
         "fmt": "int",
         "lower_better": false,
-        "cur": 6977,
+        "cur": 6979,
         "prev": 7145,
-        "wow_pct": -2.4,
+        "wow_pct": -2.3,
         "wow_pp": null
       },
       {
