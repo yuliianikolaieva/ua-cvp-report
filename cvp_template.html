@@ -55,6 +55,7 @@ footer{font-size:11px;color:var(--muted);margin-top:24px;padding-top:12px;border
 </div>
 
 <div id="p-input" style="display:none">
+  <div id="lookerCsvHint" class="sub" style="display:none;margin-bottom:10px;color:var(--warn)"></div>
   <h2>CVP Input — Україна (помісячно)</h2>
   <div class="tbl"><table id="tblInput"></table></div>
 </div>
@@ -67,7 +68,8 @@ footer{font-size:11px;color:var(--muted);margin-top:24px;padding-top:12px;border
 
 <div id="p-countries" style="display:none">
   <h2>Порівняння країн по місяцях</h2>
-  <div class="sub" style="margin-bottom:8px">Червень 2026 — поточний місяць. UA — Looker CSV (де є) + Databricks; інші країни — Databricks.</div>
+  <div class="sub" style="margin-bottom:8px">Червень 2026 — поточний місяць. UA — Looker CSV (де є) + Databricks. Інші країни — лише з Looker CSV (експорт по країнах у <code>data/</code>); без файлу в таблиці будуть «—».</div>
+  <div id="benchPeersWarn" class="sub" style="display:none;margin-bottom:8px;color:var(--warn)"></div>
   <div class="filter"><label>Місяць: </label><select id="benchMonthSel"></select></div>
   <div class="legend">
     <span><i class="dot" style="background:var(--good-bg);border:1px solid var(--good)"></i>UA краще за медіану інших країн</span>
@@ -213,6 +215,15 @@ function metricTable(secId, metrics, section){
   document.getElementById(secId).innerHTML=h+"</tbody>";
 }
 metricTable("tblInput",R.input_metrics,"input");
+(function(){
+  const have=new Set(R.looker_csv_months||[]);
+  const miss=(R.months||[]).filter(m=>!have.has(m));
+  if(miss.length){
+    const el=document.getElementById("lookerCsvHint");
+    el.style.display="block";
+    el.textContent="Без оновленого Looker CSV (📥 CVP Input (4) з колонками "+miss.join(", ")+"): Item-Level Promo, Campaigns Discount, Delivery Fee Campaign, Eater Fees — «—». Експортуйте dashboard 32511 і покладіть у data/.";
+  }
+})();
 metricTable("tblGmv",R.gmv_metrics,"gmv");
 metricTable("tblUsers",R.users_metrics,"users");
 metricTable("tblFunnel",R.funnel_metrics,"funnel");
@@ -221,6 +232,11 @@ metricTable("tblFunnel",R.funnel_metrics,"funnel");
 (function(){
   const defs=R.bench_metric_defs||[];
   const byMo=R.bench_by_month||{};
+  if(!R.bench_peers_from_looker){
+    const w=document.getElementById("benchPeersWarn");
+    w.style.display="block";
+    w.textContent="Немає даних по інших країнах: експортуйте з Looker 32511 tiles CVP Input / GMV / Users з розбивкою по країнах (Estonia, Poland, …) у data/.";
+  }
   const mSel=document.getElementById("benchMonthSel");
   (R.bench_months||R.months||[]).forEach((m,i)=>{
     const o=document.createElement("option");o.value=m;o.textContent=(R.month_lbl[i]||m)+" "+m; mSel.appendChild(o);

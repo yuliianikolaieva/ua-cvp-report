@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-05 08:18 UTC",
+  "generated_at": "2026-10-05 11:42 UTC",
   "looker_url": "https://bolt.cloud.looker.com/dashboards/32511",
   "months": [
     "2026-06",
@@ -31,7 +31,7 @@
           "",
           "5%",
           "11%",
-          null
+          "-12%"
         ],
         "lower_better": false
       },
@@ -49,7 +49,7 @@
           "",
           "2.3",
           "1.",
-          null
+          "1.4"
         ],
         "lower_better": false
       },
@@ -67,7 +67,7 @@
           "",
           "-0.4",
           "-3.8",
-          null
+          "-5.1"
         ],
         "lower_better": false
       },
@@ -97,7 +97,7 @@
           16.0,
           19.0,
           23.0,
-          4.58
+          null
         ],
         "deltas": [
           "",
@@ -157,7 +157,7 @@
           "",
           "-1.3",
           "2.2",
-          null
+          "2.1"
         ],
         "lower_better": true
       },
@@ -175,7 +175,7 @@
           "",
           "-10%",
           "83%",
-          null
+          "-45%"
         ],
         "lower_better": true
       },
@@ -193,7 +193,7 @@
           "",
           "-0.3",
           "0.8",
-          null
+          "0.6"
         ],
         "lower_better": true
       },
@@ -211,7 +211,7 @@
           "",
           "3.6",
           "3.2",
-          null
+          "2.9"
         ],
         "lower_better": true
       },
@@ -229,7 +229,7 @@
           "",
           "12.8",
           "1.4",
-          null
+          "0.2"
         ],
         "lower_better": true
       },
@@ -247,7 +247,7 @@
           "",
           "0.1",
           "0.7",
-          null
+          "-0.6"
         ],
         "lower_better": true
       }
@@ -369,7 +369,7 @@
           3013643.0,
           3346143.0,
           4606884.0,
-          null
+          19476962
         ],
         "deltas": null,
         "lower_better": false
@@ -382,7 +382,7 @@
           5.0,
           5.0,
           5.0,
-          null
+          10.1
         ],
         "deltas": null,
         "lower_better": false
@@ -395,7 +395,7 @@
           154183.0,
           164352.0,
           237331.0,
-          null
+          1806153
         ],
         "deltas": null,
         "lower_better": false
@@ -408,7 +408,7 @@
           35.0,
           36.0,
           34.0,
-          null
+          43.2
         ],
         "deltas": null,
         "lower_better": false
@@ -421,7 +421,7 @@
           36.0,
           35.0,
           42.0,
-          null
+          34.1
         ],
         "deltas": null,
         "lower_better": true
@@ -434,13 +434,23 @@
           22.0,
           23.0,
           20.0,
-          null
+          26.2
         ],
         "deltas": null,
         "lower_better": false
       }
     ],
-    "aug_deltas": {}
+    "aug_deltas": {
+      "active_merchants": "-12%",
+      "merchant_availability": "1.4",
+      "sku_availability": "-5.1",
+      "not_delivered": "2.1",
+      "delivery_time": "-45%",
+      "late_delivery_10": "0.6",
+      "order_defect": "2.9",
+      "order_replacement": "0.2",
+      "cs_ticket": "-0.6"
+    }
   },
   "segments": {
     "total": {
@@ -459,7 +469,7 @@
             "",
             "5%",
             "11%",
-            null
+            "-12%"
           ],
           "lower_better": false
         },
@@ -477,7 +487,7 @@
             "",
             "2.3",
             "1.",
-            null
+            "1.4"
           ],
           "lower_better": false
         },
@@ -495,7 +505,7 @@
             "",
             "-0.4",
             "-3.8",
-            null
+            "-5.1"
           ],
           "lower_better": false
         },
@@ -525,7 +535,7 @@
             16.0,
             19.0,
             23.0,
-            4.58
+            null
           ],
           "deltas": [
             "",
@@ -585,7 +595,7 @@
             "",
             "-1.3",
             "2.2",
-            null
+            "2.1"
           ],
           "lower_better": true
         },
@@ -603,7 +613,7 @@
             "",
             "-10%",
             "83%",
-            null
+            "-45%"
           ],
           "lower_better": true
         },
@@ -621,7 +631,7 @@
             "",
             "-0.3",
             "0.8",
-            null
+            "0.6"
           ],
           "lower_better": true
         },
@@ -639,7 +649,7 @@
             "",
             "3.6",
             "3.2",
-            null
+            "2.9"
           ],
           "lower_better": true
         },
@@ -657,7 +667,7 @@
             "",
             "12.8",
             "1.4",
-            null
+            "0.2"
           ],
           "lower_better": true
         },
@@ -675,7 +685,7 @@
             "",
             "0.1",
             "0.7",
-            null
+            "-0.6"
           ],
           "lower_better": true
         }
@@ -797,7 +807,7 @@
             3013643.0,
             3346143.0,
             4606884.0,
-            null
+            19476962
           ],
           "deltas": null,
           "lower_better": false
@@ -810,7 +820,7 @@
             5.0,
             5.0,
             5.0,
-            null
+            10.1
           ],
           "deltas": null,
           "lower_better": false
@@ -823,7 +833,7 @@
             154183.0,
             164352.0,
             237331.0,
-            null
+            1806153
           ],
           "deltas": null,
           "lower_better": false
@@ -836,7 +846,7 @@
             35.0,
             36.0,
             34.0,
-            null
+            43.2
           ],
           "deltas": null,
           "lower_better": false
@@ -849,7 +859,7 @@
             36.0,
             35.0,
             42.0,
-            null
+            34.1
           ],
           "deltas": null,
           "lower_better": true
@@ -862,7 +872,7 @@
             22.0,
             23.0,
             20.0,
-            null
+            26.2
           ],
           "deltas": null,
           "lower_better": false
@@ -40775,6 +40785,11 @@
       "text": "Late Delivery 10+: 6.0→6.6 (Вер vs Сер)."
     },
     {
+      "level": "crit",
+      "kind": "Вер PP",
+      "text": "Order Defect Rate PP vs Сер: 2.9 п.п.; Replacements PP: 0.2."
+    },
+    {
       "level": "win",
       "kind": "WoW · Orders",
       "text": "Orders: 10,886→10,972 (+0.8% WoW)."
@@ -41174,5 +41189,11 @@
         "wow_pp": 0.1
       }
     ]
-  }
+  },
+  "bench_peers_from_looker": false,
+  "looker_csv_months": [
+    "2026-06",
+    "2026-07",
+    "2026-08"
+  ]
 }
