@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-05 15:49 UTC",
+  "generated_at": "2026-10-07 07:44 UTC",
   "looker_url": "https://bolt.cloud.looker.com/dashboards/32511",
   "months": [
     "2026-06",
@@ -369,7 +369,7 @@
           3013643.0,
           3346143.0,
           4606884.0,
-          4693919
+          4693921
         ],
         "deltas": null,
         "lower_better": false
@@ -807,7 +807,7 @@
             3013643.0,
             3346143.0,
             4606884.0,
-            4693919
+            4693921
           ],
           "deltas": null,
           "lower_better": false
@@ -956,7 +956,7 @@
             85.5,
             83.9,
             80.1,
-            75.0
+            75.1
           ],
           "deltas": null,
           "lower_better": false
@@ -2381,7 +2381,7 @@
         "2026-09": {
           "active_merchants": 150,
           "merchant_availability": 94.3,
-          "sku_availability": 74.3,
+          "sku_availability": 74.4,
           "item_promo_gmv": 1.07,
           "not_delivered": 3.8,
           "delivery_time": 26.8,
@@ -2994,7 +2994,7 @@
         "2026-09": {
           "active_merchants": 13,
           "merchant_availability": 93.6,
-          "sku_availability": 72.3,
+          "sku_availability": 72.4,
           "item_promo_gmv": 6.0,
           "not_delivered": 2.1,
           "delivery_time": 24.4,
@@ -40792,7 +40792,7 @@
     {
       "level": "win",
       "kind": "WoW · Orders",
-      "text": "Orders: 10,886→10,974 (+0.8% WoW)."
+      "text": "Orders: 10,886→10,975 (+0.8% WoW)."
     },
     {
       "level": "crit",
@@ -41083,7 +41083,7 @@
         "label": "Orders",
         "fmt": "int",
         "lower_better": false,
-        "cur": 10974,
+        "cur": 10975,
         "prev": 10886,
         "wow_pct": 0.8,
         "wow_pp": null
@@ -41093,7 +41093,7 @@
         "label": "GMV",
         "fmt": "eur",
         "lower_better": false,
-        "cur": 151947.0,
+        "cur": 151952.0,
         "prev": 150414.0,
         "wow_pct": 1.0,
         "wow_pp": null
@@ -41123,10 +41123,10 @@
         "label": "SKU Availability %",
         "fmt": "pct",
         "lower_better": false,
-        "cur": 77.7,
+        "cur": 77.8,
         "prev": 72.9,
         "wow_pct": null,
-        "wow_pp": 4.8
+        "wow_pp": 4.9
       },
       {
         "key": "not_delivered",
