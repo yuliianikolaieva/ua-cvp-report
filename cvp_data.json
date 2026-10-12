@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-07 07:44 UTC",
+  "generated_at": "2026-10-12 16:39 UTC",
   "looker_url": "https://bolt.cloud.looker.com/dashboards/32511",
   "months": [
     "2026-06",
@@ -25,7 +25,7 @@
           1474.0,
           1547.0,
           1721.0,
-          1519
+          1520
         ],
         "deltas": [
           "",
@@ -61,13 +61,13 @@
           84.0,
           84.0,
           80.0,
-          74.9
+          75.0
         ],
         "deltas": [
           "",
           "-0.4",
           "-3.8",
-          "-5.1"
+          "-5.0"
         ],
         "lower_better": false
       },
@@ -187,13 +187,13 @@
           6.0,
           5.0,
           6.0,
-          6.6
+          6.7
         ],
         "deltas": [
           "",
           "-0.3",
           "0.8",
-          "0.6"
+          "0.7"
         ],
         "lower_better": true
       },
@@ -223,13 +223,13 @@
           25.0,
           38.0,
           40.0,
-          40.2
+          40.3
         ],
         "deltas": [
           "",
           "12.8",
           "1.4",
-          "0.2"
+          "0.3"
         ],
         "lower_better": true
       },
@@ -261,7 +261,7 @@
           441844.0,
           513210.0,
           648917.0,
-          633282.0
+          633702.0
         ],
         "deltas": null,
         "lower_better": false
@@ -287,7 +287,7 @@
           35724.0,
           39299.0,
           49114.0,
-          46851
+          46876
         ],
         "deltas": null,
         "lower_better": false
@@ -341,7 +341,7 @@
           14791.0,
           15883.0,
           20394.0,
-          19256
+          19269
         ],
         "deltas": null,
         "lower_better": false
@@ -369,7 +369,7 @@
           3013643.0,
           3346143.0,
           4606884.0,
-          4693921
+          4696340
         ],
         "deltas": null,
         "lower_better": false
@@ -395,7 +395,7 @@
           154183.0,
           164352.0,
           237331.0,
-          218992
+          219149
         ],
         "deltas": null,
         "lower_better": false
@@ -443,12 +443,12 @@
     "aug_deltas": {
       "active_merchants": "-12%",
       "merchant_availability": "1.4",
-      "sku_availability": "-5.1",
+      "sku_availability": "-5.0",
       "not_delivered": "2.1",
       "delivery_time": "-45%",
-      "late_delivery_10": "0.6",
+      "late_delivery_10": "0.7",
       "order_defect": "2.9",
-      "order_replacement": "0.2",
+      "order_replacement": "0.3",
       "cs_ticket": "-0.6"
     }
   },
@@ -463,7 +463,7 @@
             1474.0,
             1547.0,
             1721.0,
-            1519
+            1520
           ],
           "deltas": [
             "",
@@ -499,13 +499,13 @@
             84.0,
             84.0,
             80.0,
-            74.9
+            75.0
           ],
           "deltas": [
             "",
             "-0.4",
             "-3.8",
-            "-5.1"
+            "-5.0"
           ],
           "lower_better": false
         },
@@ -625,13 +625,13 @@
             6.0,
             5.0,
             6.0,
-            6.6
+            6.7
           ],
           "deltas": [
             "",
             "-0.3",
             "0.8",
-            "0.6"
+            "0.7"
           ],
           "lower_better": true
         },
@@ -661,13 +661,13 @@
             25.0,
             38.0,
             40.0,
-            40.2
+            40.3
           ],
           "deltas": [
             "",
             "12.8",
             "1.4",
-            "0.2"
+            "0.3"
           ],
           "lower_better": true
         },
@@ -699,7 +699,7 @@
             441844.0,
             513210.0,
             648917.0,
-            633282.0
+            633702.0
           ],
           "deltas": null,
           "lower_better": false
@@ -725,7 +725,7 @@
             35724.0,
             39299.0,
             49114.0,
-            46851
+            46876
           ],
           "deltas": null,
           "lower_better": false
@@ -779,7 +779,7 @@
             14791.0,
             15883.0,
             20394.0,
-            19256
+            19269
           ],
           "deltas": null,
           "lower_better": false
@@ -807,7 +807,7 @@
             3013643.0,
             3346143.0,
             4606884.0,
-            4693921
+            4696340
           ],
           "deltas": null,
           "lower_better": false
@@ -833,7 +833,7 @@
             154183.0,
             164352.0,
             237331.0,
-            218992
+            219149
           ],
           "deltas": null,
           "lower_better": false
@@ -930,7 +930,7 @@
             938,
             1005,
             1183,
-            1205
+            1206
           ],
           "deltas": null,
           "lower_better": false
@@ -1021,7 +1021,7 @@
             7.2,
             5.8,
             8.4,
-            10.7
+            10.8
           ],
           "deltas": null,
           "lower_better": true
@@ -1034,7 +1034,7 @@
             29.0,
             30.1,
             33.2,
-            32.4
+            32.5
           ],
           "deltas": null,
           "lower_better": true
@@ -1073,7 +1073,7 @@
             27.2,
             39.3,
             39.5,
-            40.2
+            40.3
           ],
           "deltas": null,
           "lower_better": true
@@ -1101,7 +1101,7 @@
             383545.0,
             448200.0,
             574377.0,
-            562693.0
+            563113.0
           ],
           "deltas": null,
           "lower_better": false
@@ -1127,7 +1127,7 @@
             30819,
             33960,
             42868,
-            40978
+            41003
           ],
           "deltas": null,
           "lower_better": false
@@ -1181,7 +1181,7 @@
             13119,
             14156,
             18341,
-            17364
+            17377
           ],
           "deltas": null,
           "lower_better": false
@@ -1900,26 +1900,26 @@
     {
       "seg": "total",
       "name": "Загальний",
-      "orders": 46851,
-      "gmv": 633282.0,
+      "orders": 46876,
+      "gmv": 633702.0,
       "aov": 13.52,
       "commission_gmv": 11.2,
       "order_defect": 23.9,
-      "order_replacement": 40.2,
+      "order_replacement": 40.3,
       "not_delivered": 10.1,
-      "active_users": 19256
+      "active_users": 19269
     },
     {
       "seg": "ent",
       "name": "ENT",
-      "orders": 40978,
-      "gmv": 562693.0,
+      "orders": 41003,
+      "gmv": 563113.0,
       "aov": 13.73,
       "commission_gmv": 9.5,
       "order_defect": 27.1,
-      "order_replacement": 40.2,
-      "not_delivered": 10.7,
-      "active_users": 17364
+      "order_replacement": 40.3,
+      "not_delivered": 10.8,
+      "active_users": 17377
     },
     {
       "seg": "mm",
@@ -1950,7 +1950,7 @@
     {
       "brand": "VARUS",
       "mission": "Grocery Stores",
-      "orders_aug": 12055,
+      "orders_aug": 12080,
       "users": {
         "2026-06": {
           "active_users": 3571,
@@ -1965,7 +1965,7 @@
           "frequency": 2.08
         },
         "2026-09": {
-          "active_users": 5732,
+          "active_users": 5749,
           "frequency": 2.1
         }
       },
@@ -2033,16 +2033,16 @@
           "order_replacement": 45.5
         },
         "2026-09": {
-          "active_merchants": 56,
-          "merchant_availability": 93.4,
+          "active_merchants": 57,
+          "merchant_availability": 93.5,
           "sku_availability": 95.7,
-          "item_promo_gmv": 7.87,
+          "item_promo_gmv": 7.86,
           "not_delivered": 15.0,
           "delivery_time": 42.0,
           "late_delivery_10": 9.1,
           "order_defect": 59.4,
           "cs_ticket": 6.0,
-          "order_replacement": 47.5
+          "order_replacement": 47.6
         }
       },
       "input_delta": {
@@ -2106,18 +2106,18 @@
           "gmv": 233133.0
         },
         "2026-09": {
-          "orders": 12055,
-          "gmv": 192590.0
+          "orders": 12080,
+          "gmv": 193010.0
         }
       },
       "summary": {
-        "active_users": 5732,
+        "active_users": 5749,
         "frequency": 2.1,
         "conversion": null,
         "order_defect": 59.4,
-        "order_replacement": 47.5,
-        "gmv": 192590.0,
-        "orders": 12055
+        "order_replacement": 47.6,
+        "gmv": 193010.0,
+        "orders": 12080
       }
     },
     {
@@ -40443,15 +40443,15 @@
       "cc": "ua",
       "name": "Україна",
       "not_delivered": 10.1,
-      "late_delivery_10": 6.6,
+      "late_delivery_10": 6.7,
       "order_defect": 23.9,
       "delivery_time": 31.5,
       "merchant_availability": 81.4,
-      "sku_availability": 74.9,
-      "order_replacement": 40.2,
-      "orders": 46851,
-      "gmv": 633282.0,
-      "active_users": 19256,
+      "sku_availability": 75.0,
+      "order_replacement": 40.3,
+      "orders": 46876,
+      "gmv": 633702.0,
+      "active_users": 19269,
       "frequency": 2.43
     },
     {
@@ -40624,15 +40624,15 @@
         "cc": "ua",
         "name": "Україна",
         "not_delivered": 10.1,
-        "late_delivery_10": 6.6,
+        "late_delivery_10": 6.7,
         "order_defect": 23.9,
         "delivery_time": 31.5,
         "merchant_availability": 81.4,
-        "sku_availability": 74.9,
-        "order_replacement": 40.2,
-        "orders": 46851,
-        "gmv": 633282.0,
-        "active_users": 19256,
+        "sku_availability": 75.0,
+        "order_replacement": 40.3,
+        "orders": 46876,
+        "gmv": 633702.0,
+        "active_users": 19269,
         "frequency": 2.43
       },
       {
@@ -40762,7 +40762,7 @@
     {
       "level": "watch",
       "kind": "Обсяг",
-      "text": "Замовлення Сер→Вер: 49,114→46,851 (-5%)."
+      "text": "Замовлення Сер→Вер: 49,114→46,876 (-5%)."
     },
     {
       "level": "crit",
@@ -40772,7 +40772,7 @@
     {
       "level": "crit",
       "kind": "Replacements",
-      "text": "Replacements: 40.0→40.2 (Вер vs Сер)."
+      "text": "Replacements: 40.0→40.3 (Вер vs Сер)."
     },
     {
       "level": "crit",
@@ -40782,27 +40782,27 @@
     {
       "level": "crit",
       "kind": "Late Delivery 10+",
-      "text": "Late Delivery 10+: 6.0→6.6 (Вер vs Сер)."
+      "text": "Late Delivery 10+: 6.0→6.7 (Вер vs Сер)."
     },
     {
       "level": "crit",
       "kind": "Вер PP",
-      "text": "Order Defect Rate PP vs Сер: 2.9 п.п.; Replacements PP: 0.2."
+      "text": "Order Defect Rate PP vs Сер: 2.9 п.п.; Replacements PP: 0.3."
     },
     {
       "level": "win",
       "kind": "WoW · Orders",
-      "text": "Orders: 10,886→10,975 (+0.8% WoW)."
+      "text": "Orders: 10,995→11,903 (+8.3% WoW)."
     },
     {
       "level": "crit",
       "kind": "WoW · Order Defect",
-      "text": "Order Defect: 23.3→23.8 (+0.5 п.п. WoW)."
+      "text": "Order Defect: 23.9→24.9 (+1.0 п.п. WoW)."
     },
     {
       "level": "win",
       "kind": "WoW · Replacements",
-      "text": "Replacements: 41.9→39.3 (-2.6 п.п. WoW)."
+      "text": "Replacements: 39.5→39.1 (-0.4 п.п. WoW)."
     }
   ],
   "input_metrics": [
@@ -41073,19 +41073,19 @@
     }
   ],
   "wow": {
-    "week_cur": "2026-09-28",
-    "week_prev": "2026-09-21",
-    "label_cur": "тиждень з 2026-09-28",
-    "label_prev": "тиждень з 2026-09-21",
+    "week_cur": "2026-10-05",
+    "week_prev": "2026-09-28",
+    "label_cur": "тиждень з 2026-10-05",
+    "label_prev": "тиждень з 2026-09-28",
     "metrics": [
       {
         "key": "orders",
         "label": "Orders",
         "fmt": "int",
         "lower_better": false,
-        "cur": 10975,
-        "prev": 10886,
-        "wow_pct": 0.8,
+        "cur": 11903,
+        "prev": 10995,
+        "wow_pct": 8.3,
         "wow_pp": null
       },
       {
@@ -41093,9 +41093,9 @@
         "label": "GMV",
         "fmt": "eur",
         "lower_better": false,
-        "cur": 151952.0,
-        "prev": 150414.0,
-        "wow_pct": 1.0,
+        "cur": 169623.0,
+        "prev": 152300.0,
+        "wow_pct": 11.4,
         "wow_pp": null
       },
       {
@@ -41103,9 +41103,9 @@
         "label": "Active Users",
         "fmt": "int",
         "lower_better": false,
-        "cur": 6979,
-        "prev": 7145,
-        "wow_pct": -2.3,
+        "cur": 7576,
+        "prev": 6990,
+        "wow_pct": 8.4,
         "wow_pp": null
       },
       {
@@ -41113,80 +41113,80 @@
         "label": "Merchant Availability %",
         "fmt": "pct",
         "lower_better": false,
-        "cur": 82.1,
-        "prev": 81.6,
+        "cur": 80.7,
+        "prev": 82.1,
         "wow_pct": null,
-        "wow_pp": 0.5
+        "wow_pp": -1.4
       },
       {
         "key": "sku_availability",
         "label": "SKU Availability %",
         "fmt": "pct",
         "lower_better": false,
-        "cur": 77.8,
-        "prev": 72.9,
+        "cur": 77.9,
+        "prev": 78.0,
         "wow_pct": null,
-        "wow_pp": 4.9
+        "wow_pp": -0.1
       },
       {
         "key": "not_delivered",
         "label": "Not-delivered %",
         "fmt": "pct",
         "lower_better": true,
-        "cur": 8.6,
-        "prev": 9.3,
+        "cur": 9.3,
+        "prev": 8.6,
         "wow_pct": null,
-        "wow_pp": -0.7
+        "wow_pp": 0.7
       },
       {
         "key": "order_defect",
         "label": "Order Defect %",
         "fmt": "pct",
         "lower_better": true,
-        "cur": 23.8,
-        "prev": 23.3,
+        "cur": 24.9,
+        "prev": 23.9,
         "wow_pct": null,
-        "wow_pp": 0.5
+        "wow_pp": 1.0
       },
       {
         "key": "order_replacement",
         "label": "Replacements %",
         "fmt": "pct",
         "lower_better": true,
-        "cur": 39.3,
-        "prev": 41.9,
+        "cur": 39.1,
+        "prev": 39.5,
         "wow_pct": null,
-        "wow_pp": -2.6
+        "wow_pp": -0.4
       },
       {
         "key": "late_delivery_10",
         "label": "Late Delivery 10+ %",
         "fmt": "pct",
         "lower_better": true,
-        "cur": 5.8,
-        "prev": 7.1,
+        "cur": 6.5,
+        "prev": 5.8,
         "wow_pct": null,
-        "wow_pp": -1.3
+        "wow_pp": 0.7
       },
       {
         "key": "delivery_time",
         "label": "Delivery Time",
         "fmt": "min",
         "lower_better": true,
-        "cur": 30.3,
-        "prev": 32.1,
+        "cur": 32.2,
+        "prev": 30.3,
         "wow_pct": null,
-        "wow_pp": -1.8
+        "wow_pp": 1.9
       },
       {
         "key": "commission_gmv",
         "label": "Commission % GMV",
         "fmt": "pct",
         "lower_better": false,
-        "cur": 10.9,
-        "prev": 10.8,
+        "cur": 10.6,
+        "prev": 10.9,
         "wow_pct": null,
-        "wow_pp": 0.1
+        "wow_pp": -0.3
       }
     ]
   },
