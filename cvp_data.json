@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-12 16:39 UTC",
+  "generated_at": "2026-10-19 14:34 UTC",
   "looker_url": "https://bolt.cloud.looker.com/dashboards/32511",
   "months": [
     "2026-06",
@@ -1573,7 +1573,7 @@
           "label": "Active Merchants",
           "fmt": "int",
           "values": [
-            316,
+            315,
             312,
             326,
             311
@@ -1587,8 +1587,8 @@
           "fmt": "pct",
           "values": [
             65.3,
-            69.9,
-            69.7,
+            70.0,
+            69.8,
             70.5
           ],
           "deltas": null,
@@ -1625,7 +1625,7 @@
           "label": "Item-Level Promo, GMV %",
           "fmt": "pct",
           "values": [
-            2.7,
+            2.71,
             1.9,
             1.78,
             1.49
@@ -1744,7 +1744,7 @@
           "label": "GMV",
           "fmt": "eur",
           "values": [
-            58300.0,
+            58265.0,
             65047.0,
             74918.0,
             70365.0
@@ -1757,7 +1757,7 @@
           "label": "GMV per Merchant",
           "fmt": "eur",
           "values": [
-            184.0,
+            185.0,
             208.0,
             230.0,
             226.0
@@ -1770,7 +1770,7 @@
           "label": "Orders",
           "fmt": "int",
           "values": [
-            4905,
+            4903,
             5341,
             6269,
             5858
@@ -1796,7 +1796,7 @@
           "label": "GMV per Order",
           "fmt": "eur",
           "values": [
-            11.89,
+            11.88,
             12.18,
             11.95,
             12.01
@@ -1809,9 +1809,9 @@
           "label": "Bolt Plus GMV Share",
           "fmt": "pct",
           "values": [
-            15.3,
+            15.2,
             14.2,
-            15.8,
+            15.9,
             18.7
           ],
           "deltas": null,
@@ -1824,7 +1824,7 @@
           "label": "Active Users",
           "fmt": "int",
           "values": [
-            2455,
+            2453,
             2545,
             3053,
             2850
@@ -1879,7 +1879,7 @@
           "label": "AOV",
           "fmt": "eur",
           "values": [
-            11.89,
+            11.88,
             12.18,
             11.95,
             12.01
@@ -32971,7 +32971,7 @@
       "orders_aug": 0,
       "users": {
         "2026-06": {
-          "active_users": 2,
+          "active_users": 2.0,
           "frequency": 1.0
         },
         "2026-07": {
@@ -33011,52 +33011,49 @@
       },
       "input": {
         "2026-06": {
-          "active_merchants": 1,
-          "merchant_availability": 35.3,
+          "active_merchants": 1.0,
+          "merchant_availability": 35.0,
           "sku_availability": null,
-          "item_promo_gmv": null,
-          "not_delivered": null,
-          "delivery_time": 45.2,
+          "eater_fees_aov": 16.0,
+          "item_promo_gmv": 68.0,
+          "campaigns_discount": 28.0,
+          "delivery_fee_campaign": 0.0,
+          "not_delivered": 0.0,
+          "delivery_time": 45.0,
           "late_delivery_10": 50.0,
-          "order_defect": null,
-          "cs_ticket": null,
-          "order_replacement": null
+          "order_defect": 0.0,
+          "order_replacement": null,
+          "cs_ticket": 0.0
         },
         "2026-07": {
-          "active_merchants": 0,
-          "merchant_availability": null,
+          "active_merchants": 0.0,
+          "merchant_availability": 0.0,
           "sku_availability": null,
+          "eater_fees_aov": null,
           "item_promo_gmv": null,
+          "campaigns_discount": null,
+          "delivery_fee_campaign": null,
           "not_delivered": null,
           "delivery_time": null,
           "late_delivery_10": null,
           "order_defect": null,
-          "cs_ticket": null,
-          "order_replacement": null
+          "order_replacement": null,
+          "cs_ticket": null
         },
         "2026-08": {
-          "active_merchants": 0,
-          "merchant_availability": null,
+          "active_merchants": 0.0,
+          "merchant_availability": 0.0,
           "sku_availability": null,
+          "eater_fees_aov": null,
           "item_promo_gmv": null,
+          "campaigns_discount": null,
+          "delivery_fee_campaign": null,
           "not_delivered": null,
           "delivery_time": null,
           "late_delivery_10": null,
           "order_defect": null,
-          "cs_ticket": null,
-          "order_replacement": null
-        },
-        "2026-09": {
-          "active_merchants": 0,
-          "merchant_availability": null,
-          "sku_availability": null,
-          "item_promo_gmv": null,
-          "not_delivered": null,
-          "delivery_time": null,
-          "late_delivery_10": null,
-          "order_defect": null,
-          "cs_ticket": null,
-          "order_replacement": null
+          "order_replacement": null,
+          "cs_ticket": null
         }
       },
       "input_delta": {
@@ -33106,12 +33103,7 @@
           "cs_ticket": ""
         }
       },
-      "gmv": {
-        "2026-06": {
-          "orders": 2,
-          "gmv": 34.0
-        }
-      },
+      "gmv": {},
       "summary": {
         "active_users": null,
         "frequency": null,
@@ -40790,19 +40782,19 @@
       "text": "Order Defect Rate PP vs Сер: 2.9 п.п.; Replacements PP: 0.3."
     },
     {
-      "level": "win",
+      "level": "watch",
       "kind": "WoW · Orders",
-      "text": "Orders: 10,995→11,903 (+8.3% WoW)."
+      "text": "Orders: 11,905→11,269 (-5.3% WoW)."
+    },
+    {
+      "level": "win",
+      "kind": "WoW · Order Defect",
+      "text": "Order Defect: 24.9→20.4 (-4.5 п.п. WoW)."
     },
     {
       "level": "crit",
-      "kind": "WoW · Order Defect",
-      "text": "Order Defect: 23.9→24.9 (+1.0 п.п. WoW)."
-    },
-    {
-      "level": "win",
       "kind": "WoW · Replacements",
-      "text": "Replacements: 39.5→39.1 (-0.4 п.п. WoW)."
+      "text": "Replacements: 39.1→46.8 (+7.7 п.п. WoW)."
     }
   ],
   "input_metrics": [
@@ -41063,7 +41055,7 @@
           "segment": "SMB",
           "fmt": "eur",
           "values": [
-            11.89,
+            11.88,
             12.18,
             11.95,
             12.01
@@ -41073,19 +41065,19 @@
     }
   ],
   "wow": {
-    "week_cur": "2026-10-05",
-    "week_prev": "2026-09-28",
-    "label_cur": "тиждень з 2026-10-05",
-    "label_prev": "тиждень з 2026-09-28",
+    "week_cur": "2026-10-12",
+    "week_prev": "2026-10-05",
+    "label_cur": "тиждень з 2026-10-12",
+    "label_prev": "тиждень з 2026-10-05",
     "metrics": [
       {
         "key": "orders",
         "label": "Orders",
         "fmt": "int",
         "lower_better": false,
-        "cur": 11903,
-        "prev": 10995,
-        "wow_pct": 8.3,
+        "cur": 11269,
+        "prev": 11905,
+        "wow_pct": -5.3,
         "wow_pp": null
       },
       {
@@ -41093,9 +41085,9 @@
         "label": "GMV",
         "fmt": "eur",
         "lower_better": false,
-        "cur": 169623.0,
-        "prev": 152300.0,
-        "wow_pct": 11.4,
+        "cur": 165827.0,
+        "prev": 169662.0,
+        "wow_pct": -2.3,
         "wow_pp": null
       },
       {
@@ -41103,9 +41095,9 @@
         "label": "Active Users",
         "fmt": "int",
         "lower_better": false,
-        "cur": 7576,
-        "prev": 6990,
-        "wow_pct": 8.4,
+        "cur": 7343,
+        "prev": 7577,
+        "wow_pct": -3.1,
         "wow_pp": null
       },
       {
@@ -41113,70 +41105,70 @@
         "label": "Merchant Availability %",
         "fmt": "pct",
         "lower_better": false,
-        "cur": 80.7,
-        "prev": 82.1,
+        "cur": 79.7,
+        "prev": 80.7,
         "wow_pct": null,
-        "wow_pp": -1.4
+        "wow_pp": -1.0
       },
       {
         "key": "sku_availability",
         "label": "SKU Availability %",
         "fmt": "pct",
         "lower_better": false,
-        "cur": 77.9,
-        "prev": 78.0,
+        "cur": 77.5,
+        "prev": 78.1,
         "wow_pct": null,
-        "wow_pp": -0.1
+        "wow_pp": -0.6
       },
       {
         "key": "not_delivered",
         "label": "Not-delivered %",
         "fmt": "pct",
         "lower_better": true,
-        "cur": 9.3,
-        "prev": 8.6,
+        "cur": 9.6,
+        "prev": 9.3,
         "wow_pct": null,
-        "wow_pp": 0.7
+        "wow_pp": 0.3
       },
       {
         "key": "order_defect",
         "label": "Order Defect %",
         "fmt": "pct",
         "lower_better": true,
-        "cur": 24.9,
-        "prev": 23.9,
+        "cur": 20.4,
+        "prev": 24.9,
         "wow_pct": null,
-        "wow_pp": 1.0
+        "wow_pp": -4.5
       },
       {
         "key": "order_replacement",
         "label": "Replacements %",
         "fmt": "pct",
         "lower_better": true,
-        "cur": 39.1,
-        "prev": 39.5,
+        "cur": 46.8,
+        "prev": 39.1,
         "wow_pct": null,
-        "wow_pp": -0.4
+        "wow_pp": 7.7
       },
       {
         "key": "late_delivery_10",
         "label": "Late Delivery 10+ %",
         "fmt": "pct",
         "lower_better": true,
-        "cur": 6.5,
-        "prev": 5.8,
+        "cur": 7.6,
+        "prev": 6.5,
         "wow_pct": null,
-        "wow_pp": 0.7
+        "wow_pp": 1.1
       },
       {
         "key": "delivery_time",
         "label": "Delivery Time",
         "fmt": "min",
         "lower_better": true,
-        "cur": 32.2,
-        "prev": 30.3,
+        "cur": 34.5,
+        "prev": 32.4,
         "wow_pct": null,
-        "wow_pp": 1.9
+        "wow_pp": 2.1
       },
       {
         "key": "commission_gmv",
@@ -41184,9 +41176,9 @@
         "fmt": "pct",
         "lower_better": false,
         "cur": 10.6,
-        "prev": 10.9,
+        "prev": 10.6,
         "wow_pct": null,
-        "wow_pp": -0.3
+        "wow_pp": 0.0
       }
     ]
   },
